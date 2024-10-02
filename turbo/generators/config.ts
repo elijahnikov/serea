@@ -84,7 +84,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           // });
           execSync("pnpm i", { stdio: "inherit" });
           execSync(
-            `pnpm prettier --write packages/${answers.name}/** --list-different`,
+            `pnpm @biomejs/biome format --write packages/${answers.name}/**`,
           );
           return "Package scaffolded";
         }

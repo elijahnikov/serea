@@ -33,7 +33,7 @@ export const POST = async (_req: NextRequest) => {
 
 export const GET = async (
   _req: NextRequest,
-  props: { params: { nextauth: string[] } },
+  props: { params: { nextauth: string[] } }
 ) => {
   // First step must be to correct the request URL.
   const req = rewriteRequestUrlInDevelopment(_req);
@@ -67,8 +67,7 @@ export const GET = async (
 
     if (!match)
       throw new Error(
-        "Unable to find session cookie: " +
-          JSON.stringify(authResponse.headers.getSetCookie()),
+        `Unable to find session cookie: ${JSON.stringify(authResponse.headers.getSetCookie())}`
       );
 
     const url = new URL(isExpoCallback.value);

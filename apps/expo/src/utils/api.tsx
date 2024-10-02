@@ -20,38 +20,38 @@ export { type RouterInputs, type RouterOutputs } from "@acme/api";
  * Use only in _app.tsx
  */
 export function TRPCProvider(props: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
-  const [trpcClient] = useState(() =>
-    api.createClient({
-      links: [
-        loggerLink({
-          enabled: (opts) =>
-            process.env.NODE_ENV === "development" ||
-            (opts.direction === "down" && opts.result instanceof Error),
-          colorMode: "ansi",
-        }),
-        httpBatchLink({
-          transformer: superjson,
-          url: `${getBaseUrl()}/api/trpc`,
-          headers() {
-            const headers = new Map<string, string>();
-            headers.set("x-trpc-source", "expo-react");
+	const [queryClient] = useState(() => new QueryClient());
+	const [trpcClient] = useState(() =>
+		api.createClient({
+			links: [
+				loggerLink({
+					enabled: (opts) =>
+						process.env.NODE_ENV === "development" ||
+						(opts.direction === "down" && opts.result instanceof Error),
+					colorMode: "ansi",
+				}),
+				httpBatchLink({
+					transformer: superjson,
+					url: `${getBaseUrl()}/api/trpc`,
+					headers() {
+						const headers = new Map<string, string>();
+						headers.set("x-trpc-source", "expo-react");
 
-            const token = getToken();
-            if (token) headers.set("Authorization", `Bearer ${token}`);
+						const token = getToken();
+						if (token) headers.set("Authorization", `Bearer ${token}`);
 
-            return Object.fromEntries(headers);
-          },
-        }),
-      ],
-    }),
-  );
+						return Object.fromEntries(headers);
+					},
+				}),
+			],
+		}),
+	);
 
-  return (
-    <api.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        {props.children}
-      </QueryClientProvider>
-    </api.Provider>
-  );
+	return (
+		<api.Provider client={trpcClient} queryClient={queryClient}>
+			<QueryClientProvider client={queryClient}>
+				{props.children}
+			</QueryClientProvider>
+		</api.Provider>
+	);
 }
