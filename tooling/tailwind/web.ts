@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import { wedgesTW } from "@lemonsqueezy/wedges";
 
 import base from "./base";
 
@@ -36,5 +37,5 @@ export default {
 			},
 		},
 	},
-	plugins: [animate],
+	plugins: [animate, wedgesTW()],
 } satisfies Config;

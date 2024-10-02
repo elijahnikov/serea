@@ -6,31 +6,94 @@ import { cva } from "class-variance-authority";
 import { cn } from "@serea/ui";
 
 const buttonVariants = cva(
-	"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {
 				primary:
-					"bg-primary text-primary-foreground shadow hover:bg-primary/90",
-				destructive:
-					"bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-				outline:
-					"border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+					"bg-primary text-white outline-primary hover:bg-primary-600 disabled:opacity-50",
+
 				secondary:
-					"bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-				ghost: "hover:bg-accent hover:text-accent-foreground",
-				link: "text-primary underline-offset-4 hover:underline",
+					"bg-secondary text-white outline-secondary hover:bg-secondary-700 disabled:bg-secondary-200 dark:text-secondary-900 dark:hover:bg-secondary-800 dark:disabled:text-wg-white-500",
+
+				tertiary: "bg-surface hover:bg-surface-100",
+
+				outline:
+					"dark:shadow:none border border-surface-200 shadow-wg-xs [--wg-border-width:1px] hover:bg-surface disabled:border-surface-50 dark:border-surface-100",
+
+				transparent: "bg-transparent hover:bg-surface",
+				link: "p-0 underline underline-offset-3 focus-visible:text-primary",
+			},
+			shape: {
+				rounded: "rounded-lg",
+				pill: "rounded-full",
 			},
 			size: {
-				sm: "h-8 rounded-md px-3 text-xs",
-				md: "h-9 px-4 py-2",
-				lg: "h-10 rounded-md px-8",
-				icon: "size-9",
+				"xs-icon": "gap-0 px-8px py-1",
+				sm: "gap-0 px-8px py-1",
+				md: "gap-1 px-12px py-2",
+			},
+			destructive: {
+				true: [],
+				false: [],
 			},
 		},
+		compoundVariants: [
+			{
+				variant: "outline",
+				size: "md",
+				class: "py-8px",
+			},
+			{
+				variant: "outline",
+				size: "sm",
+				class: "py-4px",
+			},
+			{
+				variant: ["primary", "secondary"],
+				destructive: true,
+				class:
+					"bg-destructive text-white outline-destructive hover:bg-destructive-600 disabled:bg-destructive disabled:opacity-50 dark:text-white dark:hover:bg-destructive-600 dark:disabled:text-white",
+			},
+			{
+				variant: "tertiary",
+				destructive: true,
+				class:
+					"bg-destructive-50 hover:bg-destructive-100 disabled:bg-destructive-50 dark:bg-surface dark:hover:bg-surface-200",
+			},
+			{
+				variant: "transparent",
+				destructive: true,
+				class: "hover:bg-destructive-50 dark:hover:bg-surface",
+			},
+			{
+				variant: "outline",
+				destructive: true,
+				class:
+					"border-destructive hover:bg-destructive-50 disabled:border-destructive-100 dark:border-destructive dark:hover:bg-surface dark:disabled:border-destructive-900",
+			},
+			{
+				variant: "link",
+				destructive: true,
+				class:
+					"hover:text-destructive-800 focus-visible:text-destructive-800 dark:hover:text-destructive-400 dark:focus-visible:text-destructive-400",
+			},
+
+			{
+				variant: ["outline", "tertiary", "transparent", "link"],
+				class: "text-surface-900 outline-primary disabled:text-surface-300",
+			},
+			{
+				variant: ["outline", "tertiary", "transparent", "link"],
+				destructive: true,
+				class:
+					"text-destructive-700 outline-destructive disabled:text-destructive-300 dark:text-destructive-500 dark:disabled:text-destructive/50",
+			},
+		],
 		defaultVariants: {
-			variant: "primary",
+			shape: "rounded",
 			size: "md",
+			variant: "primary",
 		},
 	},
 );
@@ -42,11 +105,24 @@ interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, ...props }, ref) => {
+	(
+		{
+			className,
+			variant,
+			destructive = false,
+			shape,
+			size,
+			asChild = false,
+			...props
+		},
+		ref,
+	) => {
 		const Comp = asChild ? Slot : "button";
 		return (
 			<Comp
-				className={cn(buttonVariants({ variant, size, className }))}
+				className={cn(
+					buttonVariants({ variant, size, className, shape, destructive }),
+				)}
 				ref={ref}
 				{...props}
 			/>

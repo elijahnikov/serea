@@ -8,8 +8,6 @@ import {
 	PostList,
 } from "./_components/posts";
 
-export const runtime = "edge";
-
 export default function HomePage() {
 	// You can await this here if you don't want to show Suspense fallback below
 	void api.post.all.prefetch();
@@ -23,7 +21,7 @@ export default function HomePage() {
 					</h1>
 					<AuthShowcase />
 
-					<CreatePostForm />
+					{/* <CreatePostForm />
 					<div className="w-full max-w-2xl overflow-y-scroll">
 						<Suspense
 							fallback={
@@ -36,7 +34,7 @@ export default function HomePage() {
 						>
 							<PostList />
 						</Suspense>
-					</div>
+					</div> */}
 				</div>
 			</main>
 		</HydrateClient>

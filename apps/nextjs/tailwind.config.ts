@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
+import { wedgesTW } from "@lemonsqueezy/wedges";
 
 import baseConfig from "@serea/tailwind-config/web";
 
@@ -16,4 +17,5 @@ export default {
 			},
 		},
 	},
+	plugins: [wedgesTW()],
 } satisfies Config;
