@@ -1,24 +1,24 @@
 {
-  "name": "@acme/auth-proxy",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build": "nitro build",
-    "clean": "git clean -xdf .cache .nitro .output .turbo .vercel node_modules",
-    "lint": "biome lint ./routes",
-    "format": "biome format ./routes",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@auth/core": "0.34.2"
-  },
-  "devDependencies": {
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "@biomejs/biome": "1.9.3",
-    "@types/node": "^20.14.15",
-    "h3": "^1.12.0",
-    "nitropack": "^2.9.7",
-    "typescript": "catalog:"
-  }
+	"name": "@serea/auth-proxy",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nitro build",
+		"clean": "git clean -xdf .cache .nitro .output .turbo .vercel node_modules",
+		"lint": "biome lint ./routes",
+		"format": "biome format ./routes",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@auth/core": "0.34.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.3",
+		"@serea/tailwind-config": "workspace:*",
+		"@serea/tsconfig": "workspace:*",
+		"@types/node": "^20.14.15",
+		"h3": "^1.12.0",
+		"nitropack": "^2.9.7",
+		"typescript": "catalog:"
+	}
 }

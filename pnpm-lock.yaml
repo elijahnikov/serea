@@ -64,10 +64,10 @@ importers:
         specifier: 0.34.2
         version: 0.34.2
     devDependencies:
-      '@acme/tailwind-config':
+      '@serea/tailwind-config':
         specifier: workspace:*
         version: link:../../tooling/tailwind
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -167,13 +167,13 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
     devDependencies:
-      '@acme/api':
+      '@serea/api':
         specifier: workspace:*
         version: link:../../packages/api
-      '@acme/tailwind-config':
+      '@serea/tailwind-config':
         specifier: workspace:*
         version: link:../../tooling/tailwind
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@babel/core':
@@ -203,19 +203,19 @@ importers:
 
   apps/nextjs:
     dependencies:
-      '@acme/api':
+      '@serea/api':
         specifier: workspace:*
         version: link:../../packages/api
-      '@acme/auth':
+      '@serea/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@acme/db':
+      '@serea/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@acme/ui':
+      '@serea/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@acme/validators':
+      '@serea/validators':
         specifier: workspace:*
         version: link:../../packages/validators
       '@t3-oss/env-nextjs':
@@ -252,10 +252,10 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
-      '@acme/tailwind-config':
+      '@serea/tailwind-config':
         specifier: workspace:*
         version: link:../../tooling/tailwind
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -285,13 +285,13 @@ importers:
 
   packages/api:
     dependencies:
-      '@acme/auth':
+      '@serea/auth':
         specifier: workspace:*
         version: link:../auth
-      '@acme/db':
+      '@serea/db':
         specifier: workspace:*
         version: link:../db
-      '@acme/validators':
+      '@serea/validators':
         specifier: workspace:*
         version: link:../validators
       '@trpc/server':
@@ -304,7 +304,7 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -316,7 +316,7 @@ importers:
 
   packages/auth:
     dependencies:
-      '@acme/db':
+      '@serea/db':
         specifier: workspace:*
         version: link:../db
       '@auth/core':
@@ -344,7 +344,7 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -369,7 +369,7 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -418,7 +418,7 @@ importers:
         specifier: ^2.5.2
         version: 2.5.2
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -443,7 +443,7 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@biomejs/biome':
@@ -467,7 +467,7 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.10(ts-node@10.9.2(@types/node@22.3.0)(typescript@5.5.4)))
     devDependencies:
-      '@acme/tsconfig':
+      '@serea/tsconfig':
         specifier: workspace:*
         version: link:../typescript
       '@biomejs/biome':
