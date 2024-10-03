@@ -28,8 +28,9 @@ export const postRouter = {
 			});
 		}),
 
-	create: protectedProcedure
+	create: publicProcedure
 		.input(CreatePostSchema)
+		.meta({ name: "create-post" })
 		.mutation(({ ctx, input }) => {
 			return ctx.db.insert(Post).values(input);
 		}),

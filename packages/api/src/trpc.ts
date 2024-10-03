@@ -9,10 +9,16 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
+import { Ratelimit } from "@upstash/ratelimit";
 import type { Session } from "@serea/auth";
 import { auth, validateToken } from "@serea/auth";
 import { db } from "@serea/db/client";
+import { Redis } from "@upstash/redis";
+
+const ratelimit = new Ratelimit({
+	limiter: Ratelimit.fixedWindow(10, "10s"),
+	redis: Redis.fromEnv(),
+});
 
 /**
  * Isomorphic Session getter for API requests
@@ -48,6 +54,7 @@ export const createTRPCContext = async (opts: {
 	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return {
+		headers: opts.headers,
 		session,
 		db,
 		token: authToken,
@@ -113,6 +120,44 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 	return result;
 });
 
+const loggingMiddleware = t.middleware(async ({ next, input, meta }) => {
+	const result = await next({ ctx: undefined });
+
+	if (t._config.isDev) {
+		console.log("[TRPC] Input ->", input);
+		"data" in result && console.log("[TRPC] Result ->", result.data);
+		console.log("[TRPC] Metadata ->", meta);
+
+		return result;
+	}
+
+	return result;
+});
+
+const rateLimitMiddleware = t.middleware(async ({ next, ctx, meta }) => {
+	const ip = ctx.headers.get("x-forwarded-for");
+	if (!meta || !("name" in meta)) {
+		return next();
+	}
+	const { success, remaining } = await ratelimit.limit(`${ip}-${meta.name}`);
+
+	if (!success) {
+		throw new TRPCError({
+			code: "TOO_MANY_REQUESTS",
+			message:
+				"You are doing that too often, please wait a bit before trying again.",
+		});
+	}
+
+	return next({
+		ctx: {
+			ratelimit: {
+				remaining,
+			},
+		},
+	});
+});
+
 /**
  * Public (unauthed) procedure
  *
@@ -120,7 +165,10 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * tRPC API. It does not guarantee that a user querying is authorized, but you
  * can still access user session data if they are logged in
  */
-export const publicProcedure = t.procedure.use(timingMiddleware);
+export const publicProcedure = t.procedure
+	.use(loggingMiddleware)
+	.use(rateLimitMiddleware)
+	.use(timingMiddleware);
 
 /**
  * Protected (authenticated) procedure
@@ -131,6 +179,8 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure
+	.use(loggingMiddleware)
+	.use(rateLimitMiddleware)
 	.use(timingMiddleware)
 	.use(({ ctx, next }) => {
 		if (!ctx.session?.user) {

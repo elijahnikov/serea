@@ -3,9 +3,10 @@ import { vercel } from "@t3-oss/env-nextjs/presets";
 import { z } from "zod";
 
 import { env as authEnv } from "@serea/auth/env";
+import { env as apiEnv } from "@serea/api/env";
 
 export const env = createEnv({
-	extends: [authEnv, vercel()],
+	extends: [authEnv, apiEnv, vercel()],
 	shared: {
 		NODE_ENV: z
 			.enum(["development", "production", "test"])

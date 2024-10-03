@@ -2,11 +2,7 @@ import { Suspense } from "react";
 
 import { api, HydrateClient } from "~/trpc/server";
 import { AuthShowcase } from "./_components/auth-showcase";
-import {
-	CreatePostForm,
-	PostCardSkeleton,
-	PostList,
-} from "./_components/posts";
+import { CreatePostForm } from "./_components/posts";
 
 export default function HomePage() {
 	// You can await this here if you don't want to show Suspense fallback below
@@ -20,7 +16,7 @@ export default function HomePage() {
 						Create <span className="text-primary">T3</span> Turbo
 					</h1>
 					<AuthShowcase />
-
+					<CreatePostForm />
 					{/* <CreatePostForm />
 					<div className="w-full max-w-2xl overflow-y-scroll">
 						<Suspense
