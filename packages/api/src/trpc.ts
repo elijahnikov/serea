@@ -124,9 +124,14 @@ const loggingMiddleware = t.middleware(async ({ next, input, meta }) => {
 	const result = await next({ ctx: undefined });
 
 	if (t._config.isDev) {
-		console.log("[TRPC] Input ->", input);
-		"data" in result && console.log("[TRPC] Result ->", result.data);
-		console.log("[TRPC] Metadata ->", meta);
+		console.log(`[TRPC] Input -> ${JSON.stringify(input)}`);
+		console.log(
+			`[TRPC] Result ->" ${
+				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				JSON.stringify((result as any).data)
+			}`,
+		);
+		console.log(`[TRPC] Metadata -> ${JSON.stringify(meta)}`);
 
 		return result;
 	}

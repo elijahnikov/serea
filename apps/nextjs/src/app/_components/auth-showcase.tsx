@@ -25,10 +25,14 @@ import {
 	EyeOff,
 	Mail,
 	Pin,
+	Plus,
 	Redo,
 } from "lucide-react";
-import Label from "@serea/ui/label";
+
 import Input from "@serea/ui/input";
+import Avatar from "@serea/ui/avatar";
+import AvatarGroup from "@serea/ui/avatar-group";
+import Badge from "@serea/ui/badge";
 
 export async function AuthShowcase() {
 	const session = await auth();
@@ -36,6 +40,9 @@ export async function AuthShowcase() {
 	if (!session) {
 		return (
 			<form className="flex items-center">
+				<Badge stroke color="yellow" before={<Plus />}>
+					Label
+				</Badge>
 				<div className="m-auto max-w-sm text-left">
 					<Input
 						required
@@ -136,6 +143,30 @@ export async function AuthShowcase() {
 			<p className="text-center text-2xl">
 				<span>Logged in as {session.user.name}</span>
 			</p>
+			{session.user.image && (
+				<Avatar
+					className="rounded-full"
+					src={session.user.image}
+					alt={`User avatar for ${session.user.name}`}
+				/>
+			)}
+			<AvatarGroup
+				items={[
+					{
+						src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=250&h=250&auto=format&fit=crop",
+						alt: "Avatar 1",
+					},
+					{
+						src: "https://images.unsplash.com/photo-1579613832107-64359da23b0c?w=250&h=250&auto=format&fit=crop",
+						alt: "Avatar 2",
+					},
+					{
+						src: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=250&h=250&auto=format&fit=crop",
+						alt: "Avatar 2",
+					},
+				]}
+				size="lg"
+			/>
 
 			<form>
 				<Button
