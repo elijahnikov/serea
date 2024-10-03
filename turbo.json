@@ -1,61 +1,63 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
-  "ui": "tui",
-  "tasks": {
-    "topo": {
-      "dependsOn": ["^topo"]
-    },
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".cache/tsbuildinfo.json", "dist/**"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": false
-    },
-    "lint": {
-      "dependsOn": ["^topo"]
-    },
-    "format": {
-      "dependsOn": ["^topo"]
-    },
-    "typecheck": {
-      "dependsOn": ["^topo", "^build"],
-      "outputs": [".cache/tsbuildinfo.json"]
-    },
-    "clean": {
-      "cache": false
-    },
-    "//#clean": {
-      "cache": false
-    },
-    "push": {
-      "cache": false,
-      "interactive": true
-    },
-    "studio": {
-      "cache": false,
-      "persistent": true
-    },
-    "ui-add": {
-      "cache": false,
-      "interactive": true
-    }
-  },
-  "globalEnv": [
-    "POSTGRES_URL",
-    "AUTH_DISCORD_ID",
-    "AUTH_DISCORD_SECRET",
-    "AUTH_REDIRECT_PROXY_URL",
-    "AUTH_SECRET",
-    "PORT"
-  ],
-  "globalPassThroughEnv": [
-    "NODE_ENV",
-    "CI",
-    "VERCEL",
-    "VERCEL_ENV",
-    "VERCEL_URL",
-    "npm_lifecycle_event"
-  ]
+	"$schema": "https://turborepo.org/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"topo": {
+			"dependsOn": ["^topo"]
+		},
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": [".cache/tsbuildinfo.json", "dist/**"]
+		},
+		"dev": {
+			"cache": false,
+			"persistent": false
+		},
+		"lint": {
+			"dependsOn": ["^topo"]
+		},
+		"format": {
+			"dependsOn": ["^topo"]
+		},
+		"typecheck": {
+			"dependsOn": ["^topo", "^build"],
+			"outputs": [".cache/tsbuildinfo.json"]
+		},
+		"clean": {
+			"cache": false
+		},
+		"//#clean": {
+			"cache": false
+		},
+		"push": {
+			"cache": false,
+			"interactive": true
+		},
+		"studio": {
+			"cache": false,
+			"persistent": true
+		},
+		"ui-add": {
+			"cache": false,
+			"interactive": true
+		}
+	},
+	"globalEnv": [
+		"POSTGRES_URL",
+		"AUTH_DISCORD_ID",
+		"AUTH_DISCORD_SECRET",
+		"AUTH_REDIRECT_PROXY_URL",
+		"AUTH_SECRET",
+		"UPSTASH_REDIS_REST_URL",
+		"UPSTASH_REDIS_REST_TOKEN",
+		"PORT"
+	],
+	"globalPassThroughEnv": [
+		"NODE_ENV",
+		"CI",
+		"VERCEL",
+		"VERCEL_ENV",
+		"VERCEL_URL",
+		"npm_lifecycle_event"
+	]
 }
