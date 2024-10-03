@@ -3,7 +3,7 @@ import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 
-import { cn } from "@serea/ui";
+import { cn, isElementWithChildren, isReactElement } from "@serea/ui";
 
 const buttonVariants = cva(
 	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
@@ -98,34 +98,149 @@ const buttonVariants = cva(
 	},
 );
 
+const iconVariants = cva("text-current", {
+	variants: {
+		variant: {
+			primary: "",
+			secondary: "",
+			tertiary: "",
+			outline: "",
+			transparent: "",
+			link: "",
+		},
+		destructive: {
+			true: "text-current",
+		},
+		size: {
+			"xs-icon": "size-5",
+			sm: "size-5",
+			md: "size-6",
+		},
+	},
+	compoundVariants: [
+		{
+			variant: ["tertiary", "outline", "transparent", "link"],
+			class: "opacity-50",
+		},
+	],
+	defaultVariants: {
+		variant: "primary",
+		size: "md",
+	},
+});
+
 interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
+	isIconOnly?: boolean;
+	before?: React.ReactElement<HTMLElement>;
+	after?: React.ReactElement<HTMLElement>;
 }
+
+const iconOnlyPadding = {
+	md: "p-8px",
+	sm: "p-6px",
+	"xs-icon": "p-2px",
+};
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{
 			className,
-			variant,
+			variant = "primary",
 			destructive = false,
 			shape,
 			size,
 			asChild = false,
+			after,
+			before,
+			isIconOnly = false,
+			children,
 			...props
 		},
 		ref,
 	) => {
-		const Comp = asChild ? Slot : "button";
+		const useAsChild = asChild && isReactElement(children);
+		const Component = useAsChild ? Slot : "button";
+
+		const isIcon = React.useMemo(() => {
+			return (
+				(before && !after && !children && size) ??
+				(after && !before && !children && size) ??
+				isIconOnly === true ??
+				false
+			);
+		}, [before, after, children, size, isIconOnly]);
+
+		const isVariantLinkOutlineTertiaryTransparent = React.useMemo(
+			() =>
+				["link", "outline", "tertiary", "transparent"].includes(
+					variant as string,
+				),
+			[variant],
+		);
+
+		const renderIcon = (icon: React.ReactElement<HTMLElement>) => {
+			const Component = React.isValidElement(icon) ? Slot : "span";
+
+			const isNonDestructiveIconOnly =
+				variant &&
+				isVariantLinkOutlineTertiaryTransparent &&
+				isIcon &&
+				!destructive;
+
+			const iconClasses = cn(
+				iconVariants({ size, variant, destructive }),
+				isNonDestructiveIconOnly && "group-hover:opacity-70",
+				destructive && "opacity-100",
+				icon.props?.className,
+			);
+
+			return <Component className={iconClasses}>{icon}</Component>;
+		};
+
+		const innerContent = useAsChild ? (
+			React.cloneElement(children, {
+				children: (
+					<>
+						{before ? renderIcon(before) : null}
+						{isElementWithChildren(children) &&
+							isIconOnly &&
+							renderIcon(
+								children.props.children as React.ReactElement<HTMLElement>,
+							)}
+						{isElementWithChildren(children) &&
+							!isIconOnly &&
+							children.props.children}
+						{after ? renderIcon(after) : null}
+					</>
+				),
+			})
+		) : (
+			<>
+				{before ? renderIcon(before) : null}
+				{React.isValidElement(children) &&
+					isIconOnly &&
+					renderIcon(children as React.ReactElement<HTMLElement>)}
+				{children && !isIconOnly && <span className="px-1">{children}</span>}
+				{after ? renderIcon(after) : null}
+			</>
+		);
+
 		return (
-			<Comp
+			<Component
 				className={cn(
-					buttonVariants({ variant, size, className, shape, destructive }),
+					buttonVariants({ size, variant, shape, destructive }),
+					variant === "link" && children && "focus-visible:outline-0",
+					isIcon && iconOnlyPadding[size as keyof typeof iconOnlyPadding],
+					className,
 				)}
 				ref={ref}
 				{...props}
-			/>
+			>
+				{innerContent}
+			</Component>
 		);
 	},
 );

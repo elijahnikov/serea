@@ -3,6 +3,7 @@ import {
 	Dialog,
 	DialogContent,
 	DialogDescription,
+	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -17,7 +18,15 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenu,
 } from "@serea/ui/dropdown-menu";
-import { Download, EyeOff, Mail, Pin, Redo } from "lucide-react";
+import {
+	BookOpen,
+	Download,
+	Expand,
+	EyeOff,
+	Mail,
+	Pin,
+	Redo,
+} from "lucide-react";
 import Label from "@serea/ui/label";
 import Input from "@serea/ui/input";
 
@@ -26,7 +35,7 @@ export async function AuthShowcase() {
 
 	if (!session) {
 		return (
-			<form>
+			<form className="flex items-center">
 				<div className="m-auto max-w-sm text-left">
 					<Input
 						required
@@ -37,7 +46,9 @@ export async function AuthShowcase() {
 				</div>
 				<Dialog>
 					<DialogTrigger asChild>
-						<Button variant={"primary"}>Open</Button>
+						<Button before={<Expand className="h-4 w-4" />} variant={"primary"}>
+							Open
+						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
@@ -47,11 +58,20 @@ export async function AuthShowcase() {
 								account and remove your data from our servers.
 							</DialogDescription>
 						</DialogHeader>
+						<DialogFooter>
+							<Button variant={"secondary"}>Cancel</Button>
+							<Button variant={"outline"}>Save</Button>
+						</DialogFooter>
 					</DialogContent>
 				</Dialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant={"outline"}>Open Menu</Button>
+						<Button
+							variant={"outline"}
+							before={<BookOpen className="h-4 w-4" />}
+						>
+							Open Menu
+						</Button>
 					</DropdownMenuTrigger>
 
 					<DropdownMenuContent>
