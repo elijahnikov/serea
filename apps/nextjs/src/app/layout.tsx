@@ -1,13 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import { cn } from "@serea/ui";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { Inter } from "next/font/google";
 
 import "~/app/globals.css";
 
 import { env } from "~/env";
+
+export const fontSans = Inter({
+	subsets: ["latin"],
+	variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
 	metadataBase: new URL(
@@ -43,7 +48,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 			<body
 				className={cn(
 					"min-h-screen bg-background font-sans text-foreground antialiased",
-					GeistSans.variable,
+					fontSans.variable,
 					GeistMono.variable,
 				)}
 			>

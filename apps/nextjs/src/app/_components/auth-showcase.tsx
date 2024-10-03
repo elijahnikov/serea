@@ -1,22 +1,54 @@
-import { DropdownMenu } from "@lemonsqueezy/wedges";
 import { auth, signIn, signOut } from "@serea/auth";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@serea/ui/dialog";
 import { Button } from "@serea/ui/button";
 import {
 	DropdownMenuTrigger,
 	DropdownMenuContent,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuItem,
 	DropdownMenuGroup,
 	DropdownMenuShortcut,
+	DropdownMenu,
 } from "@serea/ui/dropdown-menu";
 import { Download, EyeOff, Mail, Pin, Redo } from "lucide-react";
+import Label from "@serea/ui/label";
+import Input from "@serea/ui/input";
+
 export async function AuthShowcase() {
 	const session = await auth();
 
 	if (!session) {
 		return (
 			<form>
+				<div className="m-auto max-w-sm text-left">
+					<Input
+						required
+						label="Watchlist title"
+						placeholder="Placeholder"
+						helperText="Helper text"
+					/>
+				</div>
+				<Dialog>
+					<DialogTrigger asChild>
+						<Button variant={"primary"}>Open</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Are you absolutely sure?</DialogTitle>
+							<DialogDescription>
+								This action cannot be undone. This will permanently delete your
+								account and remove your data from our servers.
+							</DialogDescription>
+						</DialogHeader>
+					</DialogContent>
+				</Dialog>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant={"outline"}>Open Menu</Button>

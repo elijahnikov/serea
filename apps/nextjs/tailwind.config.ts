@@ -1,9 +1,14 @@
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-import { wedgesTW } from "@lemonsqueezy/wedges";
+import {
+	wedgesPalette,
+	wedgesTW,
+	type ThemableColorScale,
+} from "@lemonsqueezy/wedges";
 
 import baseConfig from "@serea/tailwind-config/web";
 
+const primaryBlack: ThemableColorScale = { ...wedgesPalette.black };
 export default {
 	// We need to append the path to the UI package to the content array so that
 	// those classes are included correctly.
@@ -12,10 +17,23 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+				sans: ["var(--font-sans)", ...fontFamily.sans],
 				mono: ["var(--font-geist-mono)", ...fontFamily.mono],
 			},
 		},
 	},
-	plugins: [wedgesTW()],
+	plugins: [
+		wedgesTW({
+			themes: {
+				light: {
+					colors: {
+						primary: {
+							...wedgesPalette.gray,
+							DEFAULT: "#000000",
+						},
+					},
+				},
+			},
+		}),
+	],
 } satisfies Config;
