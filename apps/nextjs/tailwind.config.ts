@@ -17,6 +17,9 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
+				lora: ["Lora", ...fontFamily.sans],
+				heading: ["EB Garamond", ...fontFamily.sans],
+				rounded: ["Varela Round", ...fontFamily.sans],
 				sans: ["var(--font-sans)", ...fontFamily.sans],
 				mono: ["var(--font-geist-mono)", ...fontFamily.mono],
 			},

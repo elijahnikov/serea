@@ -15,6 +15,7 @@
 	},
 	"dependencies": {
 		"@lemonsqueezy/wedges": "^1.4.0",
+		"@radix-ui/react-icons": "^1.3.0",
 		"@serea/api": "workspace:*",
 		"@serea/auth": "workspace:*",
 		"@serea/db": "workspace:*",
@@ -30,6 +31,7 @@
 		"next": "^14.2.5",
 		"react": "catalog:react18",
 		"react-dom": "catalog:react18",
+		"sonner": "^1.5.0",
 		"superjson": "2.2.1",
 		"zod": "catalog:"
 	},

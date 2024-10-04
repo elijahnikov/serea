@@ -8,6 +8,7 @@ import { Inter } from "next/font/google";
 import "~/app/globals.css";
 
 import { env } from "~/env";
+import { Toaster } from "@serea/ui/sonner";
 
 export const fontSans = Inter({
 	subsets: ["latin"],
@@ -52,7 +53,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 					GeistMono.variable,
 				)}
 			>
-				<TRPCReactProvider>{props.children}</TRPCReactProvider>
+				<TRPCReactProvider>
+					{props.children}
+					<Toaster />
+				</TRPCReactProvider>
 			</body>
 		</html>
 	);

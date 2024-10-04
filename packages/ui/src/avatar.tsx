@@ -342,4 +342,11 @@ const Avatar = Object.assign(AvatarWedges, {
 	Status: AvatarStatus,
 });
 
-export default Avatar;
+export {
+	AvatarWedges,
+	AvatarFallback,
+	AvatarImage,
+	AvatarNotification,
+	AvatarRoot,
+	AvatarStatus,
+};

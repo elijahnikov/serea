@@ -2,7 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "cva";
 import { cn, isReactElement } from ".";
 import type { AvatarElement, AvatarProps } from "@serea/ui/avatar";
-import Avatar from "@serea/ui/avatar";
+import { AvatarWedges as Avatar } from "@serea/ui/avatar";
 
 /* -------------------------------- Variants -------------------------------- */
 const defaultAvatarGroupClasses =
