@@ -6,6 +6,9 @@ import type {
 import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
+import Google from "next-auth/providers/google";
+import Apple from "next-auth/providers/apple";
+import Twitter from "next-auth/providers/twitter";
 
 import { db } from "@serea/db/client";
 import { Account, Session, User } from "@serea/db/schema";
@@ -38,7 +41,7 @@ export const authConfig = {
 			}
 		: {}),
 	secret: env.AUTH_SECRET,
-	providers: [Discord],
+	providers: [Discord, Google, Twitter, Apple],
 	callbacks: {
 		session: (opts) => {
 			if (!("user" in opts))

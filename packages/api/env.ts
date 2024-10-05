@@ -6,6 +6,7 @@ export const env = createEnv({
 		UPSTASH_REDIS_REST_URL: z.string(),
 		UPSTASH_REDIS_REST_TOKEN: z.string(),
 		NODE_ENV: z.enum(["development", "production"]).optional(),
+		TMDB_ACCESS_TOKEN: z.string(),
 	},
 	client: {},
 	experimental__runtimeEnv: {

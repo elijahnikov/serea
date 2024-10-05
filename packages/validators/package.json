@@ -19,6 +19,7 @@
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
+		"radash": "^12.1.0",
 		"zod": "catalog:"
 	},
 	"devDependencies": {

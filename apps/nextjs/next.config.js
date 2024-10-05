@@ -16,7 +16,9 @@ const config = {
 		"@serea/ui",
 		"@serea/validators",
 	],
-
+	images: {
+		remotePatterns: [{ hostname: "image.tmdb.org" }],
+	},
 	/** We already do linting and typechecking as separate tasks in CI */
 	typescript: { ignoreBuildErrors: true },
 };

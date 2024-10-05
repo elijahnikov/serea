@@ -7,6 +7,9 @@ export enum Paths {
 	TermsOfService = "https://serea.co/tos",
 }
 
+export const TMDB_IMAGE_BASE_URL_SD = "https://image.tmdb.org/t/p/w500";
+export const TMDB_IMAGE_BASE_URL_HD = "https://image.tmdb.org/t/p/original";
+
 export const SocialLoginIcons = {
 	Apple: (
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>

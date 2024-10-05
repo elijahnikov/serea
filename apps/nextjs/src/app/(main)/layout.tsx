@@ -1,9 +1,15 @@
+import { auth } from "@serea/auth";
+import { redirect } from "next/navigation";
 import type React from "react";
-import Navigation from "./navigation";
+import Navigation from "~/components/navigation/navigation";
 
-export default function GlobalLayout({
+export default async function MainLayout({
 	children,
 }: { children: React.ReactNode }) {
+	const session = await auth();
+	if (!session) {
+		redirect("/login");
+	}
 	return (
 		<div className="mx-auto min-h-[calc(100vh-180px)]">
 			<div className="flex flex-col md:flex-row">

@@ -1,7 +1,7 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
-import { appRouter, createTRPCContext } from "@serea/api";
 import { auth } from "@serea/auth";
+import { appRouter, createTRPCContext } from "@serea/api";
 
 export const runtime = "edge";
 
