@@ -24,11 +24,6 @@ const socials = [
 		icon: SocialLoginIcons.X,
 		label: "X",
 	},
-	{
-		id: "apple",
-		icon: SocialLoginIcons.Apple,
-		label: "Apple",
-	},
 ];
 
 export default function SocialButtons() {

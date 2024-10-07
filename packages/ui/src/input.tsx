@@ -5,11 +5,15 @@ import { cn } from ".";
 
 /* ---------------------------------- Types --------------------------------- */
 export type InputElement = HTMLInputElement;
-export type InputProps = React.InputHTMLAttributes<HTMLInputElement> &
-	LabelProps &
-	LabelHelperProps & {
-		destructive?: boolean;
-	};
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+	destructive?: boolean;
+	description?: React.ReactNode;
+	label?: React.ReactNode;
+	helperText?: React.ReactNode;
+	required?: boolean;
+	disabled?: boolean;
+	tooltip?: React.ReactNode;
+};
 
 /* -------------------------------- Component ------------------------------- */
 const Input = React.forwardRef<InputElement, InputProps>(

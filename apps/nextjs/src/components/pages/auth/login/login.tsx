@@ -1,7 +1,3 @@
-import Link from "next/link";
-import { Button } from "@serea/ui/button";
-import { Paths, SocialLoginIcons } from "~/lib/constants";
-import { signIn } from "@serea/auth";
 import SocialButtons from "./social-buttons";
 import Footer from "./footer";
 import MovieHeader from "./movie-header";

@@ -1,5 +1,7 @@
 import { relations, sql } from "drizzle-orm";
+import { longtext } from "drizzle-orm/mysql-core";
 import {
+	date,
 	integer,
 	pgTable,
 	primaryKey,
@@ -8,33 +10,14 @@ import {
 	uuid,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 
-export const Post = pgTable("post", {
-	id: uuid("id").notNull().primaryKey().defaultRandom(),
-	title: varchar("name", { length: 256 }).notNull(),
-	content: text("content").notNull(),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updatedAt", {
-		mode: "date",
-		withTimezone: true,
-	}).$onUpdateFn(() => sql`now()`),
-});
-
-export const CreatePostSchema = createInsertSchema(Post, {
-	title: z.string().max(256),
-	content: z.string().max(256),
-}).omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-});
-
+// ------------------------------------------------------------------
+// ------------------------------ AUTH ------------------------------
+// ------------------------------------------------------------------
 export const User = pgTable("user", {
 	id: uuid("id").notNull().primaryKey().defaultRandom(),
 	name: varchar("name", { length: 255 }),
-	email: varchar("email", { length: 255 }).notNull(),
+	email: varchar("email", { length: 255 }),
 	emailVerified: timestamp("emailVerified", {
 		mode: "date",
 		withTimezone: true,
@@ -90,3 +73,35 @@ export const Session = pgTable("session", {
 export const SessionRelations = relations(Session, ({ one }) => ({
 	user: one(User, { fields: [Session.userId], references: [User.id] }),
 }));
+
+export const VerificationTokens = pgTable(
+	"verification_token",
+	{
+		identifier: text("identifier").notNull(),
+		token: text("token").notNull(),
+		expires: timestamp("expires", { mode: "date" }).notNull(),
+	},
+	(verificationToken) => ({
+		compositePk: primaryKey({
+			columns: [verificationToken.identifier, verificationToken.token],
+		}),
+	}),
+);
+
+// ------------------------------------------------------------------
+// ----------------------------- TABLES -----------------------------
+// ------------------------------------------------------------------
+export const Movie = pgTable("movie", {
+	id: uuid("id").notNull().primaryKey().defaultRandom(),
+	contentId: integer("contentId").notNull(),
+	title: varchar("title", { length: 255 }).notNull(),
+	overview: text("overview"),
+	poster: text("poster"),
+	backdrop: text("backdrop"),
+	releaseDate: text("releaseDate"),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	updatedAt: timestamp("updatedAt", {
+		mode: "date",
+		withTimezone: true,
+	}).$onUpdateFn(() => sql`now()`),
+});

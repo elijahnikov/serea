@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Marquee } from "@serea/ui/marquee";
 
 import { api } from "~/trpc/react";
+import type { RouterOutputs } from "@serea/api";
 
 export default function MovieHeader() {
 	const { data, isLoading } = api.tmdb.trendingThisWeek.useQuery();
@@ -15,7 +16,7 @@ export default function MovieHeader() {
 	}
 
 	const splitArray = (
-		arr: NonNullable<typeof data>["results"],
+		arr: RouterOutputs["tmdb"]["trendingThisWeek"]["results"],
 		parts: number,
 	) => {
 		const result = [];

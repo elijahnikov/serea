@@ -7,13 +7,13 @@ import { skipCSRFCheck } from "@auth/core";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
-import Apple from "next-auth/providers/apple";
+
 import Twitter from "next-auth/providers/twitter";
 
 import { db } from "@serea/db/client";
-import { Account, Session, User } from "@serea/db/schema";
 
 import { env } from "../env";
+import { Account, Session, User, VerificationTokens } from "@serea/db/schema";
 
 declare module "next-auth" {
 	interface Session {
@@ -27,6 +27,7 @@ const adapter = DrizzleAdapter(db, {
 	usersTable: User,
 	accountsTable: Account,
 	sessionsTable: Session,
+	verificationTokensTable: VerificationTokens,
 });
 
 export const isSecureContext = env.NODE_ENV !== "development";
@@ -41,7 +42,7 @@ export const authConfig = {
 			}
 		: {}),
 	secret: env.AUTH_SECRET,
-	providers: [Discord, Google, Twitter, Apple],
+	providers: [Discord, Google, Twitter],
 	callbacks: {
 		session: (opts) => {
 			if (!("user" in opts))

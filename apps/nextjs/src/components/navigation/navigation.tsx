@@ -2,7 +2,7 @@ import { auth } from "@serea/auth";
 import { AvatarRoot, AvatarImage, AvatarFallback } from "@serea/ui/avatar";
 import Link from "next/link";
 import UserAvatar from "./user-avatar";
-import { Compass, List, User } from "lucide-react";
+import { Compass, List, Plus, User } from "lucide-react";
 import { Button } from "@serea/ui/button";
 import {
 	TooltipProvider,
@@ -28,6 +28,11 @@ const navigationLinks = [
 		label: "Discover",
 		href: "/discover",
 		icon: <Compass size={18} className="stroke-[2px]" />,
+	},
+	{
+		label: "Create",
+		href: "/create",
+		icon: <Plus size={18} className="stroke-[2px]" />,
 	},
 ];
 
