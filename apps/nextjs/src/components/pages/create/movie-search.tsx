@@ -19,7 +19,7 @@ import {
 
 export default function MovieSearch({
 	callback,
-}: { callback: (movie: MovieTableSchemaType) => void }) {
+}: { callback: (movie: Omit<MovieTableSchemaType, "order">) => void }) {
 	const [searchText, setSearchText] = useState<string>("");
 	const debouncedSearchTerm = useDebounce(searchText, 500);
 
@@ -76,7 +76,7 @@ function MovieResult({
 	handleClick,
 }: {
 	movie: RouterOutputs["tmdb"]["searchMovies"]["results"][number];
-	handleClick: (movie: MovieTableSchemaType) => void;
+	handleClick: (movie: Omit<MovieTableSchemaType, "order">) => void;
 }) {
 	return (
 		<TooltipRoot>

@@ -92,4 +92,5 @@ export const movieTableSchema = z.object({
 	poster: z.string().nullable(),
 	backdrop: z.string().nullable(),
 	releaseDate: z.string(),
+	order: z.number(),
 });
