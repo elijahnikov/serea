@@ -2,10 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import Input from "@serea/ui/input";
 import Textarea from "@serea/ui/textarea";
 import { Button } from "@serea/ui/button";
+import { LoadingButton } from "@serea/ui/loading-button";
 import {
 	Form,
 	FormField,
@@ -16,28 +17,15 @@ import {
 	FormMessage,
 } from "@serea/ui/form";
 import { ChevronLeft } from "lucide-react";
-import { movieTableSchema } from "@serea/validators";
+import { watchlistCreateSchema } from "@serea/validators";
 import MovieList from "./movie-list";
 import Switch from "@serea/ui/switch";
-import ShareAccess from "./share-access";
-
-export const watchlistCreateSchema = z.object({
-	title: z.string().min(2, {
-		message: "Title must be at least 2 characters.",
-	}),
-	description: z.string().optional(),
-	tags: z.string(),
-	entries: movieTableSchema.array(),
-	private: z.boolean().optional(),
-	sharedWith: z.array(
-		z.object({
-			email: z.string().email(),
-			accessLevel: z.enum(["read", "write"]).default("read"),
-		}),
-	),
-});
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CreateForm() {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof watchlistCreateSchema>>({
 		resolver: zodResolver(watchlistCreateSchema),
 		defaultValues: {
@@ -45,14 +33,17 @@ export default function CreateForm() {
 			description: "",
 			entries: [],
 			tags: "",
+			private: false,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof watchlistCreateSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+	const createWatchlist = api.watchlist.create.useMutation({
+		onSuccess: async (id) => {
+			toast.success("Your watchlist has been created! Redirecting...");
+			form.reset();
+			router.push(`/watchlist/${id}`);
+		},
+	});
 
 	return (
 		<div className="w-[1000px] pt-8">
@@ -63,7 +54,11 @@ export default function CreateForm() {
 				Create your personalized movie watchlist and share it with friends.
 			</p>
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)}>
+				<form
+					onSubmit={form.handleSubmit((data) => {
+						createWatchlist.mutate(data);
+					})}
+				>
 					<div className="flex space-x-8">
 						<div className="w-full space-y-6">
 							<FormField
@@ -136,13 +131,23 @@ export default function CreateForm() {
 						<MovieList form={form} />
 					</div>
 					<div className="flex justify-end mt-4 w-full space-x-1">
-						<Button variant={"outline"} type="reset">
+						<Button
+							onClick={() => form.reset()}
+							variant={"outline"}
+							type="reset"
+						>
 							<div className="flex items-center space-x-1">
 								<ChevronLeft size={16} />
 								<p>Back</p>
 							</div>
 						</Button>
-						<Button type="submit">Submit</Button>
+						<LoadingButton
+							spinnerSize="xs"
+							loading={createWatchlist.isPending}
+							type="submit"
+						>
+							Submit
+						</LoadingButton>
 					</div>
 				</form>
 			</Form>

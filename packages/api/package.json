@@ -20,6 +20,7 @@
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
+		"@paralleldrive/cuid2": "^2.2.2",
 		"@serea/auth": "workspace:*",
 		"@serea/db": "workspace:*",
 		"@serea/validators": "workspace:*",

@@ -25,10 +25,10 @@ export const User = pgTable("user", {
 	}),
 	image: varchar("image", { length: 255 }),
 });
-
 export const UserRelations = relations(User, ({ many }) => ({
 	accounts: many(Account),
 	watchlists: many(Watchlist),
+	watchlistEntries: many(WatchlistEntries),
 }));
 
 export const Account = pgTable(
@@ -93,6 +93,8 @@ export const VerificationTokens = pgTable(
 // ------------------------------------------------------------------
 // ----------------------------- TABLES -----------------------------
 // ------------------------------------------------------------------
+
+// ----------------------------- MOVIE ------------------------------
 export const Movie = pgTable("movie", {
 	id: uuid("id").notNull().primaryKey().defaultRandom(),
 	contentId: integer("contentId").notNull().unique(),
@@ -107,11 +109,15 @@ export const Movie = pgTable("movie", {
 		withTimezone: true,
 	}).$onUpdateFn(() => sql`now()`),
 });
+export const MovieRelations = relations(Movie, ({ many }) => ({
+	watchlistEntries: many(WatchlistEntries),
+}));
 
+// -------------------------- WATCHLIST -----------------------------
 export const Watchlist = pgTable(
 	"watchlist",
 	{
-		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		id: varchar("id", { length: 24 }).primaryKey(),
 		userId: varchar("user_id", { length: 255 }).notNull(),
 		title: varchar("title", { length: 255 }).notNull(),
 		description: text("description"),
@@ -128,9 +134,45 @@ export const Watchlist = pgTable(
 		createdAtIdx: index("watchlist_created_at_idx").on(t.createdAt),
 	}),
 );
-export const WatchlistRelations = relations(Watchlist, ({ one }) => ({
+export const WatchlistRelations = relations(Watchlist, ({ one, many }) => ({
 	user: one(User, {
 		fields: [Watchlist.userId],
 		references: [User.id],
 	}),
+	entries: many(WatchlistEntries),
 }));
+
+// ---------------------- WATCHLIST ENTRIES --------------------------
+export const WatchlistEntries = pgTable(
+	"watchlist_entries",
+	{
+		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		watchlistId: varchar("watchlist_id").notNull(),
+		contentId: integer("content_id").notNull(),
+		userId: varchar("user_id").notNull(),
+		createdAt: timestamp("added_at").defaultNow().notNull(),
+	},
+	(t) => ({
+		// compoundKey: primaryKey({ columns: [t.watchlistId, t.contentId] }),
+		watchlistIdx: index("watchlist_entries_watchlist_idx").on(t.watchlistId),
+		movieIdx: index("watchlist_entries_movie_idx").on(t.contentId),
+		userIdx: index("watchlist_entries_user_idx").on(t.userId),
+	}),
+);
+export const WatchlistEntriesRelations = relations(
+	WatchlistEntries,
+	({ one }) => ({
+		watchlist: one(Watchlist, {
+			fields: [WatchlistEntries.watchlistId],
+			references: [Watchlist.id],
+		}),
+		movie: one(Movie, {
+			fields: [WatchlistEntries.contentId],
+			references: [Movie.contentId],
+		}),
+		user: one(User, {
+			fields: [WatchlistEntries.userId],
+			references: [User.id],
+		}),
+	}),
+);

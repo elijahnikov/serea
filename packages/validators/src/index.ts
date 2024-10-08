@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+// --------------------------------------------------------------------
+// ---------------------------- EXTERNAL API --------------------------
+// --------------------------------------------------------------------
+
 // TRENDING MOVIES
 // --------------------------------------------------------------------
 export type TrendingMoviesType = z.infer<typeof trendingMoviesSchema>;
@@ -82,8 +86,12 @@ export const searchShowsSchema = z.object({
 	total_results: z.number(),
 });
 
-// DATABASE: MOVIE TABLE
 // --------------------------------------------------------------------
+// -------------------------- INTERNAL SCHEMAS ------------------------
+// --------------------------------------------------------------------
+
+// MOVIE SCHEMA
+//
 export type MovieTableSchemaType = z.infer<typeof movieTableSchema>;
 export const movieTableSchema = z.object({
 	contentId: z.number(),
@@ -93,4 +101,17 @@ export const movieTableSchema = z.object({
 	backdrop: z.string().nullable(),
 	releaseDate: z.string(),
 	order: z.number(),
+});
+
+// WATCHLIST CREATE SCHEMA
+//
+export type WatchlistCreateSchemaType = z.infer<typeof watchlistCreateSchema>;
+export const watchlistCreateSchema = z.object({
+	title: z.string().min(2, {
+		message: "Title must be at least 2 characters.",
+	}),
+	description: z.string().optional(),
+	tags: z.string(),
+	entries: movieTableSchema.array(),
+	private: z.boolean().optional(),
 });

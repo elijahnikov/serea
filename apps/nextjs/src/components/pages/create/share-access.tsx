@@ -1,6 +1,6 @@
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
-import type { watchlistCreateSchema } from "./create-form";
+
 import Label from "@serea/ui/label";
 import {
 	Dialog,
@@ -10,6 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@serea/ui/dialog";
+import type { watchlistCreateSchema } from "@serea/validators";
 
 export default function ShareAccess({
 	form,

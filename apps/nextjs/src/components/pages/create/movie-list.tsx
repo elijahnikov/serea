@@ -3,9 +3,11 @@ import Label from "@serea/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
 import MovieSearch from "./movie-search";
 import type { UseFormReturn } from "react-hook-form";
-import type { watchlistCreateSchema } from "./create-form";
 import type { z } from "zod";
-import type { MovieTableSchemaType } from "@serea/validators";
+import type {
+	MovieTableSchemaType,
+	watchlistCreateSchema,
+} from "@serea/validators";
 import { useState } from "react";
 import { GripVertical, Plus, X } from "lucide-react";
 import Image from "next/image";
