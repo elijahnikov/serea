@@ -3,6 +3,8 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import { Watchlist, WatchlistEntries } from "@serea/db/schema";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
+import type { GetWatchlistSchemaType } from "./watchlist.input";
+import { redirect } from "next/navigation";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
@@ -29,4 +31,29 @@ export const createWatchlist = async (
 	}
 
 	return watchlist.id;
+};
+
+export const getWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const watchlist = await ctx.db.query.Watchlist.findFirst({
+		where: (table, { eq }) => eq(table.id, input.id),
+		with: {
+			entries: true,
+			user: true,
+		},
+	});
+
+	if (!watchlist) {
+		return redirect("/404");
+	}
+
+	if (watchlist.isPrivate && currentUserId !== watchlist.userId) {
+		return redirect("/404");
+	}
+
+	return watchlist;
 };

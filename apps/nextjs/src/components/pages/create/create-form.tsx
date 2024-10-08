@@ -131,16 +131,6 @@ export default function CreateForm() {
 						<MovieList form={form} />
 					</div>
 					<div className="flex justify-end mt-4 w-full space-x-1">
-						<Button
-							onClick={() => form.reset()}
-							variant={"outline"}
-							type="reset"
-						>
-							<div className="flex items-center space-x-1">
-								<ChevronLeft size={16} />
-								<p>Back</p>
-							</div>
-						</Button>
 						<LoadingButton
 							spinnerSize="xs"
 							loading={createWatchlist.isPending}

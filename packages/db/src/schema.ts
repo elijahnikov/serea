@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
 	boolean,
-	date,
 	index,
 	integer,
 	pgTable,
@@ -118,7 +117,7 @@ export const Watchlist = pgTable(
 	"watchlist",
 	{
 		id: varchar("id", { length: 24 }).primaryKey(),
-		userId: varchar("user_id", { length: 255 }).notNull(),
+		userId: uuid("user_id").notNull(),
 		title: varchar("title", { length: 255 }).notNull(),
 		description: text("description"),
 		isPrivate: boolean("isPrivate").default(false),
