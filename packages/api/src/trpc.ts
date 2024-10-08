@@ -6,7 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
+import { inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { Ratelimit } from "@upstash/ratelimit";
@@ -198,3 +198,8 @@ export const protectedProcedure = t.procedure
 			},
 		});
 	});
+
+export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+export type ProtectedTRPCContext = TRPCContext & {
+	session: NonNullable<TRPCContext["session"]>;
+};

@@ -25,11 +25,14 @@ import {
 	useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { api } from "~/trpc/react";
 
 export default function MovieList({
 	form,
 }: { form: UseFormReturn<z.infer<typeof watchlistCreateSchema>> }) {
 	const [open, setOpen] = useState<boolean>(false);
+
+	const { mutate } = api.movie.add.useMutation();
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -41,6 +44,9 @@ export default function MovieList({
 	const entries = form.watch("entries");
 
 	const addEntry = (newEntry: Omit<MovieTableSchemaType, "order">) => {
+		mutate({
+			...newEntry,
+		});
 		const currentEntries = form.getValues("entries");
 		if (
 			currentEntries.findIndex(
@@ -103,7 +109,12 @@ export default function MovieList({
 							</PopoverTrigger>
 
 							<PopoverContent className="min-w-[400px]">
-								<MovieSearch callback={(movie) => addEntry(movie)} />
+								<MovieSearch
+									callback={(movie) => {
+										addEntry(movie);
+										setOpen(false);
+									}}
+								/>
 							</PopoverContent>
 						</Popover>
 						<div className="space-y-2 pb-4 mt-4 max-h-[600px] overflow-y-auto w-full">

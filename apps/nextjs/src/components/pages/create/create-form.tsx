@@ -132,7 +132,6 @@ export default function CreateForm() {
 									/>
 								)}
 							/>
-							{/* <ShareAccess form={form} /> */}
 						</div>
 						<MovieList form={form} />
 					</div>

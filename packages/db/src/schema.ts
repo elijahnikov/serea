@@ -1,7 +1,8 @@
 import { relations, sql } from "drizzle-orm";
-import { longtext } from "drizzle-orm/mysql-core";
 import {
+	boolean,
 	date,
+	index,
 	integer,
 	pgTable,
 	primaryKey,
@@ -27,6 +28,7 @@ export const User = pgTable("user", {
 
 export const UserRelations = relations(User, ({ many }) => ({
 	accounts: many(Account),
+	watchlists: many(Watchlist),
 }));
 
 export const Account = pgTable(
@@ -93,7 +95,7 @@ export const VerificationTokens = pgTable(
 // ------------------------------------------------------------------
 export const Movie = pgTable("movie", {
 	id: uuid("id").notNull().primaryKey().defaultRandom(),
-	contentId: integer("contentId").notNull(),
+	contentId: integer("contentId").notNull().unique(),
 	title: varchar("title", { length: 255 }).notNull(),
 	overview: text("overview"),
 	poster: text("poster"),
@@ -105,3 +107,30 @@ export const Movie = pgTable("movie", {
 		withTimezone: true,
 	}).$onUpdateFn(() => sql`now()`),
 });
+
+export const Watchlist = pgTable(
+	"watchlist",
+	{
+		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		userId: varchar("user_id", { length: 255 }).notNull(),
+		title: varchar("title", { length: 255 }).notNull(),
+		description: text("description"),
+		isPrivate: boolean("isPrivate").default(false),
+		tags: text("tags"),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updatedAt", {
+			mode: "date",
+			withTimezone: true,
+		}).$onUpdateFn(() => sql`now()`),
+	},
+	(t) => ({
+		userIdx: index("watchlist_user_idx").on(t.userId),
+		createdAtIdx: index("watchlist_created_at_idx").on(t.createdAt),
+	}),
+);
+export const WatchlistRelations = relations(Watchlist, ({ one }) => ({
+	user: one(User, {
+		fields: [Watchlist.userId],
+		references: [User.id],
+	}),
+}));
