@@ -146,6 +146,7 @@ export const WatchlistEntries = pgTable(
 	"watchlist_entries",
 	{
 		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		order: integer("order").notNull(),
 		watchlistId: varchar("watchlist_id").notNull(),
 		contentId: integer("content_id").notNull(),
 		userId: varchar("user_id").notNull(),

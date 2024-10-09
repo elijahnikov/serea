@@ -25,6 +25,7 @@ export const createWatchlist = async (
 		const entriesInsert = input.entries.map((entry) => ({
 			contentId: entry.contentId,
 			userId: currentUserId,
+			order: entry.order,
 			watchlistId: watchlist.id,
 		}));
 		await ctx.db.insert(WatchlistEntries).values(entriesInsert);
@@ -37,23 +38,17 @@ export const getWatchlist = async (
 	ctx: ProtectedTRPCContext,
 	input: GetWatchlistSchemaType,
 ) => {
-	const currentUserId = ctx.session.user.id;
-
 	const watchlist = await ctx.db.query.Watchlist.findFirst({
 		where: (table, { eq }) => eq(table.id, input.id),
 		with: {
-			entries: true,
+			entries: {
+				with: {
+					movie: true,
+				},
+			},
 			user: true,
 		},
 	});
-
-	if (!watchlist) {
-		return redirect("/404");
-	}
-
-	if (watchlist.isPrivate && currentUserId !== watchlist.userId) {
-		return redirect("/404");
-	}
 
 	return watchlist;
 };
