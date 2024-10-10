@@ -2,8 +2,7 @@
 
 import { auth } from "@serea/auth";
 import { redirect } from "next/navigation";
-
-import SingleWatchlist from "~/components/pages/watchlist/single-watchlist";
+import SingleWatchlist from "~/components/pages/watchlist";
 import { api } from "~/trpc/server";
 
 export default async function WatchlistPage({
@@ -11,7 +10,7 @@ export default async function WatchlistPage({
 }: { params: { id: string } }) {
 	const watchlist = await api.watchlist.get({ id: params.id });
 	if (!watchlist) {
-		redirect("/404");
+		return redirect("/404");
 	}
 	const session = await auth();
 	if (watchlist.isPrivate && session?.user.id !== watchlist.userId) {
