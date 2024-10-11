@@ -3,16 +3,7 @@
 import React from "react";
 import Image from "next/image";
 
-import {
-	PinIcon,
-	DownloadIcon,
-	EyeIcon,
-	UsersIcon,
-	UserCheckIcon,
-	TrashIcon,
-	Check,
-	Tv,
-} from "lucide-react";
+import { EyeIcon, UserCheckIcon, TrashIcon } from "lucide-react";
 
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import type { RouterOutputs } from "@serea/api";
@@ -21,19 +12,62 @@ import {
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
 import AvatarGroup from "@serea/ui/avatar-group";
-import { AvatarWedges } from "@serea/ui/avatar";
+import { api } from "~/trpc/react";
 
 export default function MovieDropdown({
 	entry,
 }: {
-	entry: NonNullable<RouterOutputs["watchlist"]["get"]>["entries"][number];
+	entry: NonNullable<RouterOutputs["watchlist"]["getEntries"]>[number];
 }) {
+	const utils = api.useUtils();
+	const deleteEntry = api.watchlist.deleteEntry.useMutation({
+		onMutate: async (variables) => {
+			await utils.watchlist.getEntries.cancel();
+			const previousEntries = utils.watchlist.getEntries.getData({
+				id: variables.watchlistId,
+			});
+			utils.watchlist.getEntries.setData(
+				{ id: variables.watchlistId },
+				(old) => {
+					if (!old) return old;
+
+					const entryIndex = old.findIndex(
+						(entry) => entry.id === variables.entryId,
+					);
+					if (entryIndex === -1) return old;
+
+					const deletedEntry = old[entryIndex];
+					if (!deletedEntry) return old;
+
+					const deletedOrder = deletedEntry.order;
+
+					return old
+						.filter((entry) => entry.id !== variables.entryId)
+						.map((entry) => {
+							if (entry.order > deletedOrder) {
+								return { ...entry, order: entry.order - 1 };
+							}
+							return entry;
+						});
+				},
+			);
+
+			return { previousEntries };
+		},
+		onError: (err, variables, context) => {
+			if (context?.previousEntries) {
+				utils.watchlist.getEntries.setData(
+					{ id: variables.watchlistId },
+					context.previousEntries,
+				);
+			}
+		},
+	});
+
 	return (
 		<div className="relative group">
 			<DropdownMenu>
@@ -80,7 +114,15 @@ export default function MovieDropdown({
 					<DropdownMenuSeparator />
 
 					<DropdownMenuGroup>
-						<DropdownMenuItem destructive>
+						<DropdownMenuItem
+							onClick={() =>
+								deleteEntry.mutate({
+									entryId: entry.id,
+									watchlistId: entry.watchlistId,
+								})
+							}
+							destructive
+						>
 							<TrashIcon size={16} />
 							<span>Delete from list</span>
 						</DropdownMenuItem>

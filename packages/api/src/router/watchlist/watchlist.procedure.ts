@@ -14,4 +14,19 @@ export const watchlistRouter = {
 		.meta({ name: "get-watchlist-by-id" })
 		.input(inputs.getWatchlistSchema)
 		.query(({ ctx, input }) => services.getWatchlist(ctx, input)),
+
+	getEntries: protectedProcedure
+		.meta({ name: "get-watchlist-entries" })
+		.input(inputs.getWatchlistEntriesSchema)
+		.query(({ ctx, input }) => services.getWatchlistEntries(ctx, input)),
+
+	deleteEntry: protectedProcedure
+		.meta({ name: "delete-watchlist-entry" })
+		.input(inputs.deleteWatchlistEntrySchema)
+		.mutation(({ ctx, input }) => services.deleteWatchlistEntry(ctx, input)),
+
+	addEntry: protectedProcedure
+		.meta({ name: "add-watchlist-entry" })
+		.input(inputs.addWatchlistEntrySchema)
+		.mutation(({ ctx, input }) => services.addWatchlistEntry(ctx, input)),
 } satisfies TRPCRouterRecord;

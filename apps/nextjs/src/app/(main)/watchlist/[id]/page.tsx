@@ -2,21 +2,20 @@
 
 import { auth } from "@serea/auth";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import SingleWatchlist from "~/components/pages/watchlist";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function WatchlistPage({
 	params,
 }: { params: { id: string } }) {
-	const watchlist = await api.watchlist.get({ id: params.id });
-	if (!watchlist) {
-		return redirect("/404");
-	}
-	const session = await auth();
-	if (watchlist.isPrivate && session?.user.id !== watchlist.userId) {
-		return redirect("/404");
-	}
-	const isOwner = watchlist.user.id === session?.user.id;
-
-	return <SingleWatchlist isOwner={isOwner} watchlist={watchlist} />;
+	void api.watchlist.get.prefetch({ id: params.id });
+	void api.watchlist.getEntries.prefetch({ id: params.id });
+	return (
+		<HydrateClient>
+			<Suspense fallback={"1"}>
+				<SingleWatchlist id={params.id} />
+			</Suspense>
+		</HydrateClient>
+	);
 }

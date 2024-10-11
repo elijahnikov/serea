@@ -4,24 +4,40 @@ import {
 	TooltipRoot,
 	TooltipTrigger,
 } from "@serea/ui/tooltip";
-import { PlusIcon } from "lucide-react";
+import { Plus, PlusIcon } from "lucide-react";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import MovieDropdown from "./movie-dropdown";
 import type { RouterOutputs } from "@serea/api";
 import Image from "next/image";
+import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
+import { Button } from "@serea/ui/button";
+import MovieSearch from "../create/movie-search";
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
 
 export default function ImageGrid({
 	entries,
 	isOwner = false,
+	watchlistId,
 }: {
-	entries: NonNullable<RouterOutputs["watchlist"]["get"]>["entries"];
+	entries: RouterOutputs["watchlist"]["getEntries"];
 	isOwner?: boolean;
+	watchlistId: string;
 }) {
+	if (!entries || entries.length === 0) {
+		return (
+			<div className="grid grid-cols-5 gap-x-4">
+				<AddEntryButton watchlistId={watchlistId} />
+			</div>
+		);
+	}
+
 	return (
 		<div className="grid grid-cols-5 gap-x-4">
 			<TooltipProvider>
 				{entries
-					.sort((a, b) => a.order - b.order)
+					?.sort((a, b) => a.order - b.order)
 					.map((entry) => (
 						<div key={entry.id}>
 							<TooltipRoot>
@@ -57,10 +73,100 @@ export default function ImageGrid({
 							</TooltipRoot>
 						</div>
 					))}
-				<div className="bg-surface-100 border w-full h-[calc(100%-20px)] rounded-md cursor-pointer flex flex-col justify-center items-center">
-					<PlusIcon className="text-neutral-500" size={20} />
-				</div>
+				<AddEntryButton watchlistId={watchlistId} />
 			</TooltipProvider>
+		</div>
+	);
+}
+
+function AddEntryButton({ watchlistId }: { watchlistId: string }) {
+	const [open, setOpen] = useState(false);
+
+	const utils = api.useUtils();
+
+	const { mutate: addMovie } = api.movie.add.useMutation();
+	const { mutate: addEntry } = api.watchlist.addEntry.useMutation({
+		onMutate: async (newEntry) => {
+			await utils.watchlist.getEntries.cancel();
+			const previousEntries = utils.watchlist.getEntries.getData({
+				id: watchlistId,
+			});
+
+			const contentExists = previousEntries?.some(
+				(entry) =>
+					entry.contentId === newEntry.contentId &&
+					entry.watchlistId === watchlistId,
+			);
+
+			if (contentExists) {
+				return { previousEntries, contentExists };
+			}
+
+			utils.watchlist.getEntries.setData({ id: watchlistId }, (old) => {
+				const currentEntries = old ?? [];
+				return [
+					...currentEntries,
+					{
+						contentId: newEntry.contentId,
+						order: currentEntries.length + 1,
+						id: `temp-id-${Date.now()}`,
+						userId: "optimistic-user-id",
+						createdAt: new Date(),
+						watchlistId: watchlistId,
+						movie: {
+							contentId: newEntry.content.contentId,
+							title: newEntry.content.title,
+							overview: newEntry.content.overview ?? null,
+							poster: newEntry.content.poster,
+							backdrop: newEntry.content.backdrop,
+							releaseDate: newEntry.content.releaseDate,
+							id: `temp-id-${Date.now()}`,
+							createdAt: new Date(),
+							updatedAt: null,
+						},
+					},
+				];
+			});
+			return { previousEntries };
+		},
+		onError: (err, newEntry, context) => {
+			utils.watchlist.getEntries.setData(
+				{ id: watchlistId },
+				context?.previousEntries,
+			);
+			toast.error("Failed to add entry. Please try again.");
+		},
+		onSettled: () => {
+			// Refetch after error or success to ensure we're up to date
+			utils.watchlist.getEntries.invalidate({ id: watchlistId });
+		},
+	});
+
+	return (
+		<div>
+			<Popover open={open} onOpenChange={setOpen}>
+				<PopoverTrigger asChild>
+					<div className="bg-surface-100 border w-full min-h-[150px] h-[calc(100%-20px)] rounded-md cursor-pointer flex flex-col justify-center items-center">
+						<Plus />
+					</div>
+				</PopoverTrigger>
+
+				<PopoverContent className="min-w-[400px]">
+					<MovieSearch
+						callback={async (movie) => {
+							addMovie({
+								...movie,
+							});
+							addEntry({
+								contentId: movie.contentId,
+								watchlistId: watchlistId,
+								content: movie,
+							});
+							setOpen(false);
+						}}
+					/>
+				</PopoverContent>
+			</Popover>
 		</div>
 	);
 }
