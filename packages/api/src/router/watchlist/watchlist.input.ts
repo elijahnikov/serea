@@ -29,3 +29,10 @@ export const addWatchlistEntrySchema = z.object({
 export type AddWatchlistEntrySchemaType = z.infer<
 	typeof addWatchlistEntrySchema
 >;
+
+export const updateEntryOrderSchema = z.object({
+	watchlistId: z.string(),
+	entryId: z.string(),
+	newOrder: z.number(),
+});
+export type UpdateEntryOrderSchemaType = z.infer<typeof updateEntryOrderSchema>;

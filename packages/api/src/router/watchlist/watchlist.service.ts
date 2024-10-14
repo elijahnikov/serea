@@ -8,9 +8,10 @@ import type {
 	DeleteWatchlistEntrySchemaType,
 	GetWatchlistEntriesSchemaType,
 	GetWatchlistSchemaType,
+	UpdateEntryOrderSchemaType,
 } from "./watchlist.input";
 import { redirect } from "next/navigation";
-import { and, eq, gt, sql } from "@serea/db";
+import { and, eq, gt, lt, sql } from "@serea/db";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
@@ -44,6 +45,7 @@ export const getWatchlist = async (
 	ctx: ProtectedTRPCContext,
 	input: GetWatchlistSchemaType,
 ) => {
+	const currentUserId = ctx.session.user.id;
 	const watchlist = await ctx.db.query.Watchlist.findFirst({
 		where: (table, { eq }) => eq(table.id, input.id),
 		with: {
@@ -55,6 +57,8 @@ export const getWatchlist = async (
 			user: true,
 		},
 	});
+
+	const isOwner = !!(watchlist && watchlist.user.id === currentUserId);
 
 	return watchlist;
 };
@@ -156,4 +160,68 @@ export const addWatchlistEntry = async (
 		.returning();
 
 	return newEntry;
+};
+
+export const updateEntryOrder = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateEntryOrderSchemaType,
+) => {
+	const { watchlistId, entryId, newOrder } = input;
+
+	const currentEntry = await ctx.db.query.WatchlistEntries.findFirst({
+		where: and(
+			eq(WatchlistEntries.id, entryId),
+			eq(WatchlistEntries.watchlistId, watchlistId),
+		),
+	});
+
+	if (!currentEntry) {
+		throw new TRPCError({ code: "NOT_FOUND", message: "Entry not found" });
+	}
+
+	const oldOrder = currentEntry.order;
+
+	if (newOrder > oldOrder) {
+		await ctx.db
+			.update(WatchlistEntries)
+			.set({ order: sql`${WatchlistEntries.order} - 1` })
+			.where(
+				and(
+					eq(WatchlistEntries.watchlistId, watchlistId),
+					gt(WatchlistEntries.order, oldOrder),
+					lt(WatchlistEntries.order, newOrder + 1),
+				),
+			);
+	} else if (newOrder < oldOrder) {
+		await ctx.db
+			.update(WatchlistEntries)
+			.set({ order: sql`${WatchlistEntries.order} + 1` })
+			.where(
+				and(
+					eq(WatchlistEntries.watchlistId, watchlistId),
+					lt(WatchlistEntries.order, oldOrder),
+					gt(WatchlistEntries.order, newOrder - 1),
+				),
+			);
+	}
+
+	const [updatedEntry] = await ctx.db
+		.update(WatchlistEntries)
+		.set({ order: newOrder })
+		.where(
+			and(
+				eq(WatchlistEntries.id, entryId),
+				eq(WatchlistEntries.watchlistId, watchlistId),
+			),
+		)
+		.returning();
+
+	if (!updatedEntry) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: "Failed to update entry order",
+		});
+	}
+
+	return updatedEntry;
 };

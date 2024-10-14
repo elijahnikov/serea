@@ -2,10 +2,11 @@
 
 import FooterActions from "./footer-actions";
 import WatchlistTags from "./tags";
-import ImageGrid from "./image-grid";
+
 import WatchlistHeader from "./header";
 import MainText from "./main-text";
 import { api } from "~/trpc/react";
+import ImageGrid from "./image-grid";
 
 export default function SingleWatchlist({ id }: { id: string }) {
 	const [watchlist] = api.watchlist.get.useSuspenseQuery({ id });
