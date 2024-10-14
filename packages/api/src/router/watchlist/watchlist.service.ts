@@ -1,6 +1,6 @@
 import type { WatchlistCreateSchemaType } from "@serea/validators";
 import type { ProtectedTRPCContext } from "../../trpc";
-import { Watchlist, WatchlistEntries } from "@serea/db/schema";
+import { Watchlist, WatchlistEntries, WatchlistMember } from "@serea/db/schema";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
 import type {
@@ -27,6 +27,12 @@ export const createWatchlist = async (
 	if (!watchlist) {
 		throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 	}
+
+	await ctx.db.insert(WatchlistMember).values({
+		watchlistId: watchlist.id,
+		userId: currentUserId,
+		role: "owner",
+	});
 
 	if (input.entries.length > 0) {
 		const entriesInsert = input.entries.map((entry) => ({

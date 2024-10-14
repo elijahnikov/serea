@@ -15,7 +15,7 @@ export default function MainText({
 				{title}
 			</p>
 			<div className="flex items-center my-2 space-x-2">
-				<Badge stroke>
+				<Badge>
 					<div className="flex items-center space-x-1">
 						<Clock size={12} className="text-neutral-500" />
 						<p className="text-xs font-medium text-neutral-500">
@@ -26,7 +26,7 @@ export default function MainText({
 						</p>
 					</div>
 				</Badge>
-				<Badge stroke>
+				<Badge>
 					<div className="flex items-center space-x-1">
 						<RotateCw size={12} className="text-neutral-500" />
 						<p className="text-xs font-medium text-neutral-500">

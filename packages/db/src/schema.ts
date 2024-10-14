@@ -17,7 +17,7 @@ import {
 export const User = pgTable("user", {
 	id: uuid("id").notNull().primaryKey().defaultRandom(),
 	name: varchar("name", { length: 255 }),
-	email: varchar("email", { length: 255 }),
+	email: varchar("email", { length: 255 }).notNull(),
 	emailVerified: timestamp("emailVerified", {
 		mode: "date",
 		withTimezone: true,
@@ -28,6 +28,10 @@ export const UserRelations = relations(User, ({ many }) => ({
 	accounts: many(Account),
 	watchlists: many(Watchlist),
 	watchlistEntries: many(WatchlistEntries),
+	watchlistMemberships: many(WatchlistMember),
+	watchlistInvitationsSent: many(WatchlistInvitation, {
+		relationName: "inviter",
+	}),
 }));
 
 export const Account = pgTable(
@@ -139,6 +143,8 @@ export const WatchlistRelations = relations(Watchlist, ({ one, many }) => ({
 		references: [User.id],
 	}),
 	entries: many(WatchlistEntries),
+	invitations: many(WatchlistInvitation),
+	members: many(WatchlistMember),
 }));
 
 // ---------------------- WATCHLIST ENTRIES --------------------------
@@ -172,6 +178,84 @@ export const WatchlistEntriesRelations = relations(
 		}),
 		user: one(User, {
 			fields: [WatchlistEntries.userId],
+			references: [User.id],
+		}),
+	}),
+);
+// ------------------ WATCHLIST INVITATIONS ----------------------
+export const WatchlistInvitation = pgTable(
+	"watchlist_invitation",
+	{
+		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		watchlistId: varchar("watchlist_id").notNull(),
+		inviterId: uuid("inviter_id").notNull(),
+		inviteeId: uuid("invitee_id").notNull(),
+		role: varchar("role", { length: 20 })
+			.$type<"editor" | "viewer">()
+			.notNull()
+			.default("viewer"),
+		inviteeEmail: varchar("invitee_email", { length: 255 }).notNull(),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at", {
+			mode: "date",
+			withTimezone: true,
+		}).$onUpdateFn(() => sql`now()`),
+	},
+	(t) => ({
+		watchlistIdx: index("watchlist_invitation_watchlist_idx").on(t.watchlistId),
+		inviterIdx: index("watchlist_invitation_inviter_idx").on(t.inviterId),
+		inviteeEmailIdx: index("watchlist_invitation_invitee_email_idx").on(
+			t.inviteeEmail,
+		),
+	}),
+);
+export const WatchlistInvitationRelations = relations(
+	WatchlistInvitation,
+	({ one }) => ({
+		watchlist: one(Watchlist, {
+			fields: [WatchlistInvitation.watchlistId],
+			references: [Watchlist.id],
+		}),
+		inviter: one(User, {
+			fields: [WatchlistInvitation.inviterId],
+			references: [User.id],
+		}),
+	}),
+);
+
+// ---------------------- WATCHLIST MEMBERS --------------------------
+export const WatchlistMember = pgTable(
+	"watchlist_member",
+	{
+		id: uuid("id").notNull().primaryKey().defaultRandom(),
+		watchlistId: varchar("watchlist_id", { length: 24 }).notNull(),
+		userId: uuid("user_id").notNull(),
+		role: varchar("role", { length: 20 })
+			.$type<"owner" | "editor" | "viewer">()
+			.notNull()
+			.default("viewer"),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at", {
+			mode: "date",
+			withTimezone: true,
+		}).$onUpdateFn(() => sql`now()`),
+	},
+	(t) => ({
+		watchlistUserIdx: index("watchlist_member_watchlist_user_idx").on(
+			t.watchlistId,
+			t.userId,
+		),
+	}),
+);
+export const WatchlistMemberRelations = relations(
+	WatchlistMember,
+	({ one }) => ({
+		watchlist: one(Watchlist, {
+			fields: [WatchlistMember.watchlistId],
+			references: [Watchlist.id],
+		}),
+		user: one(User, {
+			fields: [WatchlistMember.userId],
 			references: [User.id],
 		}),
 	}),

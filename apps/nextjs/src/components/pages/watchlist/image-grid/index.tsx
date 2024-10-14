@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import {
 	closestCenter,
 	DndContext,
+	type DragEndEvent,
 	KeyboardSensor,
 	PointerSensor,
 	useSensor,
@@ -190,13 +191,14 @@ export default function ImageGrid({
 		deleteEntry.mutate({ entryId, watchlistId });
 	};
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const handleDragEnd = (event: any) => {
+	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
 
-		if (active.id !== over.id) {
-			const oldIndex = entries.findIndex((entry) => entry.id === active.id);
-			const newIndex = entries.findIndex((entry) => entry.id === over.id);
+		if (active.id !== over?.id) {
+			const oldIndex = localEntries.findIndex(
+				(entry) => entry.id === active.id,
+			);
+			const newIndex = localEntries.findIndex((entry) => entry.id === over?.id);
 
 			const newEntries = arrayMove(localEntries, oldIndex, newIndex).map(
 				(entry, index) => ({
@@ -208,7 +210,7 @@ export default function ImageGrid({
 
 			updateEntryOrder({
 				watchlistId,
-				entryId: active.id,
+				entryId: active.id as string,
 				newOrder: newIndex,
 			});
 		}
