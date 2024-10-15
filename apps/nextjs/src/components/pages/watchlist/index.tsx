@@ -19,7 +19,7 @@ export default function SingleWatchlist({ id }: { id: string }) {
 	return (
 		<div className="flex flex-col items-center justify-center gap-4">
 			<div className="w-[60vw] max-w-[1000px] pt-8">
-				<WatchlistHeader {...watchlist} />
+				<WatchlistHeader user={watchlist.user} watchlistId={watchlist.id} />
 				<div className="flex">
 					<div className="w-full pr-8">
 						<MainText {...watchlist} />

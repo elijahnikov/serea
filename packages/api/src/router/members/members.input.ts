@@ -24,3 +24,13 @@ export const updateRoleSchema = z.object({
 	role: z.enum(["viewer", "editor"]),
 });
 export type UpdateRoleSchemaType = z.infer<typeof updateRoleSchema>;
+
+export const listMembersSchema = z.object({
+	watchlistId: z.string(),
+});
+export type ListMembersSchemaType = z.infer<typeof listMembersSchema>;
+
+export const listInvitesSchema = z.object({
+	watchlistId: z.string(),
+});
+export type ListInvitesSchemaType = z.infer<typeof listMembersSchema>;

@@ -23,4 +23,14 @@ export const membersRouter = {
 		.meta({ name: "update-role" })
 		.input(inputs.updateRoleSchema)
 		.mutation(({ ctx, input }) => services.updateRole(ctx, input)),
+
+	listMembers: protectedProcedure
+		.meta({ name: "list-members-of-watchlist" })
+		.input(inputs.listMembersSchema)
+		.query(({ ctx, input }) => services.listMembers(ctx, input)),
+
+	listInvites: protectedProcedure
+		.meta({ name: "list-invites-of-watchlist" })
+		.input(inputs.listInvitesSchema)
+		.query(({ ctx, input }) => services.listInvites(ctx, input)),
 } satisfies TRPCRouterRecord;

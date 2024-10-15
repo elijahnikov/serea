@@ -7,11 +7,12 @@ import {
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	DeleteInviteSchemaType,
+	ListMembersSchemaType,
 	RespondToInviteSchemaType,
 	UpdateRoleSchemaType,
 	WatchlistInviteSchemaType,
 } from "./members.input";
-import { and, eq } from "@serea/db";
+import { and, desc, eq } from "@serea/db";
 import { TRPCError } from "@trpc/server";
 
 export const inviteToWatchlist = async (
@@ -26,6 +27,42 @@ export const inviteToWatchlist = async (
 
 	if (!userToInvite) {
 		throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+	}
+
+	const isOwnerOfWatchlist = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.userId, currentUserId),
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+			eq(WatchlistMember.role, "owner"),
+		),
+	});
+
+	if (!isOwnerOfWatchlist) {
+		throw new TRPCError({ code: "FORBIDDEN" });
+	}
+
+	const isUserAlreadyInvited = await ctx.db.query.WatchlistInvitation.findFirst(
+		{
+			where: and(
+				eq(WatchlistInvitation.inviteeId, userToInvite.id),
+				eq(WatchlistInvitation.watchlistId, input.watchlistId),
+			),
+		},
+	);
+
+	if (isUserAlreadyInvited) {
+		throw new TRPCError({ code: "FORBIDDEN" });
+	}
+
+	const isUserAlreadyMember = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.userId, userToInvite.id),
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+		),
+	});
+
+	if (isUserAlreadyMember) {
+		throw new TRPCError({ code: "FORBIDDEN" });
 	}
 
 	const [invite] = await ctx.db
@@ -139,4 +176,57 @@ export const updateRole = async (
 		);
 
 	return true;
+};
+
+export const listMembers = async (
+	ctx: ProtectedTRPCContext,
+	input: ListMembersSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const isMemberOfWatchlist = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.userId, currentUserId),
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+		),
+	});
+	if (!isMemberOfWatchlist) {
+		throw new TRPCError({ code: "FORBIDDEN" });
+	}
+
+	const members = await ctx.db.query.WatchlistMember.findMany({
+		where: eq(WatchlistMember.watchlistId, input.watchlistId),
+		orderBy: desc(WatchlistMember.createdAt),
+		with: {
+			user: true,
+		},
+	});
+
+	return members;
+};
+
+export const listInvites = async (
+	ctx: ProtectedTRPCContext,
+	input: ListMembersSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const isOwnerOfWatchlist = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.userId, currentUserId),
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+			eq(WatchlistMember.role, "owner"),
+		),
+	});
+	if (!isOwnerOfWatchlist) {
+		throw new TRPCError({ code: "FORBIDDEN" });
+	}
+
+	const invites = await ctx.db.query.WatchlistInvitation.findMany({
+		where: eq(WatchlistInvitation.watchlistId, input.watchlistId),
+		orderBy: desc(WatchlistInvitation.createdAt),
+		with: {
+			invitee: true,
+		},
+	});
+
+	return invites;
 };

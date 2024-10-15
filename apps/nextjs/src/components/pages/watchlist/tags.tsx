@@ -11,8 +11,8 @@ export default function WatchlistTags({ tags }: { tags: string | null }) {
 				{tags.split(",").length > 0 &&
 					tags.split(",").map((tag, index) => (
 						<Badge
-							className="cursor-pointer"
 							stroke
+							className="cursor-pointer font-medium"
 							key={`${tag}${
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								index

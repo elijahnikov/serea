@@ -5,7 +5,6 @@ import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
 import Input from "@serea/ui/input";
 import Textarea from "@serea/ui/textarea";
-import { Button } from "@serea/ui/button";
 import { LoadingButton } from "@serea/ui/loading-button";
 import {
 	Form,
@@ -16,7 +15,6 @@ import {
 	FormDescription,
 	FormMessage,
 } from "@serea/ui/form";
-import { ChevronLeft } from "lucide-react";
 import { watchlistCreateSchema } from "@serea/validators";
 import MovieList from "./movie-list";
 import Switch from "@serea/ui/switch";

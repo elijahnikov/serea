@@ -37,7 +37,7 @@ const Input = React.forwardRef<InputElement, InputProps>(
 		const ariaInvalid = otherProps["aria-invalid"] ?? destructive;
 
 		return (
-			<div className="flex flex-col gap-2 wg-antialiased">
+			<div className="flex w-full flex-col gap-2 wg-antialiased">
 				<Label
 					description={description}
 					disabled={disabled}
@@ -57,7 +57,7 @@ const Input = React.forwardRef<InputElement, InputProps>(
 						aria-labelledby={label ? `${elId}__label` : undefined}
 						className={cn(
 							"flex grow rounded-lg border px-4 py-2 text-sm leading-6 shadow-wg-xs transition-colors duration-100 placeholder:text-surface-500",
-							"outline-primary focus:outline focus:outline-2 focus:-outline-offset-1",
+							"focus:outline-none focus:ring-0",
 							!disabled &&
 								"bg-background text-surface-900 hover:border-surface-300 dark:hover:border-surface-200",
 							disabled &&

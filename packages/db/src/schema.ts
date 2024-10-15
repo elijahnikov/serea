@@ -32,6 +32,9 @@ export const UserRelations = relations(User, ({ many }) => ({
 	watchlistInvitationsSent: many(WatchlistInvitation, {
 		relationName: "inviter",
 	}),
+	watchlistInvitationsReceived: many(WatchlistInvitation, {
+		relationName: "invitee",
+	}),
 }));
 
 export const Account = pgTable(
@@ -218,6 +221,10 @@ export const WatchlistInvitationRelations = relations(
 		}),
 		inviter: one(User, {
 			fields: [WatchlistInvitation.inviterId],
+			references: [User.id],
+		}),
+		invitee: one(User, {
+			fields: [WatchlistInvitation.inviteeId],
 			references: [User.id],
 		}),
 	}),

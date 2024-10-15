@@ -115,3 +115,10 @@ export const watchlistCreateSchema = z.object({
 	entries: movieTableSchema.array(),
 	private: z.boolean().optional(),
 });
+
+// WATCHLIST INVITE FORM SCHEMA
+export const watchlistInviteSchema = z.object({
+	email: z.string().email(),
+	role: z.enum(["viewer", "editor"]),
+});
+export type WatchlistInviteSchemaType = z.infer<typeof watchlistInviteSchema>;

@@ -1,11 +1,14 @@
-import { Button } from "@lemonsqueezy/wedges";
 import type { RouterOutputs } from "@serea/api";
 import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
-import { Share } from "lucide-react";
+import ShareWatchlist from "./share";
 
 export default function WatchlistHeader({
 	user,
-}: NonNullable<RouterOutputs["watchlist"]["get"]>) {
+	watchlistId,
+}: {
+	user: NonNullable<RouterOutputs["watchlist"]["get"]>["user"];
+	watchlistId: string;
+}) {
 	return (
 		<div className="flex w-full justify-between items-center">
 			<div className="flex items-center">
@@ -20,12 +23,8 @@ export default function WatchlistHeader({
 					List by <span className="font-medium">{user.name}</span>
 				</p>
 			</div>
-			<Button size={"xs-icon"} variant={"outline"}>
-				<div className="flex items-center space-x-1">
-					<Share size={16} />
-					<p>Share</p>
-				</div>
-			</Button>
+
+			<ShareWatchlist watchlistId={watchlistId} />
 		</div>
 	);
 }
