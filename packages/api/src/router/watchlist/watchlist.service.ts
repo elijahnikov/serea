@@ -10,7 +10,6 @@ import type {
 	GetWatchlistSchemaType,
 	UpdateEntryOrderSchemaType,
 } from "./watchlist.input";
-import { redirect } from "next/navigation";
 import { and, eq, gt, lt, sql } from "@serea/db";
 
 export const createWatchlist = async (
