@@ -3,10 +3,12 @@ import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
 import ShareWatchlist from "./share";
 
 export default function WatchlistHeader({
-	user,
+	owner,
 	watchlistId,
+	isOwner,
 }: {
-	user: NonNullable<RouterOutputs["watchlist"]["get"]>["user"];
+	owner: NonNullable<RouterOutputs["watchlist"]["get"]>["user"];
+	isOwner: boolean;
 	watchlistId: string;
 }) {
 	return (
@@ -15,16 +17,22 @@ export default function WatchlistHeader({
 				<AvatarRoot>
 					<AvatarWedges
 						size="xs"
-						src={user.image ?? undefined}
-						alt={`Navigation profile picture for ${user.name}`}
+						src={owner.image ?? undefined}
+						alt={`Navigation profile picture for ${owner.name}`}
 					/>
 				</AvatarRoot>
 				<p className="text-xs -ml-2">
-					List by <span className="font-medium">{user.name}</span>
+					List by <span className="font-medium">{owner.name}</span>
 				</p>
 			</div>
 
-			<ShareWatchlist watchlistId={watchlistId} />
+			{isOwner ? (
+				<ShareWatchlist
+					isOwner={isOwner}
+					owner={owner}
+					watchlistId={watchlistId}
+				/>
+			) : null}
 		</div>
 	);
 }

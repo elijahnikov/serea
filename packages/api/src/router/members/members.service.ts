@@ -29,31 +29,6 @@ export const inviteToWatchlist = async (
 		throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
 	}
 
-	const isOwnerOfWatchlist = await ctx.db.query.WatchlistMember.findFirst({
-		where: and(
-			eq(WatchlistMember.userId, currentUserId),
-			eq(WatchlistMember.watchlistId, input.watchlistId),
-			eq(WatchlistMember.role, "owner"),
-		),
-	});
-
-	if (!isOwnerOfWatchlist) {
-		throw new TRPCError({ code: "FORBIDDEN" });
-	}
-
-	const isUserAlreadyInvited = await ctx.db.query.WatchlistInvitation.findFirst(
-		{
-			where: and(
-				eq(WatchlistInvitation.inviteeId, userToInvite.id),
-				eq(WatchlistInvitation.watchlistId, input.watchlistId),
-			),
-		},
-	);
-
-	if (isUserAlreadyInvited) {
-		throw new TRPCError({ code: "FORBIDDEN" });
-	}
-
 	const isUserAlreadyMember = await ctx.db.query.WatchlistMember.findFirst({
 		where: and(
 			eq(WatchlistMember.userId, userToInvite.id),

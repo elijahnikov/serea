@@ -1,5 +1,3 @@
-import type { RouterOutputs } from "@serea/api";
-import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
 import { Button } from "@serea/ui/button";
 import {
 	Dialog,
@@ -7,45 +5,37 @@ import {
 	DialogContent,
 	DialogHeader,
 } from "@serea/ui/dialog";
-import Input from "@serea/ui/input";
 import Loading from "@serea/ui/loading";
-import { Share, Plus, Crown, Eye, Pencil } from "lucide-react";
+import { Share } from "lucide-react";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import InviteForm from "./invite-form";
 import Members from "./members";
 import Invites from "./invites";
-
-const roleMap = {
-	owner: <Crown size={16} />,
-	viewer: <Eye size={16} />,
-	editor: <Pencil size={16} />,
-};
+import type { RouterOutputs } from "@serea/api";
 
 export default function ShareWatchlist({
 	watchlistId,
-}: { watchlistId: string }) {
+	owner,
+	isOwner,
+}: {
+	watchlistId: string;
+	owner: NonNullable<RouterOutputs["watchlist"]["get"]>["user"];
+	isOwner: boolean;
+}) {
 	const [open, setOpen] = useState<boolean>(false);
 
+	const utils = api.useUtils();
+
+	const { data: members } = api.members.listMembers.useQuery({ watchlistId });
+	const { data: invites } = api.members.listInvites.useQuery({ watchlistId });
 	const { data: session } = api.auth.getSession.useQuery();
-	const { data: members, isLoading: isLoadingMembers } =
-		api.members.listMembers.useQuery(
-			{
-				watchlistId,
-			},
-			{
-				enabled: open,
-			},
-		);
-	const { data: invites, isLoading: isLoadingInvites } =
-		api.members.listInvites.useQuery(
-			{
-				watchlistId,
-			},
-			{
-				enabled: open,
-			},
-		);
+
+	const { mutate: deleteInvite } = api.members.deleteInvite.useMutation({
+		onSuccess: () => {
+			utils.members.listInvites.invalidate({ watchlistId });
+		},
+	});
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -61,17 +51,12 @@ export default function ShareWatchlist({
 				<DialogHeader className="text-lg font-medium">
 					Share watchlist
 				</DialogHeader>
-				{isLoadingMembers && (
-					<div className="w-full flex items-center justify-center h-24">
-						<Loading type="spinner" color="secondary" size="sm" />
-					</div>
-				)}
 				<InviteForm watchlistId={watchlistId} />
-				{!isLoadingMembers && members && (
+				{members && (
 					<Members members={members} currentUserId={session?.user.id} />
 				)}
-				{!isLoadingInvites && invites && invites.length > 0 && (
-					<Invites invites={invites} />
+				{invites && invites.length > 0 && (
+					<Invites deleteInvite={deleteInvite} invites={invites} />
 				)}
 			</DialogContent>
 		</Dialog>
