@@ -8,8 +8,6 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 
-import Twitter from "next-auth/providers/twitter";
-
 import { db } from "@serea/db/client";
 
 import { env } from "../env";
@@ -42,7 +40,7 @@ export const authConfig = {
 			}
 		: {}),
 	secret: env.AUTH_SECRET,
-	providers: [Discord, Google, Twitter],
+	providers: [Discord, Google],
 	callbacks: {
 		session: (opts) => {
 			if (!("user" in opts))
