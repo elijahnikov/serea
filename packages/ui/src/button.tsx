@@ -6,7 +6,7 @@ import { cva } from "class-variance-authority";
 import { cn, isElementWithChildren, isReactElement } from "@serea/ui";
 
 const buttonVariants = cva(
-	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
+	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {

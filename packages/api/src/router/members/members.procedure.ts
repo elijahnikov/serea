@@ -33,4 +33,8 @@ export const membersRouter = {
 		.meta({ name: "list-invites-of-watchlist" })
 		.input(inputs.listInvitesSchema)
 		.query(({ ctx, input }) => services.listInvites(ctx, input)),
+
+	listInvitesForUser: protectedProcedure
+		.meta({ name: "list-invites-for-user" })
+		.query(({ ctx }) => services.listInvitesForUser(ctx)),
 } satisfies TRPCRouterRecord;
