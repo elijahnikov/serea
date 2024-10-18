@@ -14,6 +14,11 @@ export const membersRouter = {
 		.input(inputs.deleteInviteSchema)
 		.mutation(({ ctx, input }) => services.deleteInvite(ctx, input)),
 
+	deleteMember: protectedProcedure
+		.meta({ name: "delete-member" })
+		.input(inputs.deleteMemberSchema)
+		.mutation(({ ctx, input }) => services.deleteMember(ctx, input)),
+
 	respond: protectedProcedure
 		.meta({ name: "respond-to-invite" })
 		.input(inputs.respondToInviteSchema)

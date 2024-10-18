@@ -110,10 +110,9 @@ export const Movie = pgTable("movie", {
 	backdrop: text("backdrop"),
 	releaseDate: text("releaseDate"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
-	updatedAt: timestamp("updatedAt", {
-		mode: "date",
-		withTimezone: true,
-	}).$onUpdateFn(() => sql`now()`),
+	updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdate(
+		() => new Date(),
+	),
 });
 export const MovieRelations = relations(Movie, ({ many }) => ({
 	watchlistEntries: many(WatchlistEntries),
@@ -130,10 +129,9 @@ export const Watchlist = pgTable(
 		isPrivate: boolean("isPrivate").default(false),
 		tags: text("tags"),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
-		updatedAt: timestamp("updatedAt", {
-			mode: "date",
-			withTimezone: true,
-		}).$onUpdateFn(() => sql`now()`),
+		updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdate(
+			() => new Date(),
+		),
 	},
 	(t) => ({
 		userIdx: index("watchlist_user_idx").on(t.userId),
@@ -199,10 +197,6 @@ export const WatchlistInvitation = pgTable(
 			.default("viewer"),
 		inviteeEmail: varchar("invitee_email", { length: 255 }).notNull(),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
-		updatedAt: timestamp("updated_at", {
-			mode: "date",
-			withTimezone: true,
-		}).$onUpdateFn(() => sql`now()`),
 	},
 	(t) => ({
 		watchlistIdx: index("watchlist_invitation_watchlist_idx").on(t.watchlistId),
@@ -242,10 +236,9 @@ export const WatchlistMember = pgTable(
 			.notNull()
 			.default("viewer"),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
-		updatedAt: timestamp("updated_at", {
-			mode: "date",
-			withTimezone: true,
-		}).$onUpdateFn(() => sql`now()`),
+		updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdate(
+			() => new Date(),
+		),
 	},
 	(t) => ({
 		watchlistUserIdx: index("watchlist_member_watchlist_user_idx").on(

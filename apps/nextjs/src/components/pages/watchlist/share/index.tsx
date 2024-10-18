@@ -29,7 +29,6 @@ export default function ShareWatchlist({
 
 	const { data: members } = api.members.listMembers.useQuery({ watchlistId });
 	const { data: invites } = api.members.listInvites.useQuery({ watchlistId });
-	const { data: session } = api.auth.getSession.useQuery();
 
 	const { mutate: deleteInvite } = api.members.deleteInvite.useMutation({
 		onSuccess: () => {
@@ -53,7 +52,11 @@ export default function ShareWatchlist({
 				</DialogHeader>
 				<InviteForm watchlistId={watchlistId} />
 				{members && (
-					<Members members={members} currentUserId={session?.user.id} />
+					<Members
+						watchlistId={watchlistId}
+						isOwner={isOwner}
+						members={members}
+					/>
 				)}
 				{invites && invites.length > 0 && (
 					<Invites deleteInvite={deleteInvite} invites={invites} />

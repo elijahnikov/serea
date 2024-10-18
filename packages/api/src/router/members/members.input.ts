@@ -34,3 +34,9 @@ export const listInvitesSchema = z.object({
 	watchlistId: z.string(),
 });
 export type ListInvitesSchemaType = z.infer<typeof listMembersSchema>;
+
+export const deleteMemberSchema = z.object({
+	watchlistId: z.string(),
+	memberId: z.string(),
+});
+export type DeleteMemberSchemaType = z.infer<typeof deleteMemberSchema>;

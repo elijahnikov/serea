@@ -7,6 +7,7 @@ import {
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	DeleteInviteSchemaType,
+	DeleteMemberSchemaType,
 	ListMembersSchemaType,
 	RespondToInviteSchemaType,
 	UpdateRoleSchemaType,
@@ -227,4 +228,22 @@ export const listInvitesForUser = async (ctx: ProtectedTRPCContext) => {
 		},
 	});
 	return invites;
+};
+
+export const deleteMember = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteMemberSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	await ctx.db
+		.delete(WatchlistMember)
+		.where(
+			and(
+				eq(WatchlistMember.watchlistId, input.watchlistId),
+				eq(WatchlistMember.userId, input.memberId),
+			),
+		);
+
+	return true;
 };

@@ -27,6 +27,8 @@ export default function Invites() {
 	const { mutate: respond } = api.members.respond.useMutation({
 		onSuccess: () => {
 			trpcUtils.members.listInvitesForUser.invalidate();
+			trpcUtils.members.listInvites.invalidate();
+			trpcUtils.members.listMembers.invalidate();
 		},
 	});
 
