@@ -5,8 +5,7 @@ import {
 	DialogContent,
 	DialogHeader,
 } from "@serea/ui/dialog";
-import Loading from "@serea/ui/loading";
-import { Share } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import InviteForm from "./invite-form";
@@ -41,14 +40,14 @@ export default function ShareWatchlist({
 			<DialogTrigger asChild>
 				<Button size={"xs-icon"} variant={"outline"}>
 					<div className="flex items-center space-x-1">
-						<Share size={16} />
-						<p>Share</p>
+						<Plus size={16} />
+						<p>Invite</p>
 					</div>
 				</Button>
 			</DialogTrigger>
 			<DialogContent className="focus:outline-none focus:ring-0">
 				<DialogHeader className="text-lg font-medium">
-					Share watchlist
+					Invite to watchlist
 				</DialogHeader>
 				<InviteForm watchlistId={watchlistId} />
 				{members && (

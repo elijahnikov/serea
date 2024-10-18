@@ -5,7 +5,7 @@ export default function WatchlistTags({ tags }: { tags: string | null }) {
 		return null;
 	}
 	return (
-		<>
+		<div>
 			<p className="font-medium text-neutral-600 text-sm mb-2">Tagged</p>
 			<div className="flex flex-wrap gap-2">
 				{tags.split(",").length > 0 &&
@@ -22,6 +22,6 @@ export default function WatchlistTags({ tags }: { tags: string | null }) {
 						</Badge>
 					))}
 			</div>
-		</>
+		</div>
 	);
 }

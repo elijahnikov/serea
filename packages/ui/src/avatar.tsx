@@ -267,13 +267,7 @@ const AvatarWedges = React.forwardRef<AvatarElement, AvatarProps>(
 						className={cn("text-surface-300", className)}
 						style={style}
 					>
-						<SereaIcon
-							aria-hidden="true"
-							className={cn(
-								fallbackVariants({ size }),
-								"mr-[-4.5%] w-auto fill-current stroke-none",
-							)}
-						/>
+						S
 					</AvatarFallback>
 				)}
 

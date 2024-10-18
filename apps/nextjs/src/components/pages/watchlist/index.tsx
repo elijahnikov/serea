@@ -1,19 +1,23 @@
 "use client";
 
-import FooterActions from "./footer-actions";
-import WatchlistTags from "./tags";
+import FooterActions from "./components/footer-actions";
+import WatchlistTags from "./components/tags";
 
-import WatchlistHeader from "./header";
-import MainText from "./main-text";
+import WatchlistHeader from "./components/header";
+import MainText from "./components/main-text";
 import { api } from "~/trpc/react";
 import ImageGrid from "./image-grid";
+import MemberList from "./components/member-list";
 
 export default function SingleWatchlist({
 	id,
 	currentUserId,
 }: { id: string; currentUserId?: string }) {
 	const [watchlist] = api.watchlist.get.useSuspenseQuery({ id });
-	const [watchlistEntries] = api.watchlist.getEntries.useSuspenseQuery({ id });
+	const [watchlistEntries] = api.watchlist.getEntries.useSuspenseQuery(
+		{ id },
+		{ refetchInterval: 60000 },
+	);
 
 	if (!watchlist) {
 		return null;
@@ -37,8 +41,9 @@ export default function SingleWatchlist({
 							isOwner={true}
 						/>
 					</div>
-					<div className="w-[30%] mt-10 min-w-[200px]">
+					<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
 						<WatchlistTags tags={watchlist.tags} />
+						<MemberList watchlistId={watchlist.id} />
 					</div>
 				</div>
 			</div>

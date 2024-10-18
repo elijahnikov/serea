@@ -121,7 +121,7 @@ const AvatarGroupItem = React.forwardRef<
 	);
 });
 
-const AvatarGroupWedges = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
+const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
 	(props, ref) => {
 		const {
 			items,
@@ -178,15 +178,9 @@ const AvatarGroupWedges = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
 	},
 );
 
-const AvatarGroup = Object.assign(AvatarGroupWedges, {
-	Root: AvatarGroupRoot,
-	Item: AvatarGroupItem,
-	Label: AvatarMoreLabel,
-});
-
 AvatarGroupRoot.displayName = "AvatarGroupRoot";
 AvatarGroupItem.displayName = "AvatarGroupItem";
 AvatarMoreLabel.displayName = "AvatarMoreLabel";
-AvatarGroupWedges.displayName = "AvatarGroup";
+AvatarGroup.displayName = "AvatarGroup";
 
-export default AvatarGroup;
+export { AvatarGroup, AvatarGroupRoot, AvatarGroupItem, AvatarMoreLabel };

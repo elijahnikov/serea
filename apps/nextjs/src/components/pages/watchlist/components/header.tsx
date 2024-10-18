@@ -1,6 +1,6 @@
 import type { RouterOutputs } from "@serea/api";
 import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
-import ShareWatchlist from "./share";
+import ShareWatchlist from "../share";
 
 export default function WatchlistHeader({
 	owner,
