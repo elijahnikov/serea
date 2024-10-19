@@ -42,4 +42,9 @@ export const membersRouter = {
 	listInvitesForUser: protectedProcedure
 		.meta({ name: "list-invites-for-user" })
 		.query(({ ctx }) => services.listInvitesForUser(ctx)),
+
+	getMemberRole: protectedProcedure
+		.meta({ name: "get-member-role" })
+		.input(inputs.getMemberRoleSchema)
+		.query(({ ctx, input }) => services.getMemberRole(ctx, input)),
 } satisfies TRPCRouterRecord;

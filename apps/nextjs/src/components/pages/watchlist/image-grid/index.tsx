@@ -1,14 +1,5 @@
-import {
-	TooltipContent,
-	TooltipProvider,
-	TooltipRoot,
-	TooltipTrigger,
-} from "@serea/ui/tooltip";
-import { Plus } from "lucide-react";
-import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
-import type { RouterInputs, RouterOutputs } from "@serea/api";
-import Image from "next/image";
-import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
+import { TooltipProvider } from "@serea/ui/tooltip";
+import type { RouterOutputs } from "@serea/api";
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
@@ -26,19 +17,17 @@ import {
 	arrayMove,
 	rectSortingStrategy,
 	SortableContext,
-	useSortable,
 } from "@dnd-kit/sortable";
 import SortableEntryItem from "./entry";
-import MovieSearch from "../../create/movie-search";
 import AddEntryButton from "./add-entry-button";
 
 export default function ImageGrid({
 	entries,
-	isOwner = false,
+	role,
 	watchlistId,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"];
-	isOwner?: boolean;
+	role: "owner" | "editor" | "viewer" | "non-member";
 	watchlistId: string;
 }) {
 	const [open, setOpen] = useState(false);
@@ -216,7 +205,7 @@ export default function ImageGrid({
 		}
 	};
 
-	if ((!entries || entries.length === 0) && isOwner) {
+	if ((!entries || entries.length === 0) && role === "owner") {
 		return (
 			<div className="grid grid-cols-5 gap-x-4">
 				<AddEntryButton
@@ -246,13 +235,14 @@ export default function ImageGrid({
 							?.sort((a, b) => a.order - b.order)
 							.map((entry) => (
 								<SortableEntryItem
+									role={role}
 									key={entry.id}
 									entry={entry}
-									isOwner={isOwner}
+									isOwner={role === "owner"}
 									onDeleteEntry={handleDeleteEntry}
 								/>
 							))}
-						{isOwner && (
+						{(role === "owner" || role === "editor") && (
 							<AddEntryButton
 								open={open}
 								setOpen={setOpen}

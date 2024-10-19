@@ -11,10 +11,12 @@ export default function SortableEntryItem({
 	entry,
 	isOwner,
 	onDeleteEntry,
+	role,
 }: {
 	entry: RouterOutputs["watchlist"]["getEntries"][number];
 	isOwner: boolean;
 	onDeleteEntry: (entryId: string) => void;
+	role: "owner" | "editor" | "viewer" | "non-member";
 }) {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const {
@@ -42,6 +44,7 @@ export default function SortableEntryItem({
 			{...(isDropdownOpen ? {} : listeners)}
 		>
 			<EntryItem
+				role={role}
 				onDeleteEntry={onDeleteEntry}
 				isDragging={isDragging}
 				entry={entry}
@@ -60,6 +63,7 @@ function EntryItem({
 	onDeleteEntry,
 	isDropdownOpen,
 	setIsDropdownOpen,
+	role,
 }: {
 	entry: RouterOutputs["watchlist"]["getEntries"][number];
 	isOwner: boolean;
@@ -67,41 +71,41 @@ function EntryItem({
 	onDeleteEntry: (entryId: string) => void;
 	isDropdownOpen: boolean;
 	setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	role: "owner" | "editor" | "viewer" | "non-member";
 }) {
 	return (
 		<TooltipRoot>
 			<TooltipTrigger asChild disabled={isDragging}>
 				<div className="flex flex-col items-center">
-					{isOwner && (
-						<div className="relative group">
-							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-							<div
-								className={`absolute top-2 right-2 z-50 transition-opacity duration-200 ${
-									isDropdownOpen
-										? "opacity-100"
-										: "opacity-0 group-hover:opacity-100"
-								}`}
-								onClick={(e) => e.stopPropagation()}
-							>
-								<MovieDropdown
-									entry={entry}
-									onDeleteEntry={onDeleteEntry}
-									onOpenChange={setIsDropdownOpen}
-								/>
-							</div>
-							<div className={isDropdownOpen ? "pointer-events-none" : ""}>
-								<Image
-									className="rounded-md border-[0.5px] border-surface-200"
-									width={0}
-									height={0}
-									sizes="100vw"
-									style={{ width: "100%", height: "auto" }}
-									alt={`Poster for ${entry.movie.title}`}
-									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-								/>
-							</div>
+					<div className="relative group">
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<div
+							className={`absolute top-2 right-2 z-50 transition-opacity duration-200 ${
+								isDropdownOpen
+									? "opacity-100"
+									: "opacity-0 group-hover:opacity-100"
+							}`}
+							onClick={(e) => e.stopPropagation()}
+						>
+							<MovieDropdown
+								role={role}
+								entry={entry}
+								onDeleteEntry={onDeleteEntry}
+								onOpenChange={setIsDropdownOpen}
+							/>
 						</div>
-					)}
+						<div className={isDropdownOpen ? "pointer-events-none" : ""}>
+							<Image
+								className="rounded-md border-[0.5px] border-surface-200"
+								width={0}
+								height={0}
+								sizes="100vw"
+								style={{ width: "100%", height: "auto" }}
+								alt={`Poster for ${entry.movie.title}`}
+								src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+							/>
+						</div>
+					</div>
 					<p className="font-medium text-neutral-500 text-sm">
 						{entry.order + 1}
 					</p>

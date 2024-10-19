@@ -11,7 +11,6 @@ import {
 	TooltipContent,
 	TooltipArrow,
 } from "@serea/ui/tooltip";
-import { api, HydrateClient } from "~/trpc/server";
 import Invites from "./invites";
 import Notifications from "./notifications";
 
@@ -42,42 +41,40 @@ export default async function Navigation() {
 	const session = await auth();
 
 	return (
-		<HydrateClient>
-			<div className="w-16 justify-between bg-white flex items-center flex-col py-4 border border-surface-100 shadow-wg-xs">
-				<Link href={"/"} className="active:scale-[0.85] duration-200 scale-100">
-					<img className="h-12 w-12" src="/logo.png" alt="Serea logo" />
-				</Link>
-				<div className="flex items-center flex-col space-y-1">
-					<TooltipProvider>
-						{navigationLinks.map((link) => (
-							<TooltipRoot key={link.href}>
-								<TooltipTrigger>
-									<Link key={link.href} href={link.href}>
-										<Button
-											size={"xs-icon"}
-											variant={"transparent"}
-											className="text-neutral-500 h-9 w-9 hover:border-[1px] border-surface-100"
-										>
-											{link.icon}
-										</Button>
-									</Link>
-								</TooltipTrigger>
-								<TooltipPortal>
-									<TooltipContent side="right" content="" arrow>
-										<p>{link.label}</p>
-										<TooltipArrow />
-									</TooltipContent>
-								</TooltipPortal>
-							</TooltipRoot>
-						))}
-					</TooltipProvider>
-				</div>
-				<div className="flex items-center justify-center space-y-1 flex-col">
-					<Invites />
-					<Notifications />
-					{session ? <UserAvatar avatar={{ ...session.user }} /> : null}
-				</div>
+		<div className="w-16 justify-between bg-white flex items-center flex-col py-4 border border-surface-100 shadow-wg-xs">
+			<Link href={"/"} className="active:scale-[0.85] duration-200 scale-100">
+				<img className="h-12 w-12" src="/logo.png" alt="Serea logo" />
+			</Link>
+			<div className="flex items-center flex-col space-y-1">
+				<TooltipProvider>
+					{navigationLinks.map((link) => (
+						<TooltipRoot key={link.href}>
+							<TooltipTrigger>
+								<Link key={link.href} href={link.href}>
+									<Button
+										size={"xs-icon"}
+										variant={"transparent"}
+										className="text-neutral-500 h-9 w-9 hover:border-[1px] border-surface-100"
+									>
+										{link.icon}
+									</Button>
+								</Link>
+							</TooltipTrigger>
+							<TooltipPortal>
+								<TooltipContent side="right" content="" arrow>
+									<p>{link.label}</p>
+									<TooltipArrow />
+								</TooltipContent>
+							</TooltipPortal>
+						</TooltipRoot>
+					))}
+				</TooltipProvider>
 			</div>
-		</HydrateClient>
+			<div className="flex items-center justify-center space-y-1 flex-col">
+				<Invites />
+				<Notifications />
+				{session ? <UserAvatar avatar={{ ...session.user }} /> : null}
+			</div>
+		</div>
 	);
 }

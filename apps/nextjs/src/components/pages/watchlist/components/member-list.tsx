@@ -12,11 +12,18 @@ import {
 	TooltipContent,
 	TooltipArrow,
 } from "@serea/ui/tooltip";
-import { content } from "tailwindcss/defaultTheme";
+import { Crown } from "lucide-react";
 import { api } from "~/trpc/react";
 
 export default function MemberList({ watchlistId }: { watchlistId: string }) {
 	const [members] = api.members.listMembers.useSuspenseQuery({ watchlistId });
+	const sortedMembers = [...members].sort((a, b) => {
+		const roleOrder = { owner: 0, editor: 1, viewer: 2 };
+		return (
+			roleOrder[a.role as keyof typeof roleOrder] -
+			roleOrder[b.role as keyof typeof roleOrder]
+		);
+	});
 	return (
 		<div>
 			<div className="flex items-center mb-2">
@@ -26,7 +33,7 @@ export default function MemberList({ watchlistId }: { watchlistId: string }) {
 			<div className="flex flex-wrap gap-2">
 				<TooltipProvider>
 					<AvatarGroupRoot>
-						{members.map((member) => (
+						{sortedMembers.map((member) => (
 							<TooltipRoot key={member.id}>
 								<TooltipTrigger asChild>
 									<AvatarGroupItem
@@ -36,8 +43,13 @@ export default function MemberList({ watchlistId }: { watchlistId: string }) {
 									/>
 								</TooltipTrigger>
 								<TooltipPortal>
-									<TooltipContent content="" arrow>
-										{member.user.name}
+									<TooltipContent
+										content=""
+										arrow
+										className="flex items-center space-x-1"
+									>
+										<p>{member.user.name}</p>
+										{member.role === "owner" && <Crown size={14} />}
 										<TooltipArrow />
 									</TooltipContent>
 								</TooltipPortal>

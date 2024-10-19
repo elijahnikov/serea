@@ -14,6 +14,9 @@ export default async function WatchlistPage({
 	void api.watchlist.get.prefetch({ id: params.id });
 	void api.watchlist.getEntries.prefetch({ id: params.id });
 	void api.members.listMembers.prefetch({ watchlistId: params.id });
+	void api.members.getMemberRole.prefetch({
+		watchlistId: params.id,
+	});
 
 	return (
 		<HydrateClient>

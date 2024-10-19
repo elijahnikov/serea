@@ -8,6 +8,7 @@ import MainText from "./components/main-text";
 import { api } from "~/trpc/react";
 import ImageGrid from "./image-grid";
 import MemberList from "./components/member-list";
+import NonMemberImageGrid from "./non-member-image-grid";
 
 export default function SingleWatchlist({
 	id,
@@ -18,6 +19,9 @@ export default function SingleWatchlist({
 		{ id },
 		{ refetchInterval: 60000 },
 	);
+	const [role] = api.members.getMemberRole.useSuspenseQuery({
+		watchlistId: id,
+	});
 
 	if (!watchlist) {
 		return null;
@@ -35,15 +39,19 @@ export default function SingleWatchlist({
 					<div className="w-full pr-8">
 						<MainText {...watchlist} />
 						<FooterActions watchlistId={watchlist.id} />
-						<ImageGrid
-							watchlistId={watchlist.id}
-							entries={watchlistEntries}
-							isOwner={true}
-						/>
+						{["owner", "editor", "viewer"].includes(role) ? (
+							<ImageGrid
+								watchlistId={watchlist.id}
+								entries={watchlistEntries}
+								role={role}
+							/>
+						) : (
+							<NonMemberImageGrid entries={watchlistEntries} />
+						)}
 					</div>
 					<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
-						<WatchlistTags tags={watchlist.tags} />
 						<MemberList watchlistId={watchlist.id} />
+						<WatchlistTags tags={watchlist.tags} />
 					</div>
 				</div>
 			</div>

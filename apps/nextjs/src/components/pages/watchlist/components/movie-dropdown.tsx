@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
+import type React from "react";
+import { useMemo } from "react";
 
 import { EyeIcon, UserCheckIcon, TrashIcon, Ellipsis } from "lucide-react";
 
-import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import type { RouterOutputs } from "@serea/api";
 import {
 	DropdownMenu,
@@ -15,19 +14,67 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
-import AvatarGroup from "@serea/ui/avatar-group";
-import { api } from "~/trpc/react";
+
 import { Button } from "@serea/ui/button";
+
+type MenuItem = {
+	label: string;
+	icon: React.ReactNode;
+	onSelect: (event: Event) => void;
+	variant?: "destructive" | "default";
+};
 
 export default function MovieDropdown({
 	entry,
 	onDeleteEntry,
 	onOpenChange,
+	role,
 }: {
 	entry: NonNullable<RouterOutputs["watchlist"]["getEntries"]>[number];
 	onDeleteEntry: (entryId: string) => void;
 	onOpenChange: (isOpen: boolean) => void;
+	role: "owner" | "editor" | "viewer" | "non-member";
 }) {
+	const editorOwner: MenuItem[] = useMemo(
+		() => [
+			{
+				label: "Mark as watched",
+				icon: <EyeIcon size={16} />,
+				onSelect: () => {},
+			},
+			{
+				label: "Mark as watched for all",
+				icon: <UserCheckIcon size={16} />,
+				onSelect: () => {},
+			},
+			{
+				label: "Delete from list",
+				icon: <TrashIcon size={16} />,
+				onSelect: () => {
+					onDeleteEntry(entry.id);
+				},
+				variant: "destructive",
+			},
+		],
+		[entry.id, onDeleteEntry],
+	);
+
+	const roleToDropdownItems: Record<"owner" | "editor" | "viewer", MenuItem[]> =
+		useMemo(
+			() => ({
+				owner: editorOwner,
+				editor: editorOwner,
+				viewer: [
+					{
+						label: "Mark as watched",
+						icon: <EyeIcon size={16} />,
+						onSelect: () => {},
+					},
+				],
+			}),
+			[editorOwner],
+		);
+
 	return (
 		<DropdownMenu onOpenChange={onOpenChange}>
 			<DropdownMenuTrigger asChild>
@@ -41,43 +88,18 @@ export default function MovieDropdown({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuGroup>
-					<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-						<EyeIcon size={16} />
-						<span>Mark as watched</span>
-					</DropdownMenuItem>
-
-					<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-						<UserCheckIcon size={16} />
-						<span>Mark as watched for all</span>
-						<AvatarGroup
-							size="xs"
-							items={[
-								{
-									src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=250&h=250&auto=format&fit=crop&crop=face",
-									alt: "Avatar 1",
-								},
-								{
-									src: "https://images.unsplash.com/photo-1579613832107-64359da23b0c?w=250&h=250&auto=format&fit=crop&crop=face",
-									alt: "Avatar 2",
-								},
-							]}
-							moreLabel="+9"
-						/>
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-
-				<DropdownMenuSeparator />
-
-				<DropdownMenuGroup>
-					<DropdownMenuItem
-						onSelect={() => {
-							onDeleteEntry(entry.id);
-						}}
-						destructive
-					>
-						<TrashIcon size={16} />
-						<span>Delete from list</span>
-					</DropdownMenuItem>
+					{roleToDropdownItems[role as keyof typeof roleToDropdownItems].map(
+						(item) => (
+							<DropdownMenuItem
+								destructive={item.variant === "destructive"}
+								key={item.label}
+								onSelect={(e) => item.onSelect(e)}
+							>
+								{item.icon}
+								<span>{item.label}</span>
+							</DropdownMenuItem>
+						),
+					)}
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>

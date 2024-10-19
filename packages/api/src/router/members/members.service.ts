@@ -8,6 +8,7 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	DeleteInviteSchemaType,
 	DeleteMemberSchemaType,
+	GetMemberRoleSchemaType,
 	ListMembersSchemaType,
 	RespondToInviteSchemaType,
 	UpdateRoleSchemaType,
@@ -246,4 +247,22 @@ export const deleteMember = async (
 		);
 
 	return true;
+};
+
+export const getMemberRole = async (
+	ctx: ProtectedTRPCContext,
+	input: GetMemberRoleSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const member = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+			eq(WatchlistMember.userId, currentUserId),
+		),
+	});
+	if (!member) {
+		return "non-member";
+	}
+
+	return member.role;
 };

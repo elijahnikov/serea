@@ -40,3 +40,8 @@ export const deleteMemberSchema = z.object({
 	memberId: z.string(),
 });
 export type DeleteMemberSchemaType = z.infer<typeof deleteMemberSchema>;
+
+export const getMemberRoleSchema = z.object({
+	watchlistId: z.string(),
+});
+export type GetMemberRoleSchemaType = z.infer<typeof getMemberRoleSchema>;
