@@ -8,6 +8,7 @@ import {
 } from "@serea/ui/tooltip";
 import { Heart, Forward, Copy } from "lucide-react";
 import LikeButton from "./like-button";
+import SharePopover from "./share-popover";
 
 export default function FooterActions({
 	likeCount,
@@ -26,9 +27,7 @@ export default function FooterActions({
 
 				<TooltipRoot>
 					<TooltipTrigger asChild>
-						<Button size={"xs-icon"} variant={"tertiary"}>
-							<Forward size={18} className=" text-neutral-400" />
-						</Button>
+						<SharePopover id={id} />
 					</TooltipTrigger>
 					<TooltipContent className="relative -left-2">Share</TooltipContent>
 				</TooltipRoot>

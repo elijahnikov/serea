@@ -16,13 +16,8 @@ export default function LikeButton({
 	const trpcUtils = api.useUtils();
 	const toggleLike = api.watchlist.toggleLike.useMutation({
 		onMutate: async ({ watchlistId }) => {
-			// Cancel outgoing refetches
 			await trpcUtils.watchlist.get.cancel({ id: watchlistId });
-
-			// Get the current data
 			const previousData = trpcUtils.watchlist.get.getData({ id: watchlistId });
-
-			// Optimistically update the UI
 			trpcUtils.watchlist.get.setData({ id: watchlistId }, (old) => {
 				if (!old) return old;
 				return {
@@ -31,18 +26,14 @@ export default function LikeButton({
 					likeCount: old.isLiked ? old.likeCount - 1 : old.likeCount + 1,
 				};
 			});
-
-			// Return the previous data for rollback in case of error
 			return { previousData };
 		},
-		onError: (err, newTodo, context) => {
-			// If there's an error, rollback to the previous state
+		onError: (_, __, context) => {
 			if (context?.previousData) {
 				trpcUtils.watchlist.get.setData({ id }, context.previousData);
 			}
 		},
 		onSettled: async () => {
-			// Refetch after mutation to ensure server-client consistency
 			await trpcUtils.watchlist.get.invalidate({ id });
 		},
 	});

@@ -120,7 +120,7 @@ export default function Invites() {
 	);
 }
 
-const ToolbarTooltip = ({
+export const ToolbarTooltip = ({
 	content,
 	children,
 }: {
