@@ -1,6 +1,11 @@
 import type { WatchlistCreateSchemaType } from "@serea/validators";
 import type { ProtectedTRPCContext } from "../../trpc";
-import { Watchlist, WatchlistEntries, WatchlistMember } from "@serea/db/schema";
+import {
+	Watchlist,
+	WatchlistEntries,
+	WatchlistLike,
+	WatchlistMember,
+} from "@serea/db/schema";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
 import type {
@@ -8,6 +13,7 @@ import type {
 	DeleteWatchlistEntrySchemaType,
 	GetWatchlistEntriesSchemaType,
 	GetWatchlistSchemaType,
+	ToggleWatchlistLikeSchemaType,
 	UpdateEntryOrderSchemaType,
 } from "./watchlist.input";
 import { and, eq, gt, lt, sql } from "@serea/db";
@@ -56,6 +62,9 @@ export const getWatchlist = async (
 	const watchlist = await ctx.db.query.Watchlist.findFirst({
 		where: (table, { eq }) => eq(table.id, input.id),
 		with: {
+			likes: !currentUserId
+				? undefined
+				: { where: eq(WatchlistLike.userId, currentUserId) },
 			entries: {
 				with: {
 					movie: true,
@@ -65,9 +74,21 @@ export const getWatchlist = async (
 		},
 	});
 
-	const isOwner = !!(watchlist && watchlist.user.id === currentUserId);
+	if (!watchlist) {
+		throw new TRPCError({ code: "NOT_FOUND", message: "Watchlist not found" });
+	}
 
-	return watchlist;
+	const likeCount =
+		(await ctx.db
+			.select({ count: sql`count(*)` })
+			.from(WatchlistLike)
+			.where(eq(WatchlistLike.watchlistId, watchlist.id))
+			.then((result) => Number(result[0]?.count))) ?? 0;
+	return {
+		...watchlist,
+		likeCount,
+		isLiked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
+	};
 };
 
 export const getWatchlistEntries = async (
@@ -232,4 +253,35 @@ export const updateEntryOrder = async (
 	}
 
 	return updatedEntry;
+};
+
+export const toggleWatchlistLike = async (
+	ctx: ProtectedTRPCContext,
+	{ watchlistId }: ToggleWatchlistLikeSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const existingLike = await ctx.db.query.WatchlistLike.findFirst({
+		where: and(
+			eq(WatchlistLike.userId, currentUserId),
+			eq(WatchlistLike.watchlistId, watchlistId),
+		),
+	});
+
+	if (!existingLike) {
+		await ctx.db.insert(WatchlistLike).values({
+			userId: currentUserId,
+			watchlistId: watchlistId,
+		});
+		return { liked: true };
+	}
+
+	await ctx.db
+		.delete(WatchlistLike)
+		.where(
+			and(
+				eq(WatchlistLike.userId, currentUserId),
+				eq(WatchlistLike.watchlistId, watchlistId),
+			),
+		);
+	return { liked: false };
 };

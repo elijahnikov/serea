@@ -37,3 +37,10 @@ export const updateEntryOrderSchema = z.object({
 	newOrder: z.number(),
 });
 export type UpdateEntryOrderSchemaType = z.infer<typeof updateEntryOrderSchema>;
+
+export const toggleWatchlistLikeSchema = z.object({
+	watchlistId: z.string(),
+});
+export type ToggleWatchlistLikeSchemaType = z.infer<
+	typeof toggleWatchlistLikeSchema
+>;

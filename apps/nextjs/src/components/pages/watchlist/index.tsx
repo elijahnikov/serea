@@ -38,7 +38,7 @@ export default function SingleWatchlist({
 				<div className="flex">
 					<div className="w-full pr-8">
 						<MainText {...watchlist} />
-						<FooterActions watchlistId={watchlist.id} />
+						<FooterActions {...watchlist} />
 						{["owner", "editor", "viewer"].includes(role) ? (
 							<ImageGrid
 								watchlistId={watchlist.id}

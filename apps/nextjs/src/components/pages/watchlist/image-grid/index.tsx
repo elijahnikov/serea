@@ -20,6 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import SortableEntryItem from "./entry";
 import AddEntryButton from "./add-entry-button";
+import { nanoid } from "nanoid";
 
 export default function ImageGrid({
 	entries,
@@ -135,7 +136,7 @@ export default function ImageGrid({
 				{
 					contentId: newEntry.contentId,
 					order: localEntries.length,
-					id: `temp-id-${Date.now()}`,
+					id: newEntry.id,
 					userId: "optimistic-user-id",
 					createdAt: new Date(),
 					watchlistId: watchlistId,
@@ -146,7 +147,7 @@ export default function ImageGrid({
 						poster: newEntry.content.poster,
 						backdrop: newEntry.content.backdrop,
 						releaseDate: newEntry.content.releaseDate,
-						id: `temp-id-${Date.now()}`,
+						id: newEntry.id,
 						createdAt: new Date(),
 						updatedAt: null,
 					},

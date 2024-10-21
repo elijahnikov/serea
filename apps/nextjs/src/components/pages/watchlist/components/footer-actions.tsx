@@ -1,3 +1,4 @@
+import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
 import {
 	TooltipContent,
@@ -6,24 +7,19 @@ import {
 	TooltipTrigger,
 } from "@serea/ui/tooltip";
 import { Heart, Forward, Copy } from "lucide-react";
+import LikeButton from "./like-button";
 
 export default function FooterActions({
-	watchlistId,
-}: { watchlistId: string }) {
+	likeCount,
+	isLiked,
+	id,
+}: NonNullable<RouterOutputs["watchlist"]["get"]>) {
 	return (
 		<TooltipProvider>
 			<div className="flex space-x-2 mb-4">
 				<TooltipRoot>
 					<TooltipTrigger asChild>
-						<Button size={"xs-icon"} variant={"tertiary"}>
-							<div className="flex items-center space-x-1">
-								<Heart
-									size={18}
-									className="fill-neutral-400 text-neutral-400"
-								/>
-								<p className="text-neutral-600">0</p>
-							</div>
-						</Button>
+						<LikeButton likeCount={likeCount} isLiked={isLiked} id={id} />
 					</TooltipTrigger>
 					<TooltipContent className="relative -left-2">Like</TooltipContent>
 				</TooltipRoot>
