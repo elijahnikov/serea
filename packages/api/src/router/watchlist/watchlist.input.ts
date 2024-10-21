@@ -22,6 +22,7 @@ export type DeleteWatchlistEntrySchemaType = z.infer<
 >;
 
 export const addWatchlistEntrySchema = z.object({
+	id: z.string(),
 	watchlistId: z.string(),
 	contentId: z.number(),
 	content: movieTableSchema.omit({ order: true }),

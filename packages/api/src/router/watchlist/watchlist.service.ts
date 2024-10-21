@@ -11,6 +11,7 @@ import type {
 	UpdateEntryOrderSchemaType,
 } from "./watchlist.input";
 import { and, eq, gt, lt, sql } from "@serea/db";
+import { nanoid } from "nanoid";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
@@ -35,6 +36,7 @@ export const createWatchlist = async (
 
 	if (input.entries.length > 0) {
 		const entriesInsert = input.entries.map((entry) => ({
+			id: nanoid(),
 			contentId: entry.contentId,
 			userId: currentUserId,
 			order: entry.order,
@@ -157,6 +159,7 @@ export const addWatchlistEntry = async (
 	const [newEntry] = await ctx.db
 		.insert(WatchlistEntries)
 		.values({
+			id: input.id,
 			watchlistId: input.watchlistId,
 			contentId: input.contentId,
 			userId: currentUserId,
