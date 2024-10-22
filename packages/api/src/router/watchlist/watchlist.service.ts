@@ -1,3 +1,5 @@
+"use server";
+
 import type { WatchlistCreateSchemaType } from "@serea/validators";
 import type { ProtectedTRPCContext } from "../../trpc";
 import {
@@ -10,6 +12,7 @@ import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
 import type {
 	AddWatchlistEntrySchemaType,
+	CloneWatchlistSchemaType,
 	DeleteWatchlistEntrySchemaType,
 	GetWatchlistEntriesSchemaType,
 	GetWatchlistSchemaType,
@@ -173,9 +176,14 @@ export const addWatchlistEntry = async (
 	if (existingEntry) {
 		return existingEntry;
 	}
-	const currentOrder = await ctx.db.query.WatchlistEntries.findMany({
-		where: eq(WatchlistEntries.watchlistId, input.watchlistId),
-	});
+	const maxOrderResult =
+		(await ctx.db
+			.select({ maxOrder: sql`MAX(${WatchlistEntries.order})` })
+			.from(WatchlistEntries)
+			.where(eq(WatchlistEntries.watchlistId, input.watchlistId))
+			.then((result) => Number(result[0]?.maxOrder))) ?? 0;
+
+	const newOrder = maxOrderResult + 1;
 
 	const [newEntry] = await ctx.db
 		.insert(WatchlistEntries)
@@ -184,7 +192,7 @@ export const addWatchlistEntry = async (
 			watchlistId: input.watchlistId,
 			contentId: input.contentId,
 			userId: currentUserId,
-			order: currentOrder.length + 1,
+			order: newOrder,
 		})
 		.returning();
 
@@ -284,4 +292,61 @@ export const toggleWatchlistLike = async (
 			),
 		);
 	return { liked: false };
+};
+
+export const cloneWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: CloneWatchlistSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const watchlist = await ctx.db.query.Watchlist.findFirst({
+		where: eq(Watchlist.id, input.id),
+	});
+	if (!watchlist) {
+		throw new TRPCError({ code: "NOT_FOUND", message: "Watchlist not found" });
+	}
+
+	const watchlistEntries = await ctx.db.query.WatchlistEntries.findMany({
+		where: eq(WatchlistEntries.watchlistId, watchlist.id),
+	});
+
+	const newWatchlistTransaction = await ctx.db.transaction(async (tx) => {
+		const newWatchlistId = createId();
+		const [newWatchlist] = await tx
+			.insert(Watchlist)
+			.values({
+				...watchlist,
+				id: newWatchlistId,
+				userId: currentUserId,
+				title: `${watchlist.title} (Copy)`,
+			})
+			.returning();
+
+		if (newWatchlist) {
+			if (watchlistEntries.length > 0) {
+				const entriesInsert = watchlistEntries.map((entry, index) => ({
+					...entry,
+					id: nanoid(),
+					order: entry.order,
+					userId: currentUserId,
+					watchlistId: newWatchlist.id,
+				}));
+				await tx.insert(WatchlistEntries).values(entriesInsert);
+			}
+
+			await tx.insert(WatchlistMember).values({
+				watchlistId: newWatchlist.id,
+				userId: currentUserId,
+				role: "owner",
+			});
+		}
+		return newWatchlist?.id;
+	});
+	if (!newWatchlistTransaction) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: "Failed to clone watchlist",
+		});
+	}
+	return newWatchlistTransaction;
 };

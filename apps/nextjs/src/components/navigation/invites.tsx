@@ -1,6 +1,5 @@
 "use client";
 
-import type { RouterOutputs } from "@serea/api";
 import { cn } from "@serea/ui";
 import { Button } from "@serea/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
@@ -123,16 +122,18 @@ export default function Invites() {
 export const ToolbarTooltip = ({
 	content,
 	children,
+	side = "right",
 }: {
 	content: string;
 	children: React.ReactNode;
+	side?: "right" | "top" | "bottom" | "left" | undefined;
 }) => {
 	return (
 		<TooltipProvider>
 			<TooltipRoot>
 				<TooltipTrigger asChild>{children}</TooltipTrigger>
 				<TooltipPortal>
-					<TooltipContent side="right" content="" arrow>
+					<TooltipContent side={side} content="" arrow>
 						{content}
 						<TooltipArrow />
 					</TooltipContent>

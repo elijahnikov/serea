@@ -39,4 +39,9 @@ export const watchlistRouter = {
 		.meta({ name: "toggle-watchlist-like" })
 		.input(inputs.toggleWatchlistLikeSchema)
 		.mutation(({ ctx, input }) => services.toggleWatchlistLike(ctx, input)),
+
+	clone: protectedProcedure
+		.meta({ name: "clone-watchlist" })
+		.input(inputs.cloneWatchlistSchema)
+		.mutation(({ ctx, input }) => services.cloneWatchlist(ctx, input)),
 } satisfies TRPCRouterRecord;

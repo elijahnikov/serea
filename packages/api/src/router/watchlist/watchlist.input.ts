@@ -44,3 +44,8 @@ export const toggleWatchlistLikeSchema = z.object({
 export type ToggleWatchlistLikeSchemaType = z.infer<
 	typeof toggleWatchlistLikeSchema
 >;
+
+export const cloneWatchlistSchema = z.object({
+	id: z.string(),
+});
+export type CloneWatchlistSchemaType = z.infer<typeof cloneWatchlistSchema>;

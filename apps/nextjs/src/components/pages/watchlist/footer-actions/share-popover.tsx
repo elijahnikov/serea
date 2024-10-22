@@ -1,8 +1,10 @@
+import { cn } from "@serea/ui";
 import { Button } from "@serea/ui/button";
 import Input from "@serea/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
 import { Check, Copy, Forward } from "lucide-react";
 import { useState } from "react";
+import { ToolbarTooltip } from "~/components/navigation/invites";
 
 const socialPlatforms = ["Twitter", "Facebook", "LinkedIn", "Email"];
 
@@ -19,10 +21,18 @@ export default function SharePopover({ id }: { id: string }) {
 
 	return (
 		<Popover>
-			<PopoverTrigger asChild>
-				<Button size={"xs-icon"} variant={"tertiary"}>
-					<Forward size={18} className=" text-neutral-400" />
-				</Button>
+			<PopoverTrigger>
+				<ToolbarTooltip side="top" content="Share">
+					<div
+						className={cn(
+							"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
+							"gap-0 px-8px py-1 text-neutral-500 relative h-9 w-9",
+							"bg-surface hover:bg-surface-100 rounded-lg",
+						)}
+					>
+						<Forward size={18} className="stroke-[2px]" />
+					</div>
+				</ToolbarTooltip>
 			</PopoverTrigger>
 			<PopoverContent className="min-w-[400px]">
 				<div className="flex gap-2">

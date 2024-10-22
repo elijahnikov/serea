@@ -1,6 +1,6 @@
 "use client";
 
-import FooterActions from "./components/footer-actions";
+import FooterActions from "./footer-actions";
 import WatchlistTags from "./components/tags";
 
 import WatchlistHeader from "./components/header";
