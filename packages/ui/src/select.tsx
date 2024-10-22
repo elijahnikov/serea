@@ -47,7 +47,7 @@ const SelectTrigger = React.forwardRef<
 			ref={ref}
 			disabled={disabled}
 			className={cn(
-				"flex shrink-0 bg-surface-overlay items-center justify-start gap-2 text-nowrap rounded-lg border border-surface-200 py-8px pl-4 pr-3 text-start text-sm leading-6 transition-colors duration-100 dark:border-surface-100 [&>span]:truncate",
+				"flex shrink-0 bg-surface-overlay font-medium items-center justify-start gap-2 text-nowrap rounded-lg border border-surface-200 py-8px pl-4 pr-3 text-start text-sm leading-6 transition-colors duration-100 dark:border-surface-100 [&>span]:truncate",
 				"[--wg-border-width:1px]",
 
 				// focus

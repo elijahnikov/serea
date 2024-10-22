@@ -29,6 +29,7 @@ export default function InviteForm({ watchlistId }: { watchlistId: string }) {
 	const invite = api.members.invite.useMutation({
 		onSuccess: () => {
 			utils.members.listInvites.invalidate({ watchlistId });
+			form.reset({ email: "", role: "viewer" });
 		},
 	});
 
@@ -44,48 +45,54 @@ export default function InviteForm({ watchlistId }: { watchlistId: string }) {
 				})}
 			>
 				<div className="w-full items-center space-x-2 flex">
-					<FormField
-						control={form.control}
-						name="email"
-						render={({ field }) => (
-							<FormItem className="w-full relative">
-								<FormControl>
-									<Input {...field} placeholder="Add people by email" />
-								</FormControl>
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="role"
-						render={({ field }) => (
-							<FormItem>
-								<FormControl>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-									>
-										<SelectTrigger />
-										<SelectContent>
-											<SelectGroup>
-												<SelectItem value="viewer">View</SelectItem>
-												<SelectItem value="editor">Edit</SelectItem>
-											</SelectGroup>
-										</SelectContent>
-									</Select>
-								</FormControl>
-							</FormItem>
-						)}
-					/>
+					<div className="flex min-w-[300px] text-surface-900 border-surface-200 shadow-wg-xs items-center gap-2 border rounded-lg py-1 pl-2 pr-1">
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem className="w-full relative">
+									<FormControl>
+										<input
+											className="w-full bg-transparent focus:outline-none focus:ring-0 flex grow text-sm leading-6 transition-colors duration-100 placeholder:text-surface-500"
+											{...field}
+											placeholder="Add people by email"
+										/>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="role"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<SelectTrigger className="h-8 rounded-lg" />
+											<SelectContent>
+												<SelectGroup>
+													<SelectItem value="viewer">View</SelectItem>
+													<SelectItem value="editor">Edit</SelectItem>
+												</SelectGroup>
+											</SelectContent>
+										</Select>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+					</div>
 
 					<LoadingButton
 						loading={invite.isPending}
-						className="h-10 bg-surface-overlay"
+						className="h-10"
 						size={"sm"}
 						type="submit"
 						before={<Plus size={16} />}
 						spinnerSize="xs"
-						variant="outline"
+						variant={"primary"}
 					>
 						Invite
 					</LoadingButton>

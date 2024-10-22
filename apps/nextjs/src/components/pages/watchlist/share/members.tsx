@@ -38,27 +38,27 @@ export default function Members({
 	return (
 		<div className="flex flex-col">
 			<p className="text-[14px] font-medium text-neutral-500">Members</p>
-			<div className="mt-2 space-y-4">
+			<div className="mt-2 space-y-2">
 				{members?.map((member) => (
 					<div
 						className="w-full flex space-x-2 justify-between items-center"
 						key={member.id}
 					>
-						<div className="flex space-x-2 items-center">
+						<div className="flex items-center">
 							<AvatarRoot>
 								<AvatarWedges
-									size="md"
+									size="sm"
 									src={member.user.image ?? undefined}
 									alt={`Navigation profile picture for ${member.user.name}`}
 								/>
 							</AvatarRoot>
 							<div className="flex flex-col">
 								<div>
-									<p className="text-[16px] font-medium text-neutral-700">
+									<p className="text-[14px] leading-tight font-medium text-neutral-700">
 										{member.user.name}
 									</p>
 								</div>
-								<span className="text-xs text-neutral-500">
+								<span className="text-xs leading-tight text-neutral-500">
 									{member.role.charAt(0).toUpperCase() + member.role.slice(1)}
 								</span>
 							</div>
@@ -75,7 +75,10 @@ export default function Members({
 									}
 									defaultValue={member.role}
 								>
-									<SelectTrigger disabled={isUpdatingRole} />
+									<SelectTrigger
+										className="h-8 rounded-full"
+										disabled={isUpdatingRole}
+									/>
 									<SelectContent>
 										<SelectGroup>
 											<SelectItem value="viewer">View</SelectItem>
@@ -91,7 +94,7 @@ export default function Members({
 									}
 									size="xs-icon"
 									variant="outline"
-									className="p-1 h-10 w-10"
+									className="w-8 h-8 rounded-full"
 								>
 									<Trash size={16} className="stroke-red-600" />
 								</LoadingButton>
