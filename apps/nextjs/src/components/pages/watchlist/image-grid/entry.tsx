@@ -6,6 +6,7 @@ import MovieDropdown from "../components/movie-dropdown";
 import Image from "next/image";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { useSortable } from "@dnd-kit/sortable";
+import { cn } from "@serea/ui";
 
 export default function SortableEntryItem({
 	entry,
@@ -95,15 +96,30 @@ function EntryItem({
 							/>
 						</div>
 						<div className={isDropdownOpen ? "pointer-events-none" : ""}>
-							<Image
-								className="rounded-md border-[0.5px] border-surface-200"
-								width={0}
-								height={0}
-								sizes="100vw"
-								style={{ width: "100%", height: "auto" }}
-								alt={`Poster for ${entry.movie.title}`}
-								src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-							/>
+							{entry.movie.posterBlurhash ? (
+								<Image
+									className={cn("rounded-md border-[0.5px] border-surface-200")}
+									width={0}
+									height={0}
+									sizes="100vw"
+									placeholder="blur"
+									// biome-ignore lint/style/noNonNullAssertion: <explanation>
+									blurDataURL={entry.movie.posterBlurhash!}
+									style={{ width: "100%", height: "auto" }}
+									alt={`Poster for ${entry.movie.title}`}
+									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+								/>
+							) : (
+								<Image
+									className={cn("rounded-md border-[0.5px] border-surface-200")}
+									width={0}
+									height={0}
+									sizes="100vw"
+									style={{ width: "100%", height: "auto" }}
+									alt={`Poster for ${entry.movie.title}`}
+									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+								/>
+							)}
 						</div>
 					</div>
 					<p className="font-medium text-neutral-500 text-sm">

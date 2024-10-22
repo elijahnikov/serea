@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import createJiti from "jiti";
+import withPlaiceholder from "@plaiceholder/next";
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 createJiti(fileURLToPath(import.meta.url))("./src/env");
@@ -23,4 +24,4 @@ const config = {
 	typescript: { ignoreBuildErrors: true },
 };
 
-export default config;
+export default withPlaiceholder(config);

@@ -36,7 +36,7 @@ export default function SharePopover({ id }: { id: string }) {
 			</PopoverTrigger>
 			<PopoverContent className="min-w-[400px]">
 				<div className="flex gap-2">
-					<Input value={shareUrl} />
+					<Input autoFocus={false} value={shareUrl} />
 					<Button size={"xs-icon"} onClick={copyToClipboard}>
 						{copied ? (
 							<Check size={18} className=" text-neutral-300" />

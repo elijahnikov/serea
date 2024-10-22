@@ -28,6 +28,7 @@
 		"@upstash/ratelimit": "^2.0.3",
 		"@upstash/redis": "^1.34.1",
 		"nanoid": "^5.0.7",
+		"sharp": "^0.33.5",
 		"superjson": "2.2.1",
 		"zod": "catalog:"
 	},

@@ -176,6 +176,7 @@ export const addWatchlistEntry = async (
 	if (existingEntry) {
 		return existingEntry;
 	}
+
 	const maxOrderResult =
 		(await ctx.db
 			.select({ maxOrder: sql`MAX(${WatchlistEntries.order})` })

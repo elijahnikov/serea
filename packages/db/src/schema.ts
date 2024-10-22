@@ -108,6 +108,7 @@ export const Movie = pgTable("movie", {
 	title: varchar("title", { length: 255 }).notNull(),
 	overview: text("overview"),
 	poster: text("poster"),
+	posterBlurhash: text("posterBlurhash"),
 	backdrop: text("backdrop"),
 	releaseDate: text("releaseDate"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),

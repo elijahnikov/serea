@@ -148,6 +148,7 @@ export default function ImageGrid({
 						backdrop: newEntry.content.backdrop,
 						releaseDate: newEntry.content.releaseDate,
 						id: newEntry.id,
+						posterBlurhash: null,
 						createdAt: new Date(),
 						updatedAt: null,
 					},
