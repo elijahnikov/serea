@@ -6,12 +6,21 @@ import { cva } from "class-variance-authority";
 import { cn, isElementWithChildren, isReactElement } from "@serea/ui";
 
 const buttonVariants = cva(
-	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased disabled:pointer-events-none",
+	"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
 	{
 		variants: {
+			size: {
+				"xs-icon": "gap-0 px-8px py-1",
+				sm: "gap-0 px-8px py-1",
+				md: "gap-1 px-12px py-2",
+			},
+			shape: {
+				rounded: "rounded-lg",
+				pill: "rounded-full",
+			},
 			variant: {
 				primary:
-					"bg-primary text-white outline-primary hover:bg-primary-800 disabled:opacity-50",
+					"bg-primary text-white outline-primary hover:bg-primary-600 disabled:opacity-50",
 
 				secondary:
 					"bg-secondary text-white outline-secondary hover:bg-secondary-700 disabled:bg-secondary-200 dark:text-secondary-900 dark:hover:bg-secondary-800 dark:disabled:text-wg-white-500",
@@ -24,15 +33,7 @@ const buttonVariants = cva(
 				transparent: "bg-transparent hover:bg-surface",
 				link: "p-0 underline underline-offset-3 focus-visible:text-primary",
 			},
-			shape: {
-				rounded: "rounded-lg",
-				pill: "rounded-full",
-			},
-			size: {
-				"xs-icon": "gap-0 px-8px py-1",
-				sm: "gap-0 px-8px py-1",
-				md: "gap-1 px-12px py-2",
-			},
+
 			destructive: {
 				true: [],
 				false: [],
@@ -98,7 +99,7 @@ const buttonVariants = cva(
 	},
 );
 
-const iconVariants = cva("text-current", {
+export const iconVariants = cva("text-current", {
 	variants: {
 		variant: {
 			primary: "",
