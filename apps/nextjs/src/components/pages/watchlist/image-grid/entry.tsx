@@ -81,7 +81,7 @@ function EntryItem({
 					<div className="relative group">
 						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
-							className={`absolute top-2 right-2 z-50 transition-opacity duration-200 ${
+							className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
 								isDropdownOpen
 									? "opacity-100"
 									: "opacity-0 group-hover:opacity-100"

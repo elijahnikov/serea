@@ -33,7 +33,7 @@ export default function ShareWatchlist({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button size={"xs-icon"} variant={"outline"}>
+				<Button size={"xs-icon"} variant={"tertiary"} className="border">
 					<div className="flex items-center space-x-1">
 						<Plus size={16} />
 						<p>Invite</p>

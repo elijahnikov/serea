@@ -1,8 +1,4 @@
-import {
-	AvatarGroup,
-	AvatarGroupItem,
-	AvatarGroupRoot,
-} from "@serea/ui/avatar-group";
+import { AvatarGroupItem, AvatarGroupRoot } from "@serea/ui/avatar-group";
 import Badge from "@serea/ui/badge";
 import {
 	TooltipProvider,
@@ -28,7 +24,9 @@ export default function MemberList({ watchlistId }: { watchlistId: string }) {
 		<div>
 			<div className="flex items-center mb-2">
 				<p className="font-medium text-neutral-600 text-sm">Members</p>
-				<Badge className="ml-2 text-xs bg-surface-400">{members.length}</Badge>
+				<Badge className="ml-2 text-xs bg-surface-400 border font-medium text-neutral-600 border-surface-100">
+					{members.length}
+				</Badge>
 			</div>
 			<div className="flex flex-wrap gap-2">
 				<TooltipProvider>
@@ -38,6 +36,7 @@ export default function MemberList({ watchlistId }: { watchlistId: string }) {
 								<TooltipTrigger asChild>
 									<AvatarGroupItem
 										size="lg"
+										initials={member.user.name?.charAt(0)}
 										src={member.user.image ?? undefined}
 										alt={member.user.name ?? undefined}
 									/>

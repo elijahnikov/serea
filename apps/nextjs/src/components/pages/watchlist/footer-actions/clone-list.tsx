@@ -32,6 +32,7 @@ export default function CloneList({ id }: { id: string }) {
 						size="xs-icon"
 						spinnerSize="xs"
 						loading={cloneWatchlist.isPending}
+						className="h-8 w-8"
 					>
 						<Copy size={18} className="stroke-[2px] text-neutral-500" />
 					</LoadingButton>

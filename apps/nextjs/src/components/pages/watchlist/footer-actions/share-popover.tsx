@@ -26,7 +26,7 @@ export default function SharePopover({ id }: { id: string }) {
 					<div
 						className={cn(
 							"group inline-flex shrink-0 select-none items-center justify-center text-sm font-medium leading-6 transition-colors duration-100 wg-antialiased focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none",
-							"gap-0 px-8px py-1 text-neutral-500 relative h-9 w-9",
+							"gap-0 px-8px py-1 text-neutral-500 relative h-8 w-8",
 							"bg-surface hover:bg-surface-100 rounded-lg",
 						)}
 					>
@@ -34,7 +34,7 @@ export default function SharePopover({ id }: { id: string }) {
 					</div>
 				</ToolbarTooltip>
 			</PopoverTrigger>
-			<PopoverContent className="min-w-[400px]">
+			<PopoverContent side="top" className="min-w-[400px] z-50">
 				<div className="flex gap-2">
 					<Input autoFocus={false} value={shareUrl} />
 					<Button size={"xs-icon"} onClick={copyToClipboard}>
