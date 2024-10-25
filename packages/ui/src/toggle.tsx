@@ -37,7 +37,7 @@ const Toggle = React.forwardRef<ToggleElement, ToggleProps>(
 					asChild={asChild}
 					before={before}
 					className={cn(
-						"font-normal data-[state=on]:bg-surface-50 data-[state=on]:font-medium",
+						"font-normal data-[state=on]:bg-surface-100 data-[state=on]:font-medium",
 						className,
 					)}
 					disabled={disabled}

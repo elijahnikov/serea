@@ -80,7 +80,7 @@ export default function MovieDropdown({
 			<DropdownMenuTrigger asChild>
 				<Button
 					size={"xs-icon"}
-					className="focus:outline-none focus:ring-0 bg-surface-50 h-6 w-6"
+					className="focus:outline-none focus:ring-0 bg-white h-6 w-6"
 					variant={"outline"}
 				>
 					<Ellipsis size={14} />

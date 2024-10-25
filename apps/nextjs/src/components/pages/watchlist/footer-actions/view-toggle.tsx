@@ -1,13 +1,17 @@
-import { cn } from "@serea/ui";
 import { ToggleGroup, ToggleGroupItem } from "@serea/ui/toggle-group";
 import { Grid, Rows3 } from "lucide-react";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 const VIEW_STORAGE_KEY = "selected-view";
 
-export default function ViewToggle() {
-	const [selectedView, setSelectedView] = useState<string | null>(null);
-
+export default function ViewToggle({
+	selectedView,
+	setSelectedView,
+}: {
+	selectedView: string;
+	setSelectedView: (view: string) => void;
+}) {
 	const viewMap = [
 		{
 			label: "Grid",
@@ -22,13 +26,13 @@ export default function ViewToggle() {
 	];
 
 	useEffect(() => {
-		const savedView = localStorage.getItem(VIEW_STORAGE_KEY);
+		const savedView = Cookies.get(VIEW_STORAGE_KEY);
 		setSelectedView(savedView || "grid");
-	}, []);
+	}, [setSelectedView]);
 
 	const handleViewChange = (value: string) => {
 		setSelectedView(value);
-		localStorage.setItem(VIEW_STORAGE_KEY, value);
+		Cookies.set(VIEW_STORAGE_KEY, value);
 	};
 
 	if (selectedView === null) {

@@ -8,7 +8,12 @@ export default function FooterActions({
 	likeCount,
 	isLiked,
 	id,
-}: NonNullable<RouterOutputs["watchlist"]["get"]>) {
+	selectedView,
+	setSelectedView,
+}: NonNullable<RouterOutputs["watchlist"]["get"]> & {
+	selectedView: string;
+	setSelectedView: (view: string) => void;
+}) {
 	return (
 		<div className="flex justify-between mb-2">
 			<div className="flex items-center gap-2">
@@ -17,7 +22,10 @@ export default function FooterActions({
 				<CloneList id={id} />
 			</div>
 			<div className="flex items-center gap-2">
-				<ViewToggle />
+				<ViewToggle
+					selectedView={selectedView}
+					setSelectedView={setSelectedView}
+				/>
 			</div>
 		</div>
 	);

@@ -1,8 +1,9 @@
 import type { RouterInputs } from "@serea/api";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
 import { Plus } from "lucide-react";
-import MovieSearch from "../../create/movie-search";
+import MovieSearch from "../../../create/movie-search";
 import { nanoid } from "nanoid";
+import { Button } from "@serea/ui/button";
 
 export default function AddEntryButton({
 	watchlistId,
@@ -21,9 +22,15 @@ export default function AddEntryButton({
 		<div>
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
-					<div className="bg-surface-100 border w-full min-h-[150px] h-[calc(100%-20px)] rounded-md cursor-pointer flex flex-col justify-center items-center">
-						<Plus />
-					</div>
+					<Button
+						className="w-full min-h-[150px] h-[calc(100%-20px)] focus:outline-none focus:ring-0"
+						variant={"outline"}
+					>
+						<div className="flex flex-col justify-center items-center">
+							<Plus className="text-muted-foreground" />
+							<p>Add movie</p>
+						</div>
+					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="min-w-[400px]">
 					<MovieSearch

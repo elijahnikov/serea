@@ -2,7 +2,7 @@ import type { RouterOutputs } from "@serea/api";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 import { TooltipContent, TooltipRoot, TooltipTrigger } from "@serea/ui/tooltip";
-import MovieDropdown from "../components/movie-dropdown";
+import MovieDropdown from "../../components/movie-dropdown";
 import Image from "next/image";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { useSortable } from "@dnd-kit/sortable";

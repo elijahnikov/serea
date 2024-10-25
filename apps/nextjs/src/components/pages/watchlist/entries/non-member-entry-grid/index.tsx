@@ -8,7 +8,7 @@ import type { RouterOutputs } from "@serea/api";
 import Image from "next/image";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 
-export default function NonMemberImageGrid({
+export default function NonMemberEntryGrid({
 	entries,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"];
