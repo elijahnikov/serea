@@ -197,6 +197,13 @@ export const addWatchlistEntry = async (
 		})
 		.returning();
 
+	if (newEntry) {
+		await ctx.db
+			.update(Watchlist)
+			.set({ updatedAt: new Date() })
+			.where(eq(Watchlist.id, input.watchlistId));
+	}
+
 	return newEntry;
 };
 

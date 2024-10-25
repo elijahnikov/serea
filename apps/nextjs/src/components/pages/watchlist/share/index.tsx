@@ -7,6 +7,7 @@ import Members from "./members";
 import Invites from "./invites";
 import type { RouterOutputs } from "@serea/api";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
+import Switch from "@serea/ui/switch";
 
 export default function ShareWatchlist({
 	watchlistId,

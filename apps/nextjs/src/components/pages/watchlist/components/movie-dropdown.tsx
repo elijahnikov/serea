@@ -3,7 +3,13 @@
 import type React from "react";
 import { useMemo } from "react";
 
-import { EyeIcon, UserCheckIcon, TrashIcon, Ellipsis } from "lucide-react";
+import {
+	EyeIcon,
+	UserCheckIcon,
+	TrashIcon,
+	Ellipsis,
+	CalendarClockIcon,
+} from "lucide-react";
 
 import type { RouterOutputs } from "@serea/api";
 import {
@@ -37,6 +43,11 @@ export default function MovieDropdown({
 }) {
 	const editorOwner: MenuItem[] = useMemo(
 		() => [
+			{
+				label: "Set watch date",
+				icon: <CalendarClockIcon size={16} />,
+				onSelect: () => {},
+			},
 			{
 				label: "Mark as watched",
 				icon: <EyeIcon size={16} />,

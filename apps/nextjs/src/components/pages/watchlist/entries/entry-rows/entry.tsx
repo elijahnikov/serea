@@ -94,9 +94,9 @@ function EntryRow({
 							onOpenChange={setIsDropdownOpen}
 						/>
 					</div>
-					<div className="mr-2 font-medium text-neutral-400">
-						#<span className="text-black">{entry.order + 1}</span>
-					</div>
+					<p className="mr-2 font-medium text-neutral-500 text-sm">
+						{entry.order + 1}
+					</p>
 					<div className="min-h-[52px]">
 						{entry.movie.posterBlurhash ? (
 							<Image
