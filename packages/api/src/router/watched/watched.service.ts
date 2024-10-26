@@ -8,6 +8,7 @@ import {
 } from "@serea/db/schema";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	GetWatchStatusSchemaType,
 	ToggleAllWatchedSchemaType,
 	ToggleWatchedSchemaType,
 } from "./watched.input";
@@ -97,4 +98,37 @@ export const toggleAllWatched = async (
 	);
 
 	return true;
+};
+
+export const getWatchStatus = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchStatusSchemaType,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const isMember = await ctx.db.query.WatchlistMember.findFirst({
+		where: and(
+			eq(WatchlistMember.watchlistId, input.watchlistId),
+			eq(WatchlistMember.userId, currentUserId),
+		),
+	});
+	if (!isMember) {
+		throw new TRPCError({ code: "UNAUTHORIZED", message: "Not a member." });
+	}
+	const watched = await ctx.db.query.Watched.findMany({
+		where: and(
+			eq(Watched.watchlistId, input.watchlistId),
+			eq(Watched.entryId, input.entryId),
+		),
+		with: {
+			user: {
+				columns: {
+					name: true,
+					image: true,
+					email: true,
+				},
+			},
+		},
+	});
+	return watched;
 };

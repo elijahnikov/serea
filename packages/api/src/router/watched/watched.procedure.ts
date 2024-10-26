@@ -13,4 +13,9 @@ export const watchedRouter = {
 		.meta({ name: "toggle-all-watched" })
 		.input(inputs.toggleAllWatchedSchema)
 		.mutation(({ ctx, input }) => services.toggleAllWatched(ctx, input)),
+
+	getWatchStatus: protectedProcedure
+		.meta({ name: "get-watch-status" })
+		.input(inputs.getWatchStatusSchema)
+		.query(({ ctx, input }) => services.getWatchStatus(ctx, input)),
 } satisfies TRPCRouterRecord;
