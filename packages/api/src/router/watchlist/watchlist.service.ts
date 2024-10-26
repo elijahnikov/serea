@@ -102,6 +102,12 @@ export const getWatchlistEntries = async (
 		where: eq(WatchlistEntries.watchlistId, input.id),
 		with: {
 			movie: true,
+			watched: {
+				with: {
+					entry: true,
+					user: true,
+				},
+			},
 		},
 	});
 

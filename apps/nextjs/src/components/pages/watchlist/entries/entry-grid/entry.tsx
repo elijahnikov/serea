@@ -7,6 +7,12 @@ import Image from "next/image";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { useSortable } from "@dnd-kit/sortable";
 import { cn } from "@serea/ui";
+import {
+	AvatarFallback,
+	AvatarImage,
+	AvatarRoot,
+	AvatarStatus,
+} from "@serea/ui/avatar";
 
 export default function SortableEntryItem({
 	entry,

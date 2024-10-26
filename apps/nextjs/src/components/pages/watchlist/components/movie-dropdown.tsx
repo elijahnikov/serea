@@ -9,6 +9,7 @@ import {
 	TrashIcon,
 	Ellipsis,
 	CalendarClockIcon,
+	CheckCheck,
 } from "lucide-react";
 
 import type { RouterOutputs } from "@serea/api";
@@ -17,16 +18,23 @@ import {
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
+	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
 
 import { Button } from "@serea/ui/button";
+import { api } from "~/trpc/react";
+import {
+	AvatarGroup,
+	AvatarGroupItem,
+	AvatarGroupRoot,
+} from "@serea/ui/avatar-group";
 
 type MenuItem = {
 	label: string;
 	icon: React.ReactNode;
-	onSelect: (event: Event) => void;
+	onSelect: (watchlistId: string, entryId: string) => void;
 	variant?: "destructive" | "default";
 };
 
@@ -41,6 +49,9 @@ export default function MovieDropdown({
 	onOpenChange: (isOpen: boolean) => void;
 	role: "owner" | "editor" | "viewer" | "non-member";
 }) {
+	const { mutate: toggleWatch } = api.watched.toggle.useMutation();
+	const { mutate: toggleAllWatched } = api.watched.toggleAll.useMutation();
+
 	const editorOwner: MenuItem[] = useMemo(
 		() => [
 			{
@@ -51,12 +62,14 @@ export default function MovieDropdown({
 			{
 				label: "Mark as watched",
 				icon: <EyeIcon size={16} />,
-				onSelect: () => {},
+				onSelect: (watchlistId: string, entryId: string) =>
+					toggleWatch({ watchlistId, entryId }),
 			},
 			{
 				label: "Mark as watched for all",
 				icon: <UserCheckIcon size={16} />,
-				onSelect: () => {},
+				onSelect: (watchlistId: string, entryId: string) =>
+					toggleAllWatched({ watchlistId, entryId }),
 			},
 			{
 				label: "Delete from list",
@@ -67,7 +80,7 @@ export default function MovieDropdown({
 				variant: "destructive",
 			},
 		],
-		[entry.id, onDeleteEntry],
+		[entry.id, onDeleteEntry, toggleWatch, toggleAllWatched],
 	);
 
 	const roleToDropdownItems: Record<"owner" | "editor" | "viewer", MenuItem[]> =
@@ -99,12 +112,37 @@ export default function MovieDropdown({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuGroup>
+					<DropdownMenuItem className="pointer-events-none">
+						<CheckCheck size={16} />
+						{entry.watched.length > 0 ? (
+							<AvatarGroup
+								size="sm"
+								items={entry.watched.slice(0, 4).map((watched) => {
+									return {
+										src: watched.user.image ?? undefined,
+										alt: watched.user.name ?? undefined,
+										initials: watched.user.name?.charAt(0),
+									};
+								})}
+								moreLabel={
+									entry.watched.length > 4
+										? `+${entry.watched.length - 4}`
+										: null
+								}
+							/>
+						) : (
+							<span className="text-neutral-500">Not watched yet.</span>
+						)}
+					</DropdownMenuItem>
+				</DropdownMenuGroup>
+				<DropdownMenuSeparator />
+				<DropdownMenuGroup>
 					{roleToDropdownItems[role as keyof typeof roleToDropdownItems].map(
 						(item) => (
 							<DropdownMenuItem
 								destructive={item.variant === "destructive"}
 								key={item.label}
-								onSelect={(e) => item.onSelect(e)}
+								onSelect={() => item.onSelect(entry.watchlistId, entry.id)}
 							>
 								{item.icon}
 								<span>{item.label}</span>

@@ -8,4 +8,9 @@ export const watchedRouter = {
 		.meta({ name: "toggle-watched" })
 		.input(inputs.toggleWatchedSchema)
 		.mutation(({ ctx, input }) => services.toggleWatched(ctx, input)),
+
+	toggleAll: protectedProcedure
+		.meta({ name: "toggle-all-watched" })
+		.input(inputs.toggleAllWatchedSchema)
+		.mutation(({ ctx, input }) => services.toggleAllWatched(ctx, input)),
 } satisfies TRPCRouterRecord;
