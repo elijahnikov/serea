@@ -23,7 +23,7 @@ export default function AddEntryButton({
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
 					<Button
-						className="w-full min-h-[150px] h-[calc(100%-20px)] focus:outline-none focus:ring-0"
+						className="w-full min-h-[175px] h-[calc(100%-20px)] focus:outline-none focus:ring-0"
 						variant={"outline"}
 					>
 						<div className="flex flex-col justify-center items-center">

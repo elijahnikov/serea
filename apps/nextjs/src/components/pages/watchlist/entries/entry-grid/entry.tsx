@@ -35,7 +35,7 @@ export default function SortableEntryItem({
 		isDragging,
 	} = useSortable({
 		id: entry.id,
-		disabled: isDropdownOpen,
+		disabled: isDropdownOpen || role === "viewer",
 	});
 
 	const style = {
@@ -47,7 +47,7 @@ export default function SortableEntryItem({
 		<div
 			ref={setNodeRef}
 			style={style}
-			{...attributes}
+			{...(role === "viewer" ? {} : attributes)}
 			{...(isDropdownOpen ? {} : listeners)}
 		>
 			<EntryItem

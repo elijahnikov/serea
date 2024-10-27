@@ -32,7 +32,7 @@ export default function SortableEntryRow({
 		isDragging,
 	} = useSortable({
 		id: entry.id,
-		disabled: isDropdownOpen,
+		disabled: isDropdownOpen || role === "viewer",
 	});
 
 	const style = {
@@ -44,7 +44,7 @@ export default function SortableEntryRow({
 		<div
 			ref={setNodeRef}
 			style={style}
-			{...attributes}
+			{...(role === "viewer" ? {} : attributes)}
 			{...(isDropdownOpen ? {} : listeners)}
 		>
 			<EntryRow
@@ -77,90 +77,84 @@ function EntryRow({
 	role: "owner" | "editor" | "viewer" | "non-member";
 }) {
 	return (
-		<TooltipRoot>
-			<TooltipTrigger asChild disabled={isDragging}>
-				<div className="group bg-surface-50 border-surface-100 flex border rounded-md p-2 items-center relative">
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-					<div
-						className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
-							isDropdownOpen
-								? "opacity-100"
-								: "opacity-0 group-hover:opacity-100"
-						}`}
-						onClick={(e) => e.stopPropagation()}
-					>
-						<MovieDropdown
-							isOpen={isDropdownOpen}
-							role={role}
-							entry={entry}
-							onDeleteEntry={onDeleteEntry}
-							onOpenChange={setIsDropdownOpen}
-						/>
-					</div>
-					<p className="mr-2 font-medium text-neutral-500 text-sm">
-						{entry.order + 1}
-					</p>
-					<div className="min-h-[52px]">
-						{entry.movie.posterBlurhash ? (
-							<Image
-								className={cn(
-									"rounded-sm aspect-auto border-[0.5px] border-surface-200",
-								)}
-								width={52}
-								height={52}
-								placeholder="blur"
-								// biome-ignore lint/style/noNonNullAssertion: <explanation>
-								blurDataURL={entry.movie.posterBlurhash!}
-								alt={`Poster for ${entry.movie.title}`}
-								src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-							/>
-						) : (
-							<Image
-								className={cn(
-									"rounded-sm aspect-auto border-[0.5px] border-surface-200",
-								)}
-								width={52}
-								height={52}
-								alt={`Poster for ${entry.movie.title}`}
-								src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-							/>
+		<div className="group bg-surface-50 border-surface-100 flex border rounded-md p-2 items-center relative">
+			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+			<div
+				className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
+					isDropdownOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+				}`}
+				onClick={(e) => e.stopPropagation()}
+			>
+				<MovieDropdown
+					isOpen={isDropdownOpen}
+					role={role}
+					entry={entry}
+					onDeleteEntry={onDeleteEntry}
+					onOpenChange={setIsDropdownOpen}
+				/>
+			</div>
+			<p className="mr-2 font-medium text-neutral-500 text-sm">
+				{entry.order + 1}
+			</p>
+			<div className="min-h-[52px]">
+				{entry.movie.posterBlurhash ? (
+					<Image
+						className={cn(
+							"rounded-sm aspect-auto border-[0.5px] border-surface-200",
 						)}
-					</div>
-					<div className="flex ml-4 flex-col">
-						<div className="flex flex-col">
-							<h1 className="text-md font-semibold">{entry.movie.title}</h1>
-							{entry.movie.releaseDate && (
-								<p className="leading-none text-neutral-500 font-medium text-xs">
-									{moment(entry.movie.releaseDate).year()}
-								</p>
-							)}
-						</div>
-						<div>
-							{entry.watched.length > 0 ? (
-								<div className="flex items-center gap-1">
-									<CheckCheck className="text-green-500 mt-2" size={16} />
-									<AvatarGroup
-										className="mt-2"
-										size="xs"
-										items={entry.watched.slice(0, 5).map((watched) => {
-											return {
-												src: watched.user.image ?? undefined,
-												alt: watched.user.name ?? undefined,
-												initials: watched.user.name?.charAt(0),
-											};
-										})}
-										moreLabel={
-											entry.watched.length > 5
-												? `+${entry.watched.length - 5}`
-												: null
-										}
-									/>
-								</div>
-							) : null}
-						</div>
-					</div>
+						width={52}
+						height={52}
+						placeholder="blur"
+						// biome-ignore lint/style/noNonNullAssertion: <explanation>
+						blurDataURL={entry.movie.posterBlurhash!}
+						alt={`Poster for ${entry.movie.title}`}
+						src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+					/>
+				) : (
+					<Image
+						className={cn(
+							"rounded-sm aspect-auto border-[0.5px] border-surface-200",
+						)}
+						width={52}
+						height={52}
+						alt={`Poster for ${entry.movie.title}`}
+						src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+					/>
+				)}
+			</div>
+			<div className="flex ml-4 flex-col">
+				<div className="flex flex-col">
+					<h1 className="text-md font-semibold">{entry.movie.title}</h1>
+					{entry.movie.releaseDate && (
+						<p className="leading-none text-neutral-500 font-medium text-xs">
+							{moment(entry.movie.releaseDate).year()}
+						</p>
+					)}
 				</div>
-			</TooltipTrigger>
-		</TooltipRoot>
+				<div>
+					{entry.watched.length > 0 ? (
+						<div className="flex items-center gap-1">
+							<CheckCheck className="text-green-500 mt-2" size={16} />
+							<AvatarGroup
+								className="mt-2"
+								size="xs"
+								items={entry.watched.slice(0, 5).map((watched) => {
+									return {
+										src: watched.user.image ?? undefined,
+										alt: watched.user.name ?? undefined,
+										initials: watched.user.name?.charAt(0),
+									};
+								})}
+								moreLabel={
+									entry.watched.length > 5
+										? `+${entry.watched.length - 5}`
+										: null
+								}
+							/>
+						</div>
+					) : null}
+				</div>
+			</div>
+		</div>
 	);
 }

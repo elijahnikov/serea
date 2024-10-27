@@ -21,6 +21,12 @@ import Switch from "@serea/ui/switch";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { cn } from "@serea/ui";
+import { useEffect } from "react";
+import Label from "@serea/ui/label";
+import Badge from "@serea/ui/badge";
+import { Button } from "@serea/ui/button";
+import { RefreshCcw } from "lucide-react";
 
 export default function CreateForm() {
 	const router = useRouter();
@@ -32,6 +38,7 @@ export default function CreateForm() {
 			entries: [],
 			tags: "",
 			private: false,
+			hideStats: false,
 		},
 	});
 
@@ -43,14 +50,55 @@ export default function CreateForm() {
 		},
 	});
 
+	const isPrivate = form.watch("private");
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (isPrivate) {
+			form.setValue("hideStats", false);
+		}
+	}, [isPrivate]);
+
 	return (
 		<div className="w-[1000px] pt-8">
-			<p className="font-semibold tracking-tight text-neutral-800 text-xl">
-				Create a watchlist
-			</p>
-			<p className="font-medium text-neutral-500 mb-8 text-md max-w-[75%]">
-				Create your personalized movie watchlist and share it with friends.
-			</p>
+			<div className="flex justify-between">
+				<div className="flex min-w-[800px] flex-col">
+					<p className="font-semibold tracking-tight text-neutral-800 text-xl">
+						Create a watchlist
+					</p>
+					<p className="font-medium text-neutral-500 mb-8 text-md max-w-[75%]">
+						Create your personalized movie watchlist and share it with friends.
+					</p>
+				</div>
+				<div className="flex justify-end w-full max-h-10 space-x-1">
+					<Button
+						variant={"outline"}
+						size={"sm"}
+						onClick={() =>
+							form.reset({
+								title: "",
+								description: "",
+								entries: [],
+								tags: "",
+								private: false,
+								hideStats: false,
+							})
+						}
+						type="reset"
+						before={<RefreshCcw size={16} />}
+					>
+						Reset
+					</Button>
+					<LoadingButton
+						className="max-h-10"
+						spinnerSize="xs"
+						loading={createWatchlist.isPending}
+						type="submit"
+					>
+						Create
+					</LoadingButton>
+				</div>
+			</div>
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit((data) => {
@@ -90,24 +138,25 @@ export default function CreateForm() {
 									</FormItem>
 								)}
 							/>
-
-							<FormField
-								control={form.control}
-								name="tags"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel description="Optional">Tags</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormDescription>
-											Add relevant comma separated keywords to categorize your
-											watchlist.
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+							<div>
+								<FormField
+									control={form.control}
+									name="tags"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel description="Optional">Tags</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormDescription>
+												Press enter to add a new tag. Max 10 tags.
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+							<Label>Privacy</Label>
 							<Controller
 								control={form.control}
 								name="private"
@@ -125,17 +174,26 @@ export default function CreateForm() {
 									/>
 								)}
 							/>
+							<Controller
+								control={form.control}
+								name="hideStats"
+								render={({ field: { onChange, ref, value, ...rest } }) => (
+									<Switch
+										{...rest}
+										ref={ref}
+										checked={value}
+										onCheckedChange={onChange}
+										alignLabel="end"
+										disabled={isPrivate}
+										className={cn(isPrivate && "cursor-not-allowed")}
+										helperText="You can choose to hide progress stats from other users that are not part of your watchlist."
+										label="Hide progress?"
+										tooltip="Tooltip example"
+									/>
+								)}
+							/>
 						</div>
 						<MovieList form={form} />
-					</div>
-					<div className="flex justify-end mt-4 w-full space-x-1">
-						<LoadingButton
-							spinnerSize="xs"
-							loading={createWatchlist.isPending}
-							type="submit"
-						>
-							Submit
-						</LoadingButton>
 					</div>
 				</form>
 			</Form>

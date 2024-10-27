@@ -114,6 +114,7 @@ export const watchlistCreateSchema = z.object({
 	tags: z.string(),
 	entries: movieTableSchema.array(),
 	private: z.boolean().optional(),
+	hideStats: z.boolean().optional(),
 });
 
 // WATCHLIST INVITE FORM SCHEMA

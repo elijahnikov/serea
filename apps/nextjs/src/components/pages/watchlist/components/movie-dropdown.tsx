@@ -59,16 +59,6 @@ export default function MovieDropdown({
 			utils.watched.getWatchStatus.invalidate();
 		},
 	});
-	const { data: watched, isLoading: isLoadingWatched } =
-		api.watched.getWatchStatus.useQuery(
-			{
-				watchlistId: entry.watchlistId,
-				entryId: entry.id,
-			},
-			{
-				enabled: isOpen && role !== "non-member",
-			},
-		);
 
 	const editorOwner: MenuItem[] = useMemo(
 		() => [
@@ -110,11 +100,12 @@ export default function MovieDropdown({
 					{
 						label: "Mark as watched",
 						icon: <EyeIcon size={16} />,
-						onSelect: () => {},
+						onSelect: (watchlistId: string, entryId: string) =>
+							toggleWatch({ watchlistId, entryId }),
 					},
 				],
 			}),
-			[editorOwner],
+			[editorOwner, toggleWatch],
 		);
 
 	return (
@@ -132,24 +123,25 @@ export default function MovieDropdown({
 				<DropdownMenuGroup>
 					<DropdownMenuItem className="pointer-events-none">
 						<CheckCheck size={16} />
-						{!watched && isLoadingWatched && (
-							<Loading size="xs" type="spinner" />
-						)}
-						{!isLoadingWatched && watched && watched.length > 0 ? (
+						{entry.watched && entry.watched.length > 0 ? (
 							<AvatarGroup
 								size="sm"
-								items={watched.slice(0, 4).map((watched) => {
+								items={entry.watched.slice(0, 4).map((watched) => {
 									return {
 										src: watched.user.image ?? undefined,
 										alt: watched.user.name ?? undefined,
 										initials: watched.user.name?.charAt(0),
 									};
 								})}
-								moreLabel={watched.length > 4 ? `+${watched.length - 4}` : null}
+								moreLabel={
+									entry.watched.length > 4
+										? `+${entry.watched.length - 4}`
+										: null
+								}
 							/>
-						) : watched && watched.length === 0 ? (
+						) : (
 							<span className="text-neutral-500">Not watched yet.</span>
-						) : null}
+						)}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
