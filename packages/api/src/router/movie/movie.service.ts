@@ -13,7 +13,7 @@ export const createMovie = async (
 
 	if (!movie) {
 		const response = await fetch(
-			`${env.APP_URL}/api/base64?url=${`https://image.tmdb.org/t/p/w500${input.poster}`}`,
+			`${env.VERCEL_URL}/api/base64?url=${`https://image.tmdb.org/t/p/w500${input.poster}`}`,
 		);
 		const { base64 } = (await response.json()) as { base64: string };
 
