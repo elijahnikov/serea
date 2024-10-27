@@ -50,6 +50,7 @@ export default function Members({
 									size="sm"
 									src={member.user.image ?? undefined}
 									alt={`Navigation profile picture for ${member.user.name}`}
+									initials={member.user.name?.charAt(0)}
 								/>
 							</AvatarRoot>
 							<div className="flex flex-col">

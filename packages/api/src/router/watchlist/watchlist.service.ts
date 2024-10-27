@@ -3,6 +3,7 @@
 import type { WatchlistCreateSchemaType } from "@serea/validators";
 import type { ProtectedTRPCContext } from "../../trpc";
 import {
+	Watched,
 	Watchlist,
 	WatchlistEntries,
 	WatchlistLike,
@@ -104,7 +105,6 @@ export const getWatchlistEntries = async (
 			movie: true,
 			watched: {
 				with: {
-					entry: true,
 					user: true,
 				},
 			},

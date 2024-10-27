@@ -25,11 +25,8 @@ import {
 
 import { Button } from "@serea/ui/button";
 import { api } from "~/trpc/react";
-import {
-	AvatarGroup,
-	AvatarGroupItem,
-	AvatarGroupRoot,
-} from "@serea/ui/avatar-group";
+import { AvatarGroup } from "@serea/ui/avatar-group";
+import Loading from "@serea/ui/loading";
 
 type MenuItem = {
 	label: string;
@@ -43,14 +40,35 @@ export default function MovieDropdown({
 	onDeleteEntry,
 	onOpenChange,
 	role,
+	isOpen,
 }: {
 	entry: NonNullable<RouterOutputs["watchlist"]["getEntries"]>[number];
 	onDeleteEntry: (entryId: string) => void;
 	onOpenChange: (isOpen: boolean) => void;
 	role: "owner" | "editor" | "viewer" | "non-member";
+	isOpen: boolean;
 }) {
-	const { mutate: toggleWatch } = api.watched.toggle.useMutation();
-	const { mutate: toggleAllWatched } = api.watched.toggleAll.useMutation();
+	const utils = api.useUtils();
+	const { mutate: toggleWatch } = api.watched.toggle.useMutation({
+		onSuccess: () => {
+			utils.watched.getWatchStatus.invalidate();
+		},
+	});
+	const { mutate: toggleAllWatched } = api.watched.toggleAll.useMutation({
+		onSuccess: () => {
+			utils.watched.getWatchStatus.invalidate();
+		},
+	});
+	const { data: watched, isLoading: isLoadingWatched } =
+		api.watched.getWatchStatus.useQuery(
+			{
+				watchlistId: entry.watchlistId,
+				entryId: entry.id,
+			},
+			{
+				enabled: isOpen && role !== "non-member",
+			},
+		);
 
 	const editorOwner: MenuItem[] = useMemo(
 		() => [
@@ -114,25 +132,24 @@ export default function MovieDropdown({
 				<DropdownMenuGroup>
 					<DropdownMenuItem className="pointer-events-none">
 						<CheckCheck size={16} />
-						{entry.watched.length > 0 ? (
+						{!watched && isLoadingWatched && (
+							<Loading size="xs" type="spinner" />
+						)}
+						{!isLoadingWatched && watched && watched.length > 0 ? (
 							<AvatarGroup
 								size="sm"
-								items={entry.watched.slice(0, 4).map((watched) => {
+								items={watched.slice(0, 4).map((watched) => {
 									return {
 										src: watched.user.image ?? undefined,
 										alt: watched.user.name ?? undefined,
 										initials: watched.user.name?.charAt(0),
 									};
 								})}
-								moreLabel={
-									entry.watched.length > 4
-										? `+${entry.watched.length - 4}`
-										: null
-								}
+								moreLabel={watched.length > 4 ? `+${watched.length - 4}` : null}
 							/>
-						) : (
+						) : watched && watched.length === 0 ? (
 							<span className="text-neutral-500">Not watched yet.</span>
-						)}
+						) : null}
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />

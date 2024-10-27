@@ -255,7 +255,7 @@ export const WatchlistMember = pgTable(
 );
 export const WatchlistMemberRelations = relations(
 	WatchlistMember,
-	({ one }) => ({
+	({ one, many }) => ({
 		watchlist: one(Watchlist, {
 			fields: [WatchlistMember.watchlistId],
 			references: [Watchlist.id],
@@ -264,6 +264,7 @@ export const WatchlistMemberRelations = relations(
 			fields: [WatchlistMember.userId],
 			references: [User.id],
 		}),
+		watched: many(Watched),
 	}),
 );
 
@@ -296,11 +297,16 @@ export const WatchlistLikeRelations = relations(WatchlistLike, ({ one }) => ({
 export const Watched = pgTable("watched", {
 	id: uuid("id").notNull().primaryKey().defaultRandom(),
 	userId: uuid("user_id").notNull(),
+	memberId: uuid("member_id").notNull(),
 	watchlistId: varchar("watchlist_id", { length: 24 }).notNull(),
 	entryId: varchar("entry_id", { length: 24 }).notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 export const WatchedRelations = relations(Watched, ({ one }) => ({
+	member: one(WatchlistMember, {
+		fields: [Watched.memberId],
+		references: [WatchlistMember.id],
+	}),
 	user: one(User, {
 		fields: [Watched.userId],
 		references: [User.id],

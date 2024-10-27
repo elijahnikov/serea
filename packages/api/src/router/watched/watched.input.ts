@@ -17,3 +17,10 @@ export const getWatchStatusSchema = z.object({
 	entryId: z.string(),
 });
 export type GetWatchStatusSchemaType = z.infer<typeof getWatchStatusSchema>;
+
+export const getWatchlistProgressSchema = z.object({
+	watchlistId: z.string(),
+});
+export type GetWatchlistProgressSchemaType = z.infer<
+	typeof getWatchlistProgressSchema
+>;

@@ -27,6 +27,7 @@ export default function Invites({
 								size="sm"
 								src={invite.invitee.image ?? undefined}
 								alt={`Navigation profile picture for ${invite.invitee.name}`}
+								initials={invite.invitee.name?.charAt(0)}
 							/>
 						</AvatarRoot>
 						<div className="flex w-full justify-between items-center">

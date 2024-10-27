@@ -18,6 +18,9 @@ export default async function WatchlistPage({
 	void api.members.getMemberRole.prefetch({
 		watchlistId: params.id,
 	});
+	void api.watched.getWatchlistProgress.prefetch({
+		watchlistId: params.id,
+	});
 
 	const cookieStore = cookies();
 	const view = cookieStore.get("selected-view");

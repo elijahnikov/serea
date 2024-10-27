@@ -95,6 +95,7 @@ function EntryItem({
 							onClick={(e) => e.stopPropagation()}
 						>
 							<MovieDropdown
+								isOpen={isDropdownOpen}
 								role={role}
 								entry={entry}
 								onDeleteEntry={onDeleteEntry}

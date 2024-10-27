@@ -8,6 +8,7 @@ import {
 } from "@serea/db/schema";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	GetWatchlistProgressSchemaType,
 	GetWatchStatusSchemaType,
 	ToggleAllWatchedSchemaType,
 	ToggleWatchedSchemaType,
@@ -48,16 +49,23 @@ export const toggleWatched = async (
 		),
 	});
 
+	const memberId = watchlist.members.find(
+		(member) => member.userId === currentUserId,
+	)?.id;
 	if (!watched) {
-		await ctx.db.insert(Watched).values({
-			watchlistId: input.watchlistId,
-			entryId: input.entryId,
-			userId: currentUserId,
-		});
-		return { watched: true };
+		if (memberId) {
+			await ctx.db.insert(Watched).values({
+				watchlistId: input.watchlistId,
+				entryId: input.entryId,
+				userId: currentUserId,
+				memberId,
+			});
+			return { watched: true };
+		}
+	} else {
+		await ctx.db.delete(Watched).where(eq(Watched.id, watched.id));
+		return { watched: false };
 	}
-	await ctx.db.delete(Watched).where(eq(Watched.id, watched.id));
-	return { watched: false };
 };
 
 export const toggleAllWatched = async (
@@ -78,22 +86,29 @@ export const toggleAllWatched = async (
 
 	await ctx.db
 		.delete(Watched)
-		.where(and(eq(Watched.watchlistId, input.watchlistId)));
+		.where(
+			and(
+				eq(Watched.watchlistId, input.watchlistId),
+				eq(Watched.entryId, input.entryId),
+			),
+		);
 
 	const members = await ctx.db.query.WatchlistMember.findMany({
 		where: eq(WatchlistMember.watchlistId, input.watchlistId),
 	});
-	const entries = await ctx.db.query.WatchlistEntries.findMany({
-		where: eq(WatchlistEntries.watchlistId, input.watchlistId),
-	});
 
-	const userIds = members.map((member) => member.userId);
+	const userIds = members.map((member) => {
+		return {
+			userId: member.userId,
+			memberId: member.id,
+		};
+	});
 
 	await ctx.db.insert(Watched).values(
 		userIds.map((userId) => ({
 			watchlistId: input.watchlistId,
 			entryId: input.entryId,
-			userId,
+			...userId,
 		})),
 	);
 
@@ -131,4 +146,36 @@ export const getWatchStatus = async (
 		},
 	});
 	return watched;
+};
+
+export const getWatchlistProgress = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistProgressSchemaType,
+) => {
+	const watchlist = await ctx.db.query.Watchlist.findFirst({
+		where: eq(Watchlist.id, input.watchlistId),
+	});
+	if (!watchlist) {
+		throw new TRPCError({ code: "NOT_FOUND", message: "Watchlist not found" });
+	}
+	const entries = await ctx.db.query.WatchlistEntries.findMany({
+		where: eq(WatchlistEntries.watchlistId, input.watchlistId),
+	});
+
+	const members = await ctx.db.query.WatchlistMember.findMany({
+		where: eq(WatchlistMember.watchlistId, input.watchlistId),
+		with: {
+			watched: {
+				with: {
+					entry: {
+						with: {
+							movie: true,
+						},
+					},
+				},
+			},
+			user: true,
+		},
+	});
+	return { members, entriesLength: entries.length };
 };

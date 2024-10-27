@@ -8,6 +8,8 @@ import moment from "moment";
 import MovieDropdown from "../../components/movie-dropdown";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { AvatarGroup } from "@serea/ui/avatar-group";
+import { CheckCheck } from "lucide-react";
 
 export default function SortableEntryRow({
 	entry,
@@ -88,6 +90,7 @@ function EntryRow({
 						onClick={(e) => e.stopPropagation()}
 					>
 						<MovieDropdown
+							isOpen={isDropdownOpen}
 							role={role}
 							entry={entry}
 							onDeleteEntry={onDeleteEntry}
@@ -131,6 +134,29 @@ function EntryRow({
 									{moment(entry.movie.releaseDate).year()}
 								</p>
 							)}
+						</div>
+						<div>
+							{entry.watched.length > 0 ? (
+								<div className="flex items-center gap-1">
+									<CheckCheck className="text-green-500 mt-2" size={16} />
+									<AvatarGroup
+										className="mt-2"
+										size="xs"
+										items={entry.watched.slice(0, 5).map((watched) => {
+											return {
+												src: watched.user.image ?? undefined,
+												alt: watched.user.name ?? undefined,
+												initials: watched.user.name?.charAt(0),
+											};
+										})}
+										moreLabel={
+											entry.watched.length > 5
+												? `+${entry.watched.length - 5}`
+												: null
+										}
+									/>
+								</div>
+							) : null}
 						</div>
 					</div>
 				</div>

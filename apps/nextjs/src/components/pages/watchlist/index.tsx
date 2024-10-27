@@ -6,11 +6,11 @@ import WatchlistHeader from "./components/header";
 import MainText from "./components/main-text";
 import { api } from "~/trpc/react";
 import EntryGrid from "./entries/entry-grid";
-import MemberList from "./components/member-list";
 import NonMemberEntryGrid from "./entries/non-member-entry-grid";
 import FooterActions from "./footer-actions";
 import { useState } from "react";
 import EntryRows from "./entries/entry-rows";
+import MembersProgress from "./components/member-progress";
 
 export default function SingleWatchlist({
 	id,
@@ -67,8 +67,9 @@ export default function SingleWatchlist({
 						) : null}
 					</div>
 					<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
-						<MemberList watchlistId={watchlist.id} />
 						<WatchlistTags tags={watchlist.tags} />
+						{/* <MemberList watchlistId={watchlist.id} /> */}
+						<MembersProgress watchlistId={watchlist.id} />
 					</div>
 				</div>
 			</div>

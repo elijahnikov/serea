@@ -18,4 +18,9 @@ export const watchedRouter = {
 		.meta({ name: "get-watch-status" })
 		.input(inputs.getWatchStatusSchema)
 		.query(({ ctx, input }) => services.getWatchStatus(ctx, input)),
+
+	getWatchlistProgress: protectedProcedure
+		.meta({ name: "get-watchlist-progress" })
+		.input(inputs.getWatchlistProgressSchema)
+		.query(({ ctx, input }) => services.getWatchlistProgress(ctx, input)),
 } satisfies TRPCRouterRecord;
