@@ -31,7 +31,7 @@ export const createWatchlist = async (
 	const id = createId();
 	const [watchlist] = await ctx.db
 		.insert(Watchlist)
-		.values({ id, ...input, userId: currentUserId })
+		.values({ id, ...input, userId: currentUserId, tags: input.tags.join(",") })
 		.returning();
 
 	if (!watchlist) {

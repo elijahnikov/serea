@@ -35,7 +35,7 @@ export default function MovieHeader() {
 		movie,
 	}: { movie: NonNullable<typeof data>["results"][number] }) => {
 		return (
-			<div key={movie.id} className="w-[200px]">
+			<div key={movie.id} className="w-[200px] pointer-events-none select-none">
 				<AspectRatio ratio={2 / 3}>
 					<Image
 						fill

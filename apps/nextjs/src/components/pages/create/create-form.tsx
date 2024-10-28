@@ -26,7 +26,7 @@ import { useEffect } from "react";
 import Label from "@serea/ui/label";
 import Badge from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, X } from "lucide-react";
 
 export default function CreateForm() {
 	const router = useRouter();
@@ -36,7 +36,7 @@ export default function CreateForm() {
 			title: "",
 			description: "",
 			entries: [],
-			tags: "",
+			tags: [],
 			private: false,
 			hideStats: false,
 		},
@@ -51,6 +51,35 @@ export default function CreateForm() {
 	});
 
 	const isPrivate = form.watch("private");
+	const tags = form.watch("tags");
+
+	const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		const input = e.currentTarget;
+		const value = input.value.trim();
+
+		if (e.key === "Enter" && value) {
+			e.preventDefault();
+
+			const currentTags = form.getValues("tags");
+			if (currentTags.length >= 10) {
+				toast.error("Maximum 10 tags allowed");
+				return;
+			}
+
+			if (currentTags.includes(value)) {
+				toast.error("Tag already exists");
+				return;
+			}
+
+			if (value.length > 20) {
+				toast.error("Tag must be 20 characters or less");
+				return;
+			}
+
+			form.setValue("tags", [...currentTags, value]);
+			input.value = "";
+		}
+	};
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -79,17 +108,19 @@ export default function CreateForm() {
 								title: "",
 								description: "",
 								entries: [],
-								tags: "",
+								tags: [],
 								private: false,
 								hideStats: false,
 							})
 						}
+						form="create-watchlist-form"
 						type="reset"
 						before={<RefreshCcw size={16} />}
 					>
 						Reset
 					</Button>
 					<LoadingButton
+						form="create-watchlist-form"
 						className="max-h-10"
 						spinnerSize="xs"
 						loading={createWatchlist.isPending}
@@ -101,6 +132,7 @@ export default function CreateForm() {
 			</div>
 			<Form {...form}>
 				<form
+					id="create-watchlist-form"
 					onSubmit={form.handleSubmit((data) => {
 						createWatchlist.mutate(data);
 					})}
@@ -139,22 +171,38 @@ export default function CreateForm() {
 								)}
 							/>
 							<div>
-								<FormField
-									control={form.control}
-									name="tags"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel description="Optional">Tags</FormLabel>
-											<FormControl>
-												<Input {...field} />
-											</FormControl>
-											<FormDescription>
-												Press enter to add a new tag. Max 10 tags.
-											</FormDescription>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+								<FormItem>
+									<FormLabel description="Optional">Tags</FormLabel>
+									<Input onKeyDown={handleTagInput} />
+									<div className="mt-2 flex flex-wrap gap-2">
+										{form.watch("tags").map((tag, index) => (
+											<Badge
+												key={`${tag}_${
+													// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+													index
+												}`}
+												stroke
+												className="cursor-pointer"
+												onClick={() => {
+													const currentTags = form.getValues("tags");
+													form.setValue(
+														"tags",
+														currentTags.filter((_, i) => i !== index),
+													);
+												}}
+											>
+												<div className="flex items-center gap-1">
+													<p>{tag}</p>
+													<X size={14} className="text-neutral-500" />
+												</div>
+											</Badge>
+										))}
+									</div>
+									<FormDescription>
+										Press enter to add a new tag. Max 10 tags.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
 							</div>
 							<Label>Privacy</Label>
 							<Controller
@@ -168,7 +216,7 @@ export default function CreateForm() {
 										onCheckedChange={onChange}
 										alignLabel="end"
 										disabled={false}
-										helperText="When public, anyone with the link can view your list. When private, only you have access."
+										helperText="When public, anyone with the link can view your list. When private, only you and other members	 have access."
 										label="Make list private?"
 										tooltip="Tooltip example"
 									/>
@@ -185,7 +233,7 @@ export default function CreateForm() {
 										onCheckedChange={onChange}
 										alignLabel="end"
 										disabled={isPrivate}
-										className={cn(isPrivate && "cursor-not-allowed")}
+										className={cn(isPrivate ? "cursor-not-allowed" : "")}
 										helperText="You can choose to hide progress stats from other users that are not part of your watchlist."
 										label="Hide progress?"
 										tooltip="Tooltip example"

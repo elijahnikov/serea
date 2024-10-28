@@ -111,7 +111,7 @@ export const watchlistCreateSchema = z.object({
 		message: "Title must be at least 2 characters.",
 	}),
 	description: z.string().optional(),
-	tags: z.string(),
+	tags: z.string().array(),
 	entries: movieTableSchema.array(),
 	private: z.boolean().optional(),
 	hideStats: z.boolean().optional(),
