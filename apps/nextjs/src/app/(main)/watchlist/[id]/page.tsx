@@ -13,8 +13,6 @@ export default async function WatchlistPage({
 }: { params: { id: string } }) {
 	const session = await auth();
 	void api.watchlist.get.prefetch({ id: params.id });
-	void api.watchlist.getEntries.prefetch({ id: params.id });
-	void api.members.listMembers.prefetch({ watchlistId: params.id });
 	void api.members.getMemberRole.prefetch({
 		watchlistId: params.id,
 	});

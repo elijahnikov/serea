@@ -51,13 +51,13 @@ export default function MovieDropdown({
 	const utils = api.useUtils();
 	const { mutate: toggleWatch } = api.watched.toggle.useMutation({
 		onSuccess: () => {
-			utils.watched.getWatchStatus.invalidate();
+			utils.watchlist.getEntries.invalidate();
 			utils.watched.getWatchlistProgress.invalidate();
 		},
 	});
 	const { mutate: toggleAllWatched } = api.watched.toggleAll.useMutation({
 		onSuccess: () => {
-			utils.watched.getWatchStatus.invalidate();
+			utils.watchlist.getEntries.invalidate();
 			utils.watched.getWatchlistProgress.invalidate();
 		},
 	});

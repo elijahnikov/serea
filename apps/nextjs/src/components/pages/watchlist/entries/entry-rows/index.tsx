@@ -19,6 +19,7 @@ import {
 	SortableContext,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Skeleton } from "@serea/ui/skeleton";
 
 export default function EntryRows({
 	entries,
@@ -125,5 +126,35 @@ export default function EntryRows({
 				</SortableContext>
 			</TooltipProvider>
 		</DndContext>
+	);
+}
+
+export function EntryRowsSkeleton() {
+	return (
+		<div className="space-y-4">
+			<div className="h-10 w-full">
+				<Skeleton className="h-full w-full" />
+			</div>
+
+			{Array.from({ length: 3 }).map((_, index) => (
+				<div
+					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					key={index}
+					className="flex items-center gap-2 bg-surface-50 border-surface-100 border rounded-md px-2 py-2"
+				>
+					<Skeleton className="h-4 w-4" />
+					<Skeleton className="h-[76px] w-[52px]" />
+
+					<div className="flex flex-1 flex-col gap-2">
+						<Skeleton className="h-6 w-48" />
+						<Skeleton className="h-4 w-24" />
+						<div className="flex gap-1">
+							<Skeleton className="h-4 w-4 rounded-full" />
+							<Skeleton className="h-4 w-4 rounded-full" />
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
 	);
 }

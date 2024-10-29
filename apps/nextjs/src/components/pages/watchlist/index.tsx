@@ -5,11 +5,11 @@ import WatchlistTags from "./components/tags";
 import WatchlistHeader from "./components/header";
 import MainText from "./components/main-text";
 import { api } from "~/trpc/react";
-import EntryGrid from "./entries/entry-grid";
+import EntryGrid, { EntryGridSkeleton } from "./entries/entry-grid";
 import NonMemberEntryGrid from "./entries/non-member-entry-grid";
 import FooterActions from "./footer-actions";
 import { useState } from "react";
-import EntryRows from "./entries/entry-rows";
+import EntryRows, { EntryRowsSkeleton } from "./entries/entry-rows";
 import MembersProgress from "./components/member-progress";
 
 export default function SingleWatchlist({
@@ -20,10 +20,8 @@ export default function SingleWatchlist({
 	const [selectedView, setSelectedView] = useState<string>(view || "grid");
 
 	const [watchlist] = api.watchlist.get.useSuspenseQuery({ id });
-	const [watchlistEntries] = api.watchlist.getEntries.useSuspenseQuery(
-		{ id },
-		{ refetchInterval: 60000 },
-	);
+	const { data: watchlistEntries, isLoading } =
+		api.watchlist.getEntries.useQuery({ id });
 	const [role] = api.members.getMemberRole.useSuspenseQuery({
 		watchlistId: id,
 	});
@@ -48,27 +46,34 @@ export default function SingleWatchlist({
 							setSelectedView={setSelectedView}
 							{...watchlist}
 						/>
-						{["owner", "editor", "viewer"].includes(role) ? (
-							selectedView === "grid" ? (
-								<EntryGrid
-									watchlistId={watchlist.id}
-									entries={watchlistEntries}
-									role={role}
-								/>
+						{isLoading &&
+							(selectedView === "grid" ? (
+								<EntryGridSkeleton />
 							) : (
-								<EntryRows
-									entries={watchlistEntries}
-									role={role}
-									watchlistId={watchlist.id}
-								/>
-							)
-						) : selectedView === "grid" ? (
-							<NonMemberEntryGrid entries={watchlistEntries} />
-						) : null}
+								<EntryRowsSkeleton />
+							))}
+						{!isLoading &&
+							watchlistEntries &&
+							(["owner", "editor", "viewer"].includes(role) ? (
+								selectedView === "grid" ? (
+									<EntryGrid
+										watchlistId={watchlist.id}
+										entries={watchlistEntries}
+										role={role}
+									/>
+								) : (
+									<EntryRows
+										entries={watchlistEntries}
+										role={role}
+										watchlistId={watchlist.id}
+									/>
+								)
+							) : selectedView === "grid" ? (
+								<NonMemberEntryGrid entries={watchlistEntries} />
+							) : null)}
 					</div>
 					<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
 						<WatchlistTags tags={watchlist.tags} />
-						{/* <MemberList watchlistId={watchlist.id} /> */}
 						<MembersProgress watchlistId={watchlist.id} />
 					</div>
 				</div>

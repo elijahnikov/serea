@@ -11,7 +11,6 @@ export default function WatchlistLoadingSkeleton() {
 					<div className="w-full pr-8">
 						<MainTextSkeleton />
 						<FooterActionsSkeleton />
-						<ImageGridSkeleton />
 					</div>
 					<div className="w-[30%] mt-10 min-w-[200px]">
 						<TagsSkeleton />

@@ -2,8 +2,6 @@ import { TooltipProvider } from "@serea/ui/tooltip";
 import type { RouterOutputs } from "@serea/api";
 
 import { useState } from "react";
-import { api } from "~/trpc/react";
-import { toast } from "sonner";
 import {
 	closestCenter,
 	DndContext,
@@ -20,8 +18,8 @@ import {
 } from "@dnd-kit/sortable";
 import SortableEntryItem from "./entry";
 import AddEntryButton from "./add-entry-button";
-import { nanoid } from "nanoid";
 import useEntryActions from "../utils";
+import { Skeleton } from "@serea/ui/skeleton";
 
 export default function EntryGrid({
 	entries,
@@ -128,5 +126,23 @@ export default function EntryGrid({
 				</SortableContext>
 			</TooltipProvider>
 		</DndContext>
+	);
+}
+
+export function EntryGridSkeleton() {
+	const skeletonItems = Array.from({ length: 10 }, (_, i) => i);
+
+	return (
+		<div className="grid grid-cols-5 gap-x-4">
+			{skeletonItems.map((item, index) => (
+				<div
+					key={item}
+					className="group items-center relative flex aspect-[2/3] flex-col overflow-hidden rounded-lg"
+				>
+					<Skeleton className="h-full w-full" />
+					<Skeleton className="rounde-sm my-1 h-4 w-4" />
+				</div>
+			))}
+		</div>
 	);
 }
