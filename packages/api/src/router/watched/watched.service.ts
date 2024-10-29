@@ -154,13 +154,13 @@ export const getWatchlistProgress = async (
 ) => {
 	const watchlist = await ctx.db.query.Watchlist.findFirst({
 		where: eq(Watchlist.id, input.watchlistId),
+		with: {
+			entries: true,
+		},
 	});
 	if (!watchlist) {
 		throw new TRPCError({ code: "NOT_FOUND", message: "Watchlist not found" });
 	}
-	const entries = await ctx.db.query.WatchlistEntries.findMany({
-		where: eq(WatchlistEntries.watchlistId, input.watchlistId),
-	});
 
 	const members = await ctx.db.query.WatchlistMember.findMany({
 		where: eq(WatchlistMember.watchlistId, input.watchlistId),
@@ -177,5 +177,5 @@ export const getWatchlistProgress = async (
 			user: true,
 		},
 	});
-	return { members, entriesLength: entries.length };
+	return { members, entriesLength: watchlist.entries.length };
 };
