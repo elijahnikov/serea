@@ -31,7 +31,13 @@ export const createWatchlist = async (
 	const id = createId();
 	const [watchlist] = await ctx.db
 		.insert(Watchlist)
-		.values({ id, ...input, userId: currentUserId, tags: input.tags.join(",") })
+		.values({
+			id,
+			...input,
+			userId: currentUserId,
+			tags: input.tags.join(","),
+			entriesLength: input.entries.length,
+		})
 		.returning();
 
 	if (!watchlist) {
@@ -145,7 +151,7 @@ export const deleteWatchlistEntry = async (
 		});
 	}
 
-	await ctx.db
+	const [deletedEntry] = await ctx.db
 		.update(WatchlistEntries)
 		.set({ order: sql`${WatchlistEntries.order} - 1` })
 		.where(
@@ -153,7 +159,18 @@ export const deleteWatchlistEntry = async (
 				eq(WatchlistEntries.watchlistId, input.watchlistId),
 				gt(WatchlistEntries.order, deletedOrder),
 			),
-		);
+		)
+		.returning();
+
+	if (deletedEntry) {
+		await ctx.db
+			.update(Watchlist)
+			.set({
+				updatedAt: new Date(),
+				entriesLength: sql`${Watchlist.entriesLength} - 1`,
+			})
+			.where(eq(Watchlist.id, input.watchlistId));
+	}
 
 	return true;
 };
@@ -206,7 +223,10 @@ export const addWatchlistEntry = async (
 	if (newEntry) {
 		await ctx.db
 			.update(Watchlist)
-			.set({ updatedAt: new Date() })
+			.set({
+				updatedAt: new Date(),
+				entriesLength: sql`${Watchlist.entriesLength} + 1`,
+			})
 			.where(eq(Watchlist.id, input.watchlistId));
 	}
 

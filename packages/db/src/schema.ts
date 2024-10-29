@@ -131,6 +131,7 @@ export const Watchlist = pgTable(
 		description: text("description"),
 		isPrivate: boolean("isPrivate").default(false),
 		hideStats: boolean("hideStats").default(false),
+		entriesLength: integer("entriesLength").default(0),
 		tags: text("tags"),
 		createdAt: timestamp("created_at").defaultNow().notNull(),
 		updatedAt: timestamp("updated_at", { mode: "date" }).$onUpdate(

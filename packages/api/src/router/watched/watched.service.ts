@@ -15,6 +15,7 @@ import type {
 } from "./watched.input";
 import { and, eq } from "@serea/db";
 import { TRPCError } from "@trpc/server";
+import { appRouter } from "../../root";
 
 export const toggleWatched = async (
 	ctx: ProtectedTRPCContext,
@@ -154,8 +155,8 @@ export const getWatchlistProgress = async (
 ) => {
 	const watchlist = await ctx.db.query.Watchlist.findFirst({
 		where: eq(Watchlist.id, input.watchlistId),
-		with: {
-			entries: true,
+		columns: {
+			entriesLength: true,
 		},
 	});
 	if (!watchlist) {
@@ -166,16 +167,18 @@ export const getWatchlistProgress = async (
 		where: eq(WatchlistMember.watchlistId, input.watchlistId),
 		with: {
 			watched: {
-				with: {
-					entry: {
-						with: {
-							movie: true,
-						},
-					},
+				columns: {
+					id: true,
 				},
 			},
-			user: true,
+			user: {
+				columns: {
+					id: true,
+					name: true,
+					image: true,
+				},
+			},
 		},
 	});
-	return { members, entriesLength: watchlist.entries.length };
+	return { members, entriesLength: watchlist.entriesLength };
 };
