@@ -13,10 +13,18 @@ import {
 export default function MembersProgress({
 	watchlistId,
 }: { watchlistId: string }) {
-	const [{ members, entriesLength }] =
-		api.watched.getWatchlistProgress.useSuspenseQuery({
-			watchlistId,
-		});
+	const { data, isLoading } = api.watched.getWatchlistProgress.useQuery({
+		watchlistId,
+	});
+
+	if (isLoading) {
+		return <MembersProgressLoading />;
+	}
+
+	if (!data) return null;
+
+	const { members, entriesLength } = data;
+
 	const sortedMembers = [...members].sort((a, b) => {
 		const roleOrder = { owner: 0, editor: 1, viewer: 2 };
 		return (
@@ -75,6 +83,51 @@ export default function MembersProgress({
 					))}
 				</div>
 			</TooltipProvider>
+		</div>
+	);
+}
+
+function MembersProgressLoading() {
+	// Create an array of 3 items for skeleton loading
+	const skeletonMembers = Array.from({ length: 3 });
+
+	return (
+		<div>
+			<div className="flex items-center mb-2">
+				<p className="font-medium text-neutral-600 text-sm">Members</p>
+				<Badge className="ml-2 text-xs bg-surface-400 border font-medium text-neutral-600 border-surface-100">
+					-
+				</Badge>
+			</div>
+
+			<div className="space-y-2">
+				{skeletonMembers.map((_, index) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					<div key={index}>
+						<div className="flex items-center gap-2">
+							<div className="relative">
+								{/* Skeleton circle background */}
+								<ProgressCircle progress={0} total={0} />
+								<div className="absolute inset-0 flex items-center justify-center">
+									<AvatarRoot>
+										<AvatarWedges
+											size="md"
+											initials=""
+											className="bg-surface-100 animate-pulse"
+										/>
+									</AvatarRoot>
+								</div>
+							</div>
+							<div
+								className="h-5 bg-surface-100 rounded animate-pulse"
+								style={{
+									width: `${Math.floor(Math.random() * (120 - 80) + 80)}px`,
+								}}
+							/>
+						</div>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 }

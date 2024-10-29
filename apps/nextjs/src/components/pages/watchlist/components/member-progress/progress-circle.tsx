@@ -9,7 +9,7 @@ export default function ProgressCircle({
 		// biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
 		<svg className="w-14 h-14">
 			<circle
-				className="text-surface-200"
+				className="text-surface-100"
 				strokeWidth="4"
 				stroke="currentColor"
 				fill="transparent"

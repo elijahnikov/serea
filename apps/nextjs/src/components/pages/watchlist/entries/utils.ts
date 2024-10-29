@@ -121,6 +121,7 @@ export default function useEntryActions({
 					userId: "optimistic-user-id",
 					createdAt: new Date(),
 					watchlistId: watchlistId,
+					watched: [],
 					movie: {
 						contentId: newEntry.content.contentId,
 						title: newEntry.content.title,

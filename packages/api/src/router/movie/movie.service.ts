@@ -12,8 +12,11 @@ export const createMovie = async (
 	});
 
 	if (!movie) {
+		const baseUrl = env.VERCEL_URL
+			? `https://${env.VERCEL_URL}`
+			: `http://localhost:${process.env.PORT ?? 3000}`;
 		const response = await fetch(
-			`${env.VERCEL_URL}/api/base64?url=${`https://image.tmdb.org/t/p/w500${input.poster}`}`,
+			`${baseUrl}/api/base64?url=${`https://image.tmdb.org/t/p/w500${input.poster}`}`,
 		);
 		const { base64 } = (await response.json()) as { base64: string };
 
