@@ -17,7 +17,9 @@ declare module "next-auth" {
 	interface Session {
 		user: {
 			id: string;
-		} & DefaultSession["user"];
+		} & Omit<DefaultSession["user"], "email"> & {
+				email: string;
+			};
 	}
 }
 

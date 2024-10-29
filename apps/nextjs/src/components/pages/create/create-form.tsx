@@ -28,6 +28,9 @@ import Badge from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import { RefreshCcw, X } from "lucide-react";
 
+import { useAction } from "next-safe-action/hooks";
+import { createWatchlistAction } from "~/actions/watchlist/create-watchlist";
+
 export default function CreateForm() {
 	const router = useRouter();
 	const form = useForm<z.infer<typeof watchlistCreateSchema>>({
@@ -42,11 +45,18 @@ export default function CreateForm() {
 		},
 	});
 
-	const createWatchlist = api.watchlist.create.useMutation({
-		onSuccess: async (id) => {
+	// const createWatchlist = api.watchlist.create.useMutation({
+	// 	onSuccess: async (id) => {
+	// 		toast.success("Your watchlist has been created! Redirecting...");
+	// 		form.reset();
+	// 		router.push(`/watchlist/${id}`);
+	// 	},
+	// });
+	const createWatchlist = useAction(createWatchlistAction, {
+		onSuccess: async ({ data }) => {
 			toast.success("Your watchlist has been created! Redirecting...");
 			form.reset();
-			router.push(`/watchlist/${id}`);
+			router.push(`/watchlist/${data}`);
 		},
 	});
 
@@ -123,7 +133,7 @@ export default function CreateForm() {
 						form="create-watchlist-form"
 						className="max-h-10"
 						spinnerSize="xs"
-						loading={createWatchlist.isPending}
+						// loading={createWatchlist.isPending}
 						type="submit"
 					>
 						Create
@@ -134,7 +144,7 @@ export default function CreateForm() {
 				<form
 					id="create-watchlist-form"
 					onSubmit={form.handleSubmit((data) => {
-						createWatchlist.mutate(data);
+						createWatchlist.execute(data);
 					})}
 				>
 					<div className="flex space-x-8">

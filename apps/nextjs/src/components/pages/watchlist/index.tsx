@@ -11,20 +11,32 @@ import FooterActions from "./footer-actions";
 import { useState } from "react";
 import EntryRows, { EntryRowsSkeleton } from "./entries/entry-rows";
 import MembersProgress from "./components/member-progress";
+import type {
+	GetWatchlistEntriesReturnType,
+	GetWatchlistReturnType,
+} from "@serea/api";
 
 export default function SingleWatchlist({
 	id,
 	currentUserId,
 	view,
-}: { id: string; currentUserId?: string; view?: string }) {
+	watchlist,
+	watchlistEntries,
+}: {
+	id: string;
+	currentUserId?: string;
+	view?: string;
+	watchlist: GetWatchlistReturnType;
+	watchlistEntries: GetWatchlistEntriesReturnType;
+}) {
 	const [selectedView, setSelectedView] = useState<string>(view || "grid");
 
-	const [watchlist] = api.watchlist.get.useSuspenseQuery({ id });
-	const { data: watchlistEntries, isLoading } =
-		api.watchlist.getEntries.useQuery({ id });
-	const [role] = api.members.getMemberRole.useSuspenseQuery({
-		watchlistId: id,
-	});
+	// const [watchlist] = api.watchlist.get.useSuspenseQuery({ id });
+	// const { data: watchlistEntries, isLoading } =
+	// 	api.watchlist.getEntries.useQuery({ id });
+	// const [role] = api.members.getMemberRole.useSuspenseQuery({
+	// 	watchlistId: id,
+	// });
 
 	if (!watchlist) {
 		return null;
@@ -33,38 +45,38 @@ export default function SingleWatchlist({
 	return (
 		<div className="flex flex-col items-center justify-center gap-4">
 			<div className="w-[60vw] max-w-[1000px] pt-8">
-				<WatchlistHeader
+				{/* <WatchlistHeader
 					isOwner={currentUserId === watchlist.user.id}
 					owner={watchlist.user}
 					watchlistId={watchlist.id}
-				/>
+				/> */}
 				<div className="flex">
 					<div className="w-full pr-8">
 						<MainText {...watchlist} />
-						<FooterActions
+						{/* <FooterActions
 							selectedView={selectedView}
 							setSelectedView={setSelectedView}
 							{...watchlist}
-						/>
-						{isLoading &&
-							(selectedView === "grid" ? (
-								<EntryGridSkeleton />
-							) : (
-								<EntryRowsSkeleton />
-							))}
-						{!isLoading &&
-							watchlistEntries &&
-							(["owner", "editor", "viewer"].includes(role) ? (
+						/> */}
+						{/* {selectedView === "grid" ? (
+							<EntryGridSkeleton />
+						) : (
+							<EntryRowsSkeleton />
+						)} */}
+						{watchlistEntries &&
+							(["owner", "editor", "viewer"].includes("owner") ? (
 								selectedView === "grid" ? (
+									// biome-ignore lint/a11y/useValidAriaRole: <explanation>
 									<EntryGrid
 										watchlistId={watchlist.id}
 										entries={watchlistEntries}
-										role={role}
+										role={"owner"}
 									/>
 								) : (
+									// biome-ignore lint/a11y/useValidAriaRole: <explanation>
 									<EntryRows
 										entries={watchlistEntries}
-										role={role}
+										role={"owner"}
 										watchlistId={watchlist.id}
 									/>
 								)
@@ -73,8 +85,8 @@ export default function SingleWatchlist({
 							) : null)}
 					</div>
 					<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
-						<WatchlistTags tags={watchlist.tags} />
-						<MembersProgress watchlistId={watchlist.id} />
+						{/* <WatchlistTags tags={watchlist.tags} />
+						<MembersProgress watchlistId={watchlist.id} /> */}
 					</div>
 				</div>
 			</div>
