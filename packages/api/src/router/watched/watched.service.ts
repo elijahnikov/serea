@@ -180,5 +180,5 @@ export const getWatchlistProgress = async (
 			},
 		},
 	});
-	return { members, entriesLength: watchlist.entriesLength };
+	return { members, entriesLength: watchlist.entriesLength ?? 0 };
 };
