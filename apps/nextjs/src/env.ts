@@ -6,7 +6,7 @@ import { env as authEnv } from "@serea/auth/env";
 import { env as apiEnv } from "@serea/api/env";
 
 export const env = createEnv({
-	extends: [authEnv, apiEnv, vercel()],
+	extends: [authEnv, vercel()],
 	shared: {
 		NODE_ENV: z
 			.enum(["development", "production", "test"])

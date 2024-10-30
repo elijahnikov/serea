@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { cn } from "@serea/ui";
 
-import { TRPCReactProvider } from "~/trpc/react";
 import { Inter } from "next/font/google";
 
 import "~/app/globals.css";
@@ -53,10 +52,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 					GeistMono.variable,
 				)}
 			>
-				<TRPCReactProvider>
-					{props.children}
-					<Toaster />
-				</TRPCReactProvider>
+				{props.children}
+				<Toaster />
 			</body>
 		</html>
 	);

@@ -19,6 +19,8 @@ declare module "next-auth" {
 			id: string;
 		} & Omit<DefaultSession["user"], "email"> & {
 				email: string;
+				name?: string | null;
+				image?: string | null;
 			};
 	}
 }
