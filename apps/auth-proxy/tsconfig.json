@@ -1,4 +1,0 @@
-{
-	"extends": "@serea/tsconfig/base.json",
-	"include": ["routes"]
-}
