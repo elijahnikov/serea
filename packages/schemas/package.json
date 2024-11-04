@@ -1,0 +1,30 @@
+{
+	"name": "@serea/schemas",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc",
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"dev": "tsc",
+		"lint": "biome lint .",
+		"format": "biome format .",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+	},
+	"dependencies": {
+		"radash": "^12.1.0",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.3",
+		"@serea/tsconfig": "workspace:*",
+		"typescript": "catalog:"
+	}
+}
