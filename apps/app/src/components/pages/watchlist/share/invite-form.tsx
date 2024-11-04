@@ -1,4 +1,3 @@
-import { watchlistInviteSchema } from "../../../../../../../packages/schemas/src";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,10 +13,11 @@ import {
 } from "@serea/ui/select";
 import { inviteMemberAction } from "~/actions/members/invite";
 import { useAction } from "next-safe-action/hooks";
+import { watchlistInvite } from "@serea/schemas/watchlist";
 
 export default function InviteForm({ watchlistId }: { watchlistId: string }) {
-	const form = useForm<z.infer<typeof watchlistInviteSchema>>({
-		resolver: zodResolver(watchlistInviteSchema),
+	const form = useForm<z.infer<typeof watchlistInvite>>({
+		resolver: zodResolver(watchlistInvite),
 		defaultValues: {
 			email: "",
 			role: "viewer",

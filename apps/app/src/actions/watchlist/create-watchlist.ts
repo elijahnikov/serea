@@ -1,24 +1,13 @@
 "use server";
 
-import { watchlistCreateSchema } from "../../../../../packages/schemas/src";
 import { createId } from "@paralleldrive/cuid2";
 import { Watchlist, WatchlistEntries, WatchlistMember } from "@serea/db/schema";
 import { nanoid } from "nanoid";
 import { authActionClient } from "../safe-action";
-
-// const watchlistCreateSchema = z.object({
-// 	title: z.string().min(2, {
-// 		message: "Title must be at least 2 characters.",
-// 	}),
-// 	description: z.string().optional(),
-// 	tags: z.string().array(),
-// 	entries: movieTableSchema.array(),
-// 	private: z.boolean().optional(),
-// 	hideStats: z.boolean().optional(),
-// });
+import { createWatchlist } from "@serea/schemas/watchlist";
 
 export const createWatchlistAction = authActionClient
-	.schema(watchlistCreateSchema)
+	.schema(createWatchlist)
 	.metadata({ name: "create-watchlist" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

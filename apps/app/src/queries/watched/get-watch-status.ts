@@ -2,17 +2,10 @@ import { auth } from "@serea/auth";
 import { and, eq } from "@serea/db";
 import { db } from "@serea/db/client";
 import { WatchlistMember, Watched } from "@serea/db/schema";
-
+import type { GetWatchStatus } from "@serea/schemas/watched";
 import { unstable_cache } from "next/cache";
-import { z } from "zod";
 
-export const getWatchStatusSchema = z.object({
-	watchlistId: z.string(),
-	entryId: z.string(),
-});
-export type GetWatchStatusSchemaType = z.infer<typeof getWatchStatusSchema>;
-
-export const getWatchStatus = async (params: GetWatchStatusSchemaType) => {
+export const getWatchStatus = async (params: GetWatchStatus) => {
 	const session = await auth();
 	if (!session?.user) {
 		return null;
@@ -30,7 +23,7 @@ export const getWatchStatus = async (params: GetWatchStatusSchemaType) => {
 };
 
 const getWatchStatusQuery = async (
-	input: GetWatchStatusSchemaType & { userId: string },
+	input: GetWatchStatus & { userId: string },
 ) => {
 	const isMember = await db.query.WatchlistMember.findFirst({
 		where: and(

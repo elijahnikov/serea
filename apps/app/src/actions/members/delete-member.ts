@@ -4,15 +4,10 @@ import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { WatchlistMember } from "@serea/db/schema";
 import { and, eq } from "@serea/db";
-
-export const deleteMemberSchema = z.object({
-	watchlistId: z.string(),
-	memberId: z.string(),
-});
-export type DeleteMemberSchemaType = z.infer<typeof deleteMemberSchema>;
+import { deleteMember } from "@serea/schemas/members";
 
 export const deleteMemberAction = authActionClient
-	.schema(deleteMemberSchema)
+	.schema(deleteMember)
 	.metadata({ name: "delete-member" })
 	.action(async ({ parsedInput, ctx }) => {
 		await ctx.db

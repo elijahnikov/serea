@@ -1,19 +1,14 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { eq } from "@serea/db";
 import { Watchlist, WatchlistEntries, WatchlistMember } from "@serea/db/schema";
 import { nanoid } from "nanoid";
 import { createId } from "@paralleldrive/cuid2";
-
-export const cloneWatchlistSchema = z.object({
-	id: z.string(),
-});
-export type CloneWatchlistSchemaType = z.infer<typeof cloneWatchlistSchema>;
+import { cloneWatchlist } from "@serea/schemas/watchlist";
 
 export const cloneWatchlistAction = authActionClient
-	.schema(cloneWatchlistSchema)
+	.schema(cloneWatchlist)
 	.metadata({ name: "clone-watchlist" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

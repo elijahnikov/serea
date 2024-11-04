@@ -1,19 +1,12 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { and, eq } from "@serea/db";
 import { User, WatchlistInvitation, WatchlistMember } from "@serea/db/schema";
-
-export const watchlistInviteSchema = z.object({
-	watchlistId: z.string(),
-	inviteeEmail: z.string().email(),
-	role: z.enum(["viewer", "editor"]),
-});
-export type WatchlistInviteSchemaType = z.infer<typeof watchlistInviteSchema>;
+import { watchlistInvite } from "@serea/schemas/members";
 
 export const inviteMemberAction = authActionClient
-	.schema(watchlistInviteSchema)
+	.schema(watchlistInvite)
 	.metadata({ name: "invite-to-watchlist" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

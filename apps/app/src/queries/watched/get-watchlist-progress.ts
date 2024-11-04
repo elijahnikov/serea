@@ -2,19 +2,10 @@ import { auth } from "@serea/auth";
 import { eq } from "@serea/db";
 import { db } from "@serea/db/client";
 import { Watchlist, WatchlistMember } from "@serea/db/schema";
+import type { GetWatchlistProgress } from "@serea/schemas/watched";
 import { unstable_cache } from "next/cache";
-import { z } from "zod";
 
-const getWatchlistProgressSchema = z.object({
-	watchlistId: z.string(),
-});
-export type GetWatchlistProgressSchemaType = z.infer<
-	typeof getWatchlistProgressSchema
->;
-
-export const getWatchlistProgress = async (
-	params: GetWatchlistProgressSchemaType,
-) => {
+export const getWatchlistProgress = async (params: GetWatchlistProgress) => {
 	const session = await auth();
 	if (!session?.user) {
 		return null;
@@ -31,9 +22,7 @@ export const getWatchlistProgress = async (
 	)();
 };
 
-const getWatchlistProgressQuery = async (
-	input: GetWatchlistProgressSchemaType,
-) => {
+const getWatchlistProgressQuery = async (input: GetWatchlistProgress) => {
 	const watchlist = await db.query.Watchlist.findFirst({
 		where: eq(Watchlist.id, input.watchlistId),
 		columns: {

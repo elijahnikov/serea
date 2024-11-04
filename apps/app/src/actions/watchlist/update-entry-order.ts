@@ -1,20 +1,13 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { and, eq, gt, lt, sql } from "@serea/db";
 import { WatchlistEntries } from "@serea/db/schema";
 import { revalidateTag } from "next/cache";
-
-const updateEntryOrderSchema = z.object({
-	watchlistId: z.string(),
-	entryId: z.string(),
-	newOrder: z.number(),
-});
-export type UpdateEntryOrderSchemaType = z.infer<typeof updateEntryOrderSchema>;
+import { updateEntryOrder } from "@serea/schemas/watchlist";
 
 export const updateEntryOrderAction = authActionClient
-	.schema(updateEntryOrderSchema)
+	.schema(updateEntryOrder)
 	.metadata({ name: "update-entry-order" })
 	.action(async ({ parsedInput, ctx }) => {
 		const { watchlistId, entryId, newOrder } = parsedInput;

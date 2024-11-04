@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 import { fetchTemplate, TMDB_API_URLS } from "./constants";
 
 import { z } from "zod";
-import { searchMoviesSchema } from "@serea/schemas";
+import { searchMovies as searchMoviesSchema } from "@serea/schemas/movie";
 
 const searchMoviesInputSchema = z.object({
 	query: z.string(),

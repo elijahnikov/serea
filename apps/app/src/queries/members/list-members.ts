@@ -2,16 +2,13 @@ import { auth } from "@serea/auth";
 import { and, desc, eq } from "@serea/db";
 import { db } from "@serea/db/client";
 import { WatchlistMember } from "@serea/db/schema";
+import type { ListMembers } from "@serea/schemas/members";
+import type { QueryReturnType } from "@serea/schemas/utils";
 import { unstable_cache } from "next/cache";
-import { z } from "zod";
 
-const listMembersSchema = z.object({
-	watchlistId: z.string(),
-});
-export type ListMembersSchemaType = z.infer<typeof listMembersSchema>;
-export type ListMembersReturnType = Awaited<ReturnType<typeof listMembers>>;
+export type ListMembersReturnType = QueryReturnType<typeof listMembers>;
 
-export const listMembers = async (params: ListMembersSchemaType) => {
+export const listMembers = async (params: ListMembers) => {
 	const session = await auth();
 	if (!session?.user) {
 		return null;
@@ -28,9 +25,7 @@ export const listMembers = async (params: ListMembersSchemaType) => {
 	)();
 };
 
-const listMembersQuery = async (
-	params: ListMembersSchemaType & { userId: string },
-) => {
+const listMembersQuery = async (params: ListMembers & { userId: string }) => {
 	const isMemberOfWatchlist = await db.query.WatchlistMember.findFirst({
 		where: and(
 			eq(WatchlistMember.userId, params.userId),

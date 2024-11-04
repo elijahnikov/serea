@@ -1,24 +1,13 @@
 "use server";
 
-import { movieTableSchema } from "../../../../../packages/schemas/src";
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { Watchlist, WatchlistEntries } from "@serea/db/schema";
 import { and, eq, sql } from "@serea/db";
 import { revalidateTag } from "next/cache";
-
-const addWatchlistEntrySchema = z.object({
-	id: z.string(),
-	watchlistId: z.string(),
-	contentId: z.number(),
-	content: movieTableSchema.omit({ order: true }),
-});
-export type AddWatchlistEntrySchemaType = z.infer<
-	typeof addWatchlistEntrySchema
->;
+import { addWatchlistEntry } from "@serea/schemas/watchlist";
 
 export const addWatchlistEntryAction = authActionClient
-	.schema(addWatchlistEntrySchema)
+	.schema(addWatchlistEntry)
 	.metadata({ name: "add-watchlist-entry" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

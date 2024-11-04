@@ -1,21 +1,13 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { and, eq, gt, sql } from "@serea/db";
 import { Watchlist, WatchlistEntries } from "@serea/db/schema";
 import { revalidateTag } from "next/cache";
-
-const deleteWatchlistEntrySchema = z.object({
-	watchlistId: z.string(),
-	entryId: z.string(),
-});
-export type DeleteWatchlistEntrySchemaType = z.infer<
-	typeof deleteWatchlistEntrySchema
->;
+import { deleteWatchlistEntry } from "@serea/schemas/watchlist";
 
 export const deleteWatchlistEntryAction = authActionClient
-	.schema(deleteWatchlistEntrySchema)
+	.schema(deleteWatchlistEntry)
 	.metadata({ name: "delete-watchlist-entry" })
 	.action(async ({ parsedInput, ctx }) => {
 		const entry = await ctx.db.query.WatchlistEntries.findFirst({

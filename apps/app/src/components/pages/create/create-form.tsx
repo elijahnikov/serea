@@ -15,7 +15,7 @@ import {
 	FormDescription,
 	FormMessage,
 } from "@serea/ui/form";
-import { watchlistCreateSchema } from "../../../../../../packages/schemas/src";
+
 import MovieList from "./movie-list";
 import Switch from "@serea/ui/switch";
 import { toast } from "sonner";
@@ -29,11 +29,12 @@ import { RefreshCcw, X } from "lucide-react";
 
 import { useAction } from "next-safe-action/hooks";
 import { createWatchlistAction } from "~/actions/watchlist/create-watchlist";
+import { createWatchlist as createWatchlistSchema } from "@serea/schemas/watchlist";
 
 export default function CreateForm() {
 	const router = useRouter();
-	const form = useForm<z.infer<typeof watchlistCreateSchema>>({
-		resolver: zodResolver(watchlistCreateSchema),
+	const form = useForm<z.infer<typeof createWatchlistSchema>>({
+		resolver: zodResolver(createWatchlistSchema),
 		defaultValues: {
 			title: "",
 			description: "",

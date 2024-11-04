@@ -4,10 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
 import MovieSearch from "./movie-search";
 import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
-import type {
-	MovieTableSchemaType,
-	watchlistCreateSchema,
-} from "../../../../../../packages/schemas/src";
+
 import { useState } from "react";
 import { GripVertical, Plus, X } from "lucide-react";
 import Image from "next/image";
@@ -29,10 +26,12 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useAction } from "next-safe-action/hooks";
 import { addMovieAction } from "~/actions/movies/add-movie";
+import type { CreateWatchlist } from "@serea/schemas/watchlist";
+import type { MovieTableData } from "@serea/schemas/movie";
 
 export default function MovieList({
 	form,
-}: { form: UseFormReturn<z.infer<typeof watchlistCreateSchema>> }) {
+}: { form: UseFormReturn<CreateWatchlist> }) {
 	const [open, setOpen] = useState<boolean>(false);
 
 	const createMovie = useAction(addMovieAction);
@@ -46,7 +45,7 @@ export default function MovieList({
 
 	const entries = form.watch("entries");
 
-	const addEntry = (newEntry: Omit<MovieTableSchemaType, "order">) => {
+	const addEntry = (newEntry: Omit<MovieTableData, "order">) => {
 		createMovie.execute({
 			...newEntry,
 		});
@@ -154,7 +153,7 @@ function MovieCard({
 	index,
 	removeEntry,
 }: {
-	movie: MovieTableSchemaType;
+	movie: MovieTableData;
 	index: number;
 	removeEntry: (index: number) => void;
 }) {

@@ -3,9 +3,10 @@ import { eq } from "@serea/db";
 import { db } from "@serea/db/client";
 import { WatchlistInvitation } from "@serea/db/schema";
 import { unstable_cache } from "next/cache";
+import type { QueryReturnType } from "@serea/schemas/utils";
 
-export type ListInvitesForUserReturnType = Awaited<
-	ReturnType<typeof listInvitesForUser>
+export type ListInvitesForUserReturnType = QueryReturnType<
+	typeof listInvitesForUser
 >;
 
 export const listInvitesForUser = async () => {

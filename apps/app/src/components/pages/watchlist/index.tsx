@@ -7,7 +7,9 @@ import type { GetWatchlistEntriesReturnType } from "~/queries/watchlist/get-watc
 import MainWatchlistView from "./components/main-watchlist-view";
 import { Suspense } from "react";
 import WatchlistTags from "./components/tags";
-import MembersProgress from "./components/member-progress";
+import MembersProgress, {
+	MembersProgressLoading,
+} from "./components/member-progress";
 
 export default async function SingleWatchlist({
 	currentUserId,
@@ -43,7 +45,9 @@ export default async function SingleWatchlist({
 				</div>
 				<div className="w-[30%] mt-10 space-y-8 min-w-[200px]">
 					<WatchlistTags tags={watchlist.tags} />
-					<MembersProgress watchlistId={watchlist.id} />
+					<Suspense fallback={<MembersProgressLoading />}>
+						<MembersProgress watchlistId={watchlist.id} />
+					</Suspense>
 				</div>
 			</div>
 		</>

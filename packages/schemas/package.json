@@ -4,10 +4,11 @@
 	"version": "0.1.0",
 	"type": "module",
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./src/index.ts"
-		}
+		"./members": "./src/members.ts",
+		"./movie": "./src/movie.ts",
+		"./utils": "./src/utils.ts",
+		"./watched": "./src/watched.ts",
+		"./watchlist": "./src/watchlist.ts"
 	},
 	"license": "MIT",
 	"scripts": {

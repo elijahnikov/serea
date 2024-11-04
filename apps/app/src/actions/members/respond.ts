@@ -1,18 +1,12 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { and, eq } from "@serea/db";
 import { WatchlistInvitation, WatchlistMember } from "@serea/db/schema";
-
-export const respondToInviteSchema = z.object({
-	invitationId: z.string(),
-	response: z.enum(["accept", "decline"]),
-});
-export type RespondToInviteSchemaType = z.infer<typeof respondToInviteSchema>;
+import { respondToInvite } from "@serea/schemas/members";
 
 export const respondToInviteAction = authActionClient
-	.schema(respondToInviteSchema)
+	.schema(respondToInvite)
 	.metadata({ name: "respond-to-invite" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

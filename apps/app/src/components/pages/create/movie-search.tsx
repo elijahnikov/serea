@@ -1,7 +1,6 @@
 "use client";
 
 import Input from "@serea/ui/input";
-import type { MovieTableSchemaType } from "../../../../../../packages/schemas/src";
 import { useEffect, useState, useTransition } from "react";
 import useDebounce from "~/hooks/use-debounce";
 import Loading from "@serea/ui/loading";
@@ -14,15 +13,15 @@ import {
 	TooltipRoot,
 	TooltipTrigger,
 } from "@serea/ui/tooltip";
-import { data } from "tailwindcss/defaultTheme";
 import {
 	searchMovies,
 	type SearchMoviesReturnType,
 } from "~/queries/tmdb/search-movies";
+import type { MovieTableData } from "@serea/schemas/movie";
 
 export default function MovieSearch({
 	callback,
-}: { callback: (movie: Omit<MovieTableSchemaType, "order">) => void }) {
+}: { callback: (movie: Omit<MovieTableData, "order">) => void }) {
 	const [searchText, setSearchText] = useState<string>("");
 	const debouncedSearchTerm = useDebounce(searchText, 500);
 
@@ -94,7 +93,7 @@ function MovieResult({
 	handleClick,
 }: {
 	movie: SearchMoviesReturnType["results"][number];
-	handleClick: (movie: Omit<MovieTableSchemaType, "order">) => void;
+	handleClick: (movie: Omit<MovieTableData, "order">) => void;
 }) {
 	return (
 		<TooltipRoot>

@@ -2,16 +2,11 @@
 
 import { and, eq } from "@serea/db";
 import { WatchlistInvitation } from "@serea/db/schema";
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
-
-export const deleteInviteSchema = z.object({
-	invitationId: z.string(),
-});
-export type DeleteInviteSchemaType = z.infer<typeof deleteInviteSchema>;
+import { deleteInvite } from "@serea/schemas/members";
 
 export const deleteInviteAction = authActionClient
-	.schema(deleteInviteSchema)
+	.schema(deleteInvite)
 	.metadata({ name: "delete-invite" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

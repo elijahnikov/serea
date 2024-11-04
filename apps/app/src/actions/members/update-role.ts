@@ -1,18 +1,12 @@
 "use server";
-import { z } from "zod";
+
 import { authActionClient } from "../safe-action";
 import { and, eq } from "@serea/db";
 import { Watchlist, WatchlistMember } from "@serea/db/schema";
-
-export const updateRoleSchema = z.object({
-	watchlistId: z.string(),
-	memberId: z.string(),
-	role: z.enum(["viewer", "editor"]),
-});
-export type UpdateRoleSchemaType = z.infer<typeof updateRoleSchema>;
+import { updateRole } from "@serea/schemas/members";
 
 export const updateRoleAction = authActionClient
-	.schema(updateRoleSchema)
+	.schema(updateRole)
 	.metadata({ name: "update-role" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

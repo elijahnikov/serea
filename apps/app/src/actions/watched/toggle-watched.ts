@@ -1,19 +1,13 @@
 "use server";
 
-import { z } from "zod";
 import { authActionClient } from "../safe-action";
 import { and, eq } from "@serea/db";
 import { Watchlist, Watched } from "@serea/db/schema";
 import { revalidateTag } from "next/cache";
-
-const toggleWatchedSchema = z.object({
-	watchlistId: z.string(),
-	entryId: z.string(),
-});
-export type ToggleWatchedSchemaType = z.infer<typeof toggleWatchedSchema>;
+import { toggleWatched } from "@serea/schemas/watched";
 
 export const toggleWatchedAction = authActionClient
-	.schema(toggleWatchedSchema)
+	.schema(toggleWatched)
 	.metadata({ name: "toggle-watched" })
 	.action(async ({ parsedInput, ctx }) => {
 		const currentUserId = ctx.session.user.id;

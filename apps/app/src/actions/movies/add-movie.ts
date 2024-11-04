@@ -2,12 +2,11 @@
 
 import { authActionClient } from "../safe-action";
 import { env } from "~/env";
-
-import { movieTableSchema } from "@serea/schemas";
 import { Movie } from "@serea/db/schema";
+import { movieTableData } from "@serea/schemas/movie";
 
 export const addMovieAction = authActionClient
-	.schema(movieTableSchema.omit({ order: true }))
+	.schema(movieTableData.omit({ order: true }))
 	.metadata({ name: "add-movie" })
 	.action(async ({ parsedInput, ctx }) => {
 		const movie = await ctx.db.query.Movie.findFirst({

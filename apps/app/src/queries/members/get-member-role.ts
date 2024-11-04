@@ -3,14 +3,9 @@ import { and, eq } from "@serea/db";
 import { db } from "@serea/db/client";
 import { WatchlistMember } from "@serea/db/schema";
 import { unstable_cache } from "next/cache";
-import { z } from "zod";
+import type { GetMemberRole } from "@serea/schemas/members";
 
-export const getMemberRoleSchema = z.object({
-	watchlistId: z.string(),
-});
-export type GetMemberRoleSchemaType = z.infer<typeof getMemberRoleSchema>;
-
-export const getMemberRole = async (params: GetMemberRoleSchemaType) => {
+export const getMemberRole = async (params: GetMemberRole) => {
 	const session = await auth();
 	if (!session?.user) {
 		return null;
@@ -28,7 +23,7 @@ export const getMemberRole = async (params: GetMemberRoleSchemaType) => {
 };
 
 const getMemberRoleQuery = async (
-	params: GetMemberRoleSchemaType & { userId: string },
+	params: GetMemberRole & { userId: string },
 ) => {
 	const member = await db.query.WatchlistMember.findFirst({
 		where: and(

@@ -1,4 +1,3 @@
-import type { RouterInputs } from "@serea/api";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
 import { Plus } from "lucide-react";
 import MovieSearch from "../../../create/movie-search";
