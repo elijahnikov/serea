@@ -1,7 +1,8 @@
-import { sql } from "drizzle-orm";
-import { index, pgTable } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { index, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { user } from "./auth-schema";
 
 export const Post = pgTable("post", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
@@ -27,6 +28,9 @@ export const movie = pgTable("movie", (t) => ({
     .timestamp("updated_at", { mode: "date", withTimezone: true })
     .$onUpdateFn(() => sql`now()`),
 }));
+export const movieRelations = relations(movie, ({ many }) => ({
+  entries: many(entry),
+}));
 
 export const watchlist = pgTable("watchlist", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
@@ -42,7 +46,18 @@ export const watchlist = pgTable("watchlist", (t) => ({
     .timestamp("updated_at", { mode: "date", withTimezone: true })
     .$onUpdateFn(() => sql`now()`),
 }), (t) => ({
-  userIdx: index("user_idx").on(t.userId),
+  userIdx: index("watchlist_user_idx").on(t.userId),
+}));
+export const watchlistRelations = relations(watchlist, ({ many, one }) => ({
+  user: one(user, {
+    fields: [watchlist.userId],
+    references: [user.id],
+  }),
+  entries: many(entry),
+  invites: many(invite),
+  members: many(member),
+  likes: many(like),
+  watched: many(watched),
 }));
 
 export const entry = pgTable("watchlist_entry", (t) => ({
@@ -56,9 +71,24 @@ export const entry = pgTable("watchlist_entry", (t) => ({
     .timestamp("updated_at", { mode: "date", withTimezone: true })
     .$onUpdateFn(() => sql`now()`),
 }), (t) => ({
-  watchlistIdx: index("watchlist_idx").on(t.watchlistId),
-  userIdx: index("user_idx").on(t.userId),
-  contentIdIdx: index("content_idx").on(t.contentId),
+  watchlistIdx: index("entry_watchlist_idx").on(t.watchlistId),
+  userIdx: index("entry_user_idx").on(t.userId),
+  contentIdIdx: index("entry_content_idx").on(t.contentId),
+}));
+export const entryRelations = relations(entry, ({ one, many }) => ({
+  watchlist: one(watchlist, {
+    fields: [entry.watchlistId],
+    references: [watchlist.id],
+  }),
+  movie: one(movie, {
+    fields: [entry.contentId],
+    references: [movie.contentId],
+  }),
+  user: one(user, {
+    fields: [entry.userId],
+    references: [user.id],
+  }),
+  watched: many(watched),
 }));
 
 export const invite = pgTable("watchlist_invite", (t) => ({
@@ -73,7 +103,91 @@ export const invite = pgTable("watchlist_invite", (t) => ({
     .timestamp("updated_at", { mode: "date", withTimezone: true })
     .$onUpdateFn(() => sql`now()`),
 }), (t) => ({
-  watchlistIdx: index("watchlist_idx").on(t.watchlistId),
+  watchlistIdx: index("invite_watchlist_idx").on(t.watchlistId),
+}));
+export const inviteRelations = relations(invite, ({ one }) => ({
+  watchlist: one(watchlist, {
+    fields: [invite.watchlistId],
+    references: [watchlist.id],
+  }),
+  invitee: one(user, {
+    fields: [invite.inviteeId],
+    references: [user.id],
+  }),
+  inviter: one(user, {
+    fields: [invite.inviterId],
+    references: [user.id],
+  }),
+}));
+
+export const member = pgTable("watchlist_member", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  watchlistId: t.uuid("watchlist_id").notNull(),
+  userId: t.text("user_id").notNull(),
+  role: t.varchar("role", { length: 256 }).$type<"editor" | "viewer">().notNull().default("viewer"),
+  createdAt: t.timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+  updatedAt: t
+    .timestamp("updated_at", { mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`now()`),
+}), (t) => ({
+  watchlistIdx: index("member_watchlist_idx").on(t.watchlistId),
+}));
+export const memberRelations = relations(member, ({ one, many }) => ({
+  watchlist: one(watchlist, {
+    fields: [member.watchlistId],
+    references: [watchlist.id],
+  }),
+  user: one(user, {
+    fields: [member.userId],
+    references: [user.id],
+  }),
+  watched: many(watched),
+}));
+
+export const like = pgTable("watchlist_like", (t) => ({
+  watchlistId: t.uuid("watchlist_id").notNull(),
+  userId: t.text("user_id").notNull(),
+}), (t) => ({
+  pk: primaryKey({ columns: [t.watchlistId, t.userId] }),
+  watchlistIdx: index("like_watchlist_idx").on(t.watchlistId),
+  userIdx: index("like_user_idx").on(t.userId),
+}));
+export const likeRelations = relations(like, ({ one }) => ({
+  watchlist: one(watchlist, {
+    fields: [like.watchlistId],
+    references: [watchlist.id],
+  }),
+  user: one(user, {
+    fields: [like.userId],
+    references: [user.id],
+  }),
+}));
+
+export const watched = pgTable("watched", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  watchlistId: t.uuid("watchlist_id").notNull(),
+  userId: t.text("user_id").notNull(),
+  memberId: t.uuid("member_id").notNull(),
+  entryId: t.uuid("entry_id").notNull(),
+  createdAt: t.timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+}));
+export const watchedRelations = relations(watched, ({ one }) => ({
+  watchlist: one(watchlist, {
+    fields: [watched.watchlistId],
+    references: [watchlist.id],
+  }),
+  member: one(member, {
+    fields: [watched.memberId],
+    references: [member.id],
+  }),
+  entry: one(entry, {
+    fields: [watched.entryId],
+    references: [entry.id],
+  }),
+  user: one(user, {
+    fields: [watched.userId],
+    references: [user.id],
+  }),
 }));
 
 export const CreatePostSchema = createInsertSchema(Post, {
