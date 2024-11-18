@@ -1,5 +1,5 @@
 {
-  "name": "@acme/validators",
+  "name": "@serea/validators",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -14,20 +14,15 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "biome format . --write",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
+    "@serea/tsconfig": "workspace:*",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

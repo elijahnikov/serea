@@ -1,4 +1,4 @@
-import { authMiddleware } from "@acme/auth/middleware";
+import { authMiddleware } from "@serea/auth/middleware";
 
 export default authMiddleware
 

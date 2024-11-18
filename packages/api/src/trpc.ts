@@ -9,8 +9,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { db } from "@acme/db/client";
-import { getSession, type Session } from "@acme/auth";
+import { db } from "@serea/db/client";
+import { getSession, type Session } from "@serea/auth";
 
 /**
  * Isomorphic Session getter for API requests

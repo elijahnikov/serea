@@ -1,5 +1,5 @@
 {
-  "name": "@acme/ui",
+  "name": "@serea/ui",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -21,10 +21,10 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "biome format . --write",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "ui-add": "pnpm dlx shadcn@latest add && prettier src --write --list-different"
+    "ui-add": "pnpm dlx shadcn@latest add && biome format src --write"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -39,13 +39,9 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@serea/tailwind-config": "workspace:*",
+    "@serea/tsconfig": "workspace:*",
     "@types/react": "catalog:react18",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "react": "catalog:react18",
     "typescript": "catalog:",
     "zod": "catalog:"
@@ -53,6 +49,5 @@
   "peerDependencies": {
     "react": "catalog:react18",
     "zod": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

@@ -1,4 +1,4 @@
-import { db } from "@acme/db/client";
+import { db } from "@serea/db/client";
 import { oAuthProxy } from "better-auth/plugins"
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";

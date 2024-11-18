@@ -1,5 +1,5 @@
 {
-  "name": "@acme/auth",
+  "name": "@serea/auth",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -16,16 +16,16 @@
   "license": "MIT",
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "format": "biome format . --write",
+    "lint": "biome check .",
     "generate": "pnpx @better-auth/cli generate --output ../db/src/auth-schema.ts",
-    "lint": "eslint",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@acme/db": "workspace:*",
     "@auth/core": "0.34.2",
     "@auth/drizzle-adapter": "1.4.2",
     "@better-auth/expo": "0.7.3-beta.10",
+    "@serea/db": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.1",
     "better-auth": "0.7.4",
     "next": "^14.2.15",
@@ -35,12 +35,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
+    "@serea/tsconfig": "workspace:*",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

@@ -6,20 +6,19 @@ createJiti(fileURLToPath(import.meta.url))("./src/env");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true,
+	reactStrictMode: true,
 
-  /** Enables hot reloading for local packages without a build step */
-  transpilePackages: [
-    "@acme/api",
-    "@acme/auth",
-    "@acme/db",
-    "@acme/ui",
-    "@acme/validators",
-  ],
+	/** Enables hot reloading for local packages without a build step */
+	transpilePackages: [
+		"@serea/api",
+		"@serea/auth",
+		"@serea/db",
+		"@serea/ui",
+		"@serea/validators",
+	],
 
-  /** We already do linting and typechecking as separate tasks in CI */
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
+	/** We already do linting and typechecking as separate tasks in CI */
+	typescript: { ignoreBuildErrors: true },
 };
 
 export default config;

@@ -1,5 +1,5 @@
 {
-  "name": "@acme/api",
+  "name": "@serea/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -14,25 +14,20 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "format": "biome format . --write",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/db": "workspace:*",
-    "@acme/validators": "workspace:*",
+    "@serea/auth": "workspace:*",
+    "@serea/db": "workspace:*",
+    "@serea/validators": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.1",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
+    "@serea/tsconfig": "workspace:*",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }

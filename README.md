@@ -5,6 +5,7 @@ This is a fork of `create-t3-app` modified to use [Better Auth](https://better-a
 Better Auth is a framework-agnostic authentication and authorization library for TypeScript. It offers a comprehensive set of built-in features and a plugin ecosystem.
 
 **Advantages of Better Auth:**
+
 - Native Expo support without any extra setup (including OAuth)
 - Preview deployments without the need for a separate proxy server
 - A lot more features available out of the box and through plugins
@@ -59,7 +60,7 @@ tooling
       └─ shared tsconfig you can extend from
 ```
 
-> In this template, we use `@acme` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@acme` to something like `@my-company` or `@project-name`.
+> In this template, we use `@serea` as a placeholder for package names. As a user, you might want to replace it with your own organization or project name. You can use find-and-replace to change all the instances of `@serea` to something like `@my-company` or `@project-name`.
 
 ## Quick Start
 
