@@ -1,8 +1,12 @@
 import type { Config } from "tailwindcss";
+import { wedgesPalette, wedgesTW } from "@lemonsqueezy/wedges";
 
 export default {
 	darkMode: ["class"],
-	content: ["src/**/*.{ts,tsx}"],
+	content: [
+		"src/**/*.{ts,tsx}",
+		"node_modules/@lemonsqueezy/wedges/dist/**/*.{js,ts,jsx,tsx}",
+	],
 	theme: {
 		extend: {
 			colors: {
@@ -45,4 +49,19 @@ export default {
 			},
 		},
 	},
+	plugins: [
+		require("tailwindcss-animate"),
+		wedgesTW({
+			themes: {
+				light: {
+					colors: {
+						primary: {
+							...wedgesPalette.gray,
+							DEFAULT: "#000000",
+						},
+					},
+				},
+			},
+		}),
+	],
 } satisfies Config;

@@ -1,12 +1,10 @@
-import type { Config } from "tailwindcss";
-
 import baseConfig from "@serea/tailwind-config/web";
+import type { Config } from "tailwindcss";
 
 export default {
 	content: [
 		...baseConfig.content,
-		"./src/**/*.{ts,tsx}",
-		"../../packages/ui/src/**/*.{ts,tsx}",
+		"../../packages/ui/src/*.{ts,tsx}",
 		"node_modules/@lemonsqueezy/wedges/dist/**/*.{js,ts,jsx,tsx}",
 	],
 	presets: [baseConfig],

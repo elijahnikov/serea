@@ -14,6 +14,8 @@
 		"with-env": "dotenv -e ../../.env --"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "^3.9.0",
+		"@lemonsqueezy/wedges": "^1.4.0",
 		"@serea/api": "workspace:*",
 		"@serea/auth": "workspace:*",
 		"@serea/db": "workspace:*",

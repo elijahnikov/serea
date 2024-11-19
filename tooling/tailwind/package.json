@@ -15,6 +15,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@lemonsqueezy/wedges": "^1.4.0",
 		"postcss": "^8.4.47",
 		"tailwindcss": "catalog:",
 		"tailwindcss-animate": "^1.0.7"
