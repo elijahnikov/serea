@@ -1,5 +1,5 @@
 {
-  "extends": "@serea/tsconfig/internal-package.json",
-  "include": ["src"],
-  "exclude": ["node_modules"]
+	"extends": "@serea/typescript/base.json",
+	"include": ["src"],
+	"exclude": ["node_modules"]
 }

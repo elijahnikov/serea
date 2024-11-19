@@ -1,30 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
   "compilerOptions": {
-    /** Base Options */
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
+    "incremental": false,
     "isolatedModules": true,
-
-    /** Keep TSC performant in monorepos */
-    "incremental": true,
-    "disableSourceOfProjectReferenceRedirect": true,
-    "tsBuildInfoFile": "${configDir}/.cache/tsbuildinfo.json",
-
-    /** Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "checkJs": true,
-
-    /** Transpile using Bundler (not tsc) */
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
     "module": "Preserve",
+    "moduleDetection": "force",
     "moduleResolution": "Bundler",
-    "noEmit": true
-  },
-  "exclude": ["node_modules", "build", "dist", ".next", ".expo"]
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022"
+  }
 }

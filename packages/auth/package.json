@@ -1,41 +1,41 @@
 {
-  "name": "@serea/auth",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    ".": {
-      "react-server": "./src/index.rsc.ts",
-      "default": "./src/index.ts"
-    },
-    "./expo": "./src/expo.ts",
-    "./middleware": "./src/middleware.ts",
-    "./client": "./src/client.ts",
-    "./env": "./env.ts"
-  },
-  "license": "MIT",
-  "scripts": {
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "format": "biome format . --write",
-    "lint": "biome check .",
-    "generate": "pnpx @better-auth/cli generate --output ../db/src/auth-schema.ts",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@auth/core": "0.34.2",
-    "@auth/drizzle-adapter": "1.4.2",
-    "@better-auth/expo": "0.7.3-beta.10",
-    "@serea/db": "workspace:*",
-    "@t3-oss/env-nextjs": "^0.11.1",
-    "better-auth": "0.7.4",
-    "next": "^14.2.15",
-    "next-auth": "5.0.0-beta.20",
-    "react": "catalog:react18",
-    "react-dom": "catalog:react18",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@serea/tsconfig": "workspace:*",
-    "typescript": "catalog:"
-  }
+	"name": "@serea/auth",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": {
+			"react-server": "./src/index.rsc.ts",
+			"default": "./src/index.ts"
+		},
+		"./expo": "./src/expo.ts",
+		"./middleware": "./src/middleware.ts",
+		"./client": "./src/client.ts",
+		"./env": "./env.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"format": "biome format . --write",
+		"lint": "biome check .",
+		"generate": "pnpx @better-auth/cli generate --output ../db/src/auth-schema.ts",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@auth/core": "0.34.2",
+		"@auth/drizzle-adapter": "1.4.2",
+		"@better-auth/expo": "0.7.3-beta.10",
+		"@serea/db": "workspace:*",
+		"@t3-oss/env-nextjs": "^0.11.1",
+		"better-auth": "0.7.4",
+		"next": "^14.2.15",
+		"next-auth": "5.0.0-beta.20",
+		"react": "catalog:react18",
+		"react-dom": "catalog:react18",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@serea/typescript": "workspace:*",
+		"typescript": "catalog:"
+	}
 }

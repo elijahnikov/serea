@@ -1,33 +1,33 @@
 {
-  "name": "@serea/api",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
-    }
-  },
-  "license": "MIT",
-  "scripts": {
-    "build": "tsc",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "format": "biome format . --write",
-    "lint": "biome check .",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
-  },
-  "dependencies": {
-    "@serea/auth": "workspace:*",
-    "@serea/db": "workspace:*",
-    "@serea/validators": "workspace:*",
-    "@trpc/server": "catalog:",
-    "superjson": "2.2.1",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@serea/tsconfig": "workspace:*",
-    "typescript": "catalog:"
-  }
+	"name": "@serea/api",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc",
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"dev": "tsc",
+		"format": "biome format . --write",
+		"lint": "biome check .",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+	},
+	"dependencies": {
+		"@serea/auth": "workspace:*",
+		"@serea/db": "workspace:*",
+		"@serea/validators": "workspace:*",
+		"@trpc/server": "catalog:",
+		"superjson": "2.2.1",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@serea/typescript": "workspace:*",
+		"typescript": "catalog:"
+	}
 }

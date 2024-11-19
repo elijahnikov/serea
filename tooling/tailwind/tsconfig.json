@@ -1,5 +1,5 @@
 {
-  "extends": "@serea/tsconfig/base.json",
-  "include": ["."],
-  "exclude": ["node_modules"]
+	"extends": "@serea/typescript/base.json",
+	"include": ["."],
+	"exclude": ["node_modules"]
 }

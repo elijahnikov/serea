@@ -33,7 +33,7 @@
 	},
 	"devDependencies": {
 		"@serea/tailwind-config": "workspace:*",
-		"@serea/tsconfig": "workspace:*",
+		"@serea/typescript": "workspace:*",
 		"@types/node": "^20.16.11",
 		"@types/react": "catalog:react18",
 		"@types/react-dom": "catalog:react18",

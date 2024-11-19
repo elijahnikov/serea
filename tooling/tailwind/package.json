@@ -1,26 +1,26 @@
 {
-  "name": "@serea/tailwind-config",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "exports": {
-    "./native": "./native.ts",
-    "./web": "./web.ts"
-  },
-  "license": "MIT",
-  "scripts": {
-    "clean": "git clean -xdf .cache .turbo node_modules",
-    "format": "biome format . --write",
-    "lint": "biome check .",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "postcss": "^8.4.47",
-    "tailwindcss": "catalog:",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@serea/tsconfig": "workspace:*",
-    "typescript": "catalog:"
-  }
+	"name": "@serea/tailwind-config",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./native": "./native.ts",
+		"./web": "./web.ts"
+	},
+	"license": "MIT",
+	"scripts": {
+		"clean": "git clean -xdf .cache .turbo node_modules",
+		"format": "biome format . --write",
+		"lint": "biome check .",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"postcss": "^8.4.47",
+		"tailwindcss": "catalog:",
+		"tailwindcss-animate": "^1.0.7"
+	},
+	"devDependencies": {
+		"@serea/typescript": "workspace:*",
+		"typescript": "catalog:"
+	}
 }
