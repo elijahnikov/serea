@@ -1,6 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
-import * as inputs from "./movies.input";
 import { protectedProcedure } from "../../trpc";
+
+import * as inputs from "./movies.input";
+import * as service from "./movies.service";
 
 export const moviesRouter = {
 	// QUERIES
@@ -8,5 +10,5 @@ export const moviesRouter = {
 	// MUTATIONS
 	addMovie: protectedProcedure
 		.input(inputs.addMovie)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => service.addMovie(ctx, input)),
 } satisfies TRPCRouterRecord;

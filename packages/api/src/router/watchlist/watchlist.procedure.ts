@@ -1,6 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { protectedProcedure } from "../../trpc";
+
 import * as inputs from "./watchlist.input";
+import * as services from "./watchlist.service";
 
 export const watchlistRouter = {
 	// QUERIES
@@ -19,7 +21,8 @@ export const watchlistRouter = {
 	// MUTATIONS
 	create: protectedProcedure
 		.input(inputs.createWatchlist)
-		.mutation(({ ctx, input }) => {}),
+		.meta({ name: "create-watchlist" })
+		.mutation(({ ctx, input }) => services.createWatchlist(ctx, input)),
 
 	addEntry: protectedProcedure
 		.input(inputs.addWatchlistEntry)

@@ -109,6 +109,20 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 	return result;
 });
 
+const loggingMiddleware = t.middleware(async ({ next, input, meta }) => {
+	const result = await next({ ctx: undefined });
+
+	if (process.env.NODE_ENV === "development") {
+		console.log("Input ->", input);
+		console.log("Result ->", result.ok);
+		console.log("Metadata ->", meta);
+
+		return result;
+	}
+
+	return result;
+});
+
 /**
  * Public (unauthed) procedure
  *
@@ -142,6 +156,8 @@ export const protectedProcedure = t.procedure
 
 export type TPRCContext = Awaited<ReturnType<typeof createTRPCContext>>;
 export type ProtectedTRPCContext = TPRCContext & {
-	user: NonNullable<TPRCContext["session"]>["user"];
-	session: NonNullable<TPRCContext["session"]>["session"];
+	session: {
+		session: NonNullable<TPRCContext["session"]>["session"];
+		user: NonNullable<TPRCContext["session"]>["user"];
+	};
 };

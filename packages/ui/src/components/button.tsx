@@ -19,7 +19,7 @@ const buttonVariants = cva(
 			},
 			variant: {
 				primary:
-					"bg-primary text-white outline-primary hover:bg-primary-600 disabled:opacity-50",
+					"dark:bg-surface bg-surface-800 hover:bg-surface-700 text-white outline-primary dark:hover:bg-surface-100 disabled:opacity-50",
 
 				secondary:
 					"bg-secondary text-white outline-secondary hover:bg-secondary-700 disabled:bg-secondary-200 dark:text-secondary-900 dark:hover:bg-secondary-800 dark:disabled:text-wg-white-500",
@@ -27,7 +27,7 @@ const buttonVariants = cva(
 				tertiary: "bg-surface-100 hover:bg-surface-200/20",
 
 				outline:
-					"dark:shadow:none dark:bg-neutral-900 bg-white border border-surface-200 [--wg-border-width:1px] hover:bg-surface disabled:border-surface-50 dark:border-surface-100",
+					"dark:shadow:none dark:bg-neutral-900 dark:hover:bg-surface bg-white border border-surface-200 [--wg-border-width:1px] hover:bg-surface disabled:border-surface-50 dark:border-surface-100",
 
 				transparent: "bg-transparent hover:bg-surface",
 				link: "p-0 underline underline-offset-3 focus-visible:text-primary",
@@ -125,7 +125,7 @@ export const iconVariants = cva("text-current", {
 	],
 	defaultVariants: {
 		variant: "primary",
-		size: "md",
+		size: "sm",
 	},
 });
 

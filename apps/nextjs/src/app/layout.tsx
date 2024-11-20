@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 
-import { ThemeProvider, ThemeToggle } from "@serea/ui/theme";
+import { ThemeProvider } from "@serea/ui/theme";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -52,10 +52,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 					<TRPCReactProvider>{props.children}</TRPCReactProvider>
-					<div className="absolute bottom-4 right-4">
-						<ThemeToggle />
-					</div>
-					<Toaster />
+					<Toaster position="bottom-center" />
 				</ThemeProvider>
 			</body>
 		</html>

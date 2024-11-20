@@ -48,3 +48,26 @@ export const searchMoviesSchema = z.object({
 	total_pages: z.number(),
 	total_results: z.number(),
 });
+
+export const movieTableData = z.object({
+	contentId: z.number(),
+	title: z.string(),
+	overview: z.string().optional(),
+	poster: z.string().nullable(),
+	backdrop: z.string().nullable(),
+	releaseDate: z.string(),
+	order: z.number(),
+});
+export type MovieTableData = z.infer<typeof movieTableData>;
+
+export const createWatchlist = z.object({
+	title: z.string().min(2, {
+		message: "Title must be at least 2 characters.",
+	}),
+	description: z.string().optional(),
+	tags: z.string().array(),
+	entries: movieTableData.array(),
+	private: z.boolean().optional(),
+	hideStats: z.boolean().optional(),
+});
+export type CreateWatchlist = z.infer<typeof createWatchlist>;

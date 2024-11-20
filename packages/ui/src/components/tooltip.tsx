@@ -16,7 +16,7 @@ const TOOLTIP_ANIMATION_CLASSES = [
 
 /* -------------------------------- Variants -------------------------------- */
 const tooltipVariant = cva({
-	base: "z-50 rounded-md text-start text-white wg-antialiased",
+	base: "z-50 rounded-md text-start dark:text-black text-white wg-antialiased",
 	variants: {
 		size: {
 			sm: "max-w-xs px-3 py-2 text-xs",

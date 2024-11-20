@@ -31,6 +31,7 @@ export const createWatchlist = z.object({
 	private: z.boolean().optional(),
 	hideStats: z.boolean().optional(),
 });
+export type CreateWatchlistInput = z.infer<typeof createWatchlist>;
 
 export const deleteWatchlistEntry = z.object({
 	watchlistId: z.string(),

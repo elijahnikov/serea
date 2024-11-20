@@ -1,5 +1,6 @@
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 import createJiti from "jiti";
+import withPlaiceholder from "@plaiceholder/next";
 
 // Import env files to validate at build time. Use jiti so we can load .ts files in here.
 createJiti(fileURLToPath(import.meta.url))("./src/env");
@@ -17,8 +18,16 @@ const config = {
 		"@serea/validators",
 	],
 
+	images: {
+		remotePatterns: [
+			{ hostname: "image.tmdb.org" },
+			{ hostname: "cdn.discordapp.com" },
+			{ hostname: "lh3.googleusercontent.com" },
+		],
+	},
+
 	/** We already do linting and typechecking as separate tasks in CI */
 	typescript: { ignoreBuildErrors: true },
 };
 
-export default config;
+export default withPlaiceholder(config);

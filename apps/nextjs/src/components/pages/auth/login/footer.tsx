@@ -6,13 +6,13 @@ export default function Footer() {
 			By clicking continue, you acknowledge that you have read and agree to
 			Serea's{" "}
 			<Link href={"/terms-of-service"}>
-				<span className="hover:text-black underline cursor-pointer">
+				<span className="hover:text-black dark:hover:text-white underline cursor-pointer">
 					Terms of Service
 				</span>
 			</Link>{" "}
 			and{" "}
 			<Link href={"/privacy-policy"} target="_blank">
-				<span className="hover:text-black underline cursor-pointer">
+				<span className="hover:text-black dark:hover:text-white underline cursor-pointer">
 					Privacy Policy
 				</span>
 			</Link>
