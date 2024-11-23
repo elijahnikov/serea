@@ -7,6 +7,7 @@ import type {
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
 	GetWatchlistLikesInput,
+	ToggleLikeInput,
 	UpdateEntryOrderInput,
 	UpdateWatchlistInput,
 } from "./watchlist.input";
@@ -175,7 +176,7 @@ export const addEntry = async (
 		await tx
 			.update(watchlist)
 			.set({
-				updatedAt: new Date(),
+				updatedAt: new Date().toISOString(),
 				numberOfEntries: sql`${watchlist.numberOfEntries} + 1`,
 			})
 			.where(eq(watchlist.id, input.watchlistId));
@@ -232,7 +233,7 @@ export const deleteEntry = async (
 		await ctx.db
 			.update(watchlist)
 			.set({
-				updatedAt: new Date(),
+				updatedAt: new Date().toISOString(),
 				numberOfEntries: sql`${watchlist.numberOfEntries} - 1`,
 			})
 			.where(eq(watchlist.id, input.watchlistId));
@@ -300,7 +301,7 @@ export const updateEntryOrder = async (
 
 		await tx
 			.update(watchlist)
-			.set({ updatedAt: new Date() })
+			.set({ updatedAt: new Date().toISOString() })
 			.where(eq(watchlist.id, input.watchlistId));
 
 		return [updatedEntry];
@@ -329,4 +330,37 @@ export const updateWatchlist = async (
 		.returning();
 
 	return updatedWatchlist;
+};
+
+export const toggleLike = async (
+	ctx: ProtectedTRPCContext,
+	input: ToggleLikeInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const existingLike = await ctx.db.query.like.findFirst({
+		where: (table, { and, eq }) =>
+			and(
+				eq(table.userId, currentUserId),
+				eq(table.watchlistId, input.watchlistId),
+			),
+	});
+
+	if (!existingLike) {
+		await ctx.db.insert(like).values({
+			userId: currentUserId,
+			watchlistId: input.watchlistId,
+		});
+		return { liked: true };
+	}
+
+	await ctx.db
+		.delete(like)
+		.where(
+			and(
+				eq(like.userId, currentUserId),
+				eq(like.watchlistId, input.watchlistId),
+			),
+		);
+
+	return { liked: false };
 };

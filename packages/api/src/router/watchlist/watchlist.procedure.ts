@@ -42,7 +42,7 @@ export const watchlistRouter = {
 
 	toggleLike: protectedProcedure
 		.input(inputs.toggleWatchlistLike)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.toggleLike(ctx, input)),
 
 	updateEntryOrder: protectedProcedure
 		.input(inputs.updateEntryOrder)

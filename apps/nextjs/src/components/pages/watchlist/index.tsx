@@ -29,6 +29,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 			<WatchlistBody
 				initialWatchlist={watchlist}
 				initialEntries={entries}
+				initialLikes={likes}
 				view={view?.value as "grid" | "row" | null}
 			/>
 		</>

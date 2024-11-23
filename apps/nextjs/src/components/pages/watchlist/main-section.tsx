@@ -6,14 +6,17 @@ import moment from "moment";
 import { useState } from "react";
 import Entries from "./entries";
 import { api } from "~/trpc/react";
+import Actions from "./actions";
 
 export default function MainSection({
 	watchlist,
 	view,
 	initialEntries,
+	initialLikes,
 }: {
 	watchlist: Omit<RouterOutputs["watchlist"]["get"], "user">;
 	initialEntries: RouterOutputs["watchlist"]["getEntries"];
+	initialLikes: RouterOutputs["watchlist"]["getLikes"];
 	view: "grid" | "row";
 }) {
 	return (
@@ -38,6 +41,7 @@ export default function MainSection({
 					</Badge>
 				</div>
 			</div>
+			<Actions watchlistId={watchlist.id} initialLikes={initialLikes} />
 			<Entries
 				watchlistId={watchlist.id}
 				view={view}

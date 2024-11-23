@@ -10,9 +10,11 @@ export default function WatchlistBody({
 	initialWatchlist,
 	view,
 	initialEntries,
+	initialLikes,
 }: {
 	initialWatchlist: RouterOutputs["watchlist"]["get"];
 	initialEntries: RouterOutputs["watchlist"]["getEntries"];
+	initialLikes: RouterOutputs["watchlist"]["getLikes"];
 	view: "grid" | "row" | null;
 }) {
 	const [selectedView, setSelectedView] = useState<"grid" | "row">(
@@ -42,6 +44,7 @@ export default function WatchlistBody({
 				initialEntries={entries}
 				view={selectedView}
 				watchlist={watchlist}
+				initialLikes={initialLikes}
 			/>
 			<div className="w-full mt-16 lg:w-1/3 order-first lg:order-last">
 				<Tags tags={watchlist.tags} />

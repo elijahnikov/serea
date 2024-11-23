@@ -54,7 +54,7 @@ export type DeleteWatchlistEntryInput = z.infer<typeof deleteWatchlistEntry>;
 export const toggleWatchlistLike = z.object({
 	watchlistId: z.string(),
 });
-
+export type ToggleLikeInput = z.infer<typeof toggleWatchlistLike>;
 export const updateEntryOrder = z.object({
 	watchlistId: z.string(),
 	entryId: z.string(),
