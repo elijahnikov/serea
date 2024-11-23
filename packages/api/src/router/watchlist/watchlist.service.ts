@@ -8,6 +8,7 @@ import type {
 	GetWatchlistInput,
 	GetWatchlistLikesInput,
 	UpdateEntryOrderInput,
+	UpdateWatchlistInput,
 } from "./watchlist.input";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
@@ -313,4 +314,19 @@ export const updateEntryOrder = async (
 	}
 
 	return updatedEntry;
+};
+
+export const updateWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateWatchlistInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const [updatedWatchlist] = await ctx.db
+		.update(watchlist)
+		.set({ ...input, tags: input.tags.join(",") })
+		.where(and(eq(watchlist.id, input.id), eq(watchlist.userId, currentUserId)))
+		.returning();
+
+	return updatedWatchlist;
 };

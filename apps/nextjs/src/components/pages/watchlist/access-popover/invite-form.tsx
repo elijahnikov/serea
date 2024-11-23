@@ -9,7 +9,6 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "@serea/ui/select";
-import { Plus } from "lucide-react";
 
 import { useForm } from "react-hook-form";
 import { z } from "zod";

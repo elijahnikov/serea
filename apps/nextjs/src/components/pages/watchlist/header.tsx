@@ -2,20 +2,26 @@ import type { RouterOutputs } from "@serea/api";
 import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
 import { api } from "~/trpc/server";
 import AccessPopover from "./access-popover";
+import { PencilLine } from "lucide-react";
+import { Button } from "@serea/ui/button";
+import EditModal from "./edit-modal";
 
 export default async function WatchlistHeader({
 	owner,
 	isOwner,
-	watchlistId,
+	watchlist,
 }: {
 	owner: RouterOutputs["watchlist"]["get"]["user"];
 	isOwner: boolean;
-	watchlistId: string;
+	watchlist: Pick<
+		RouterOutputs["watchlist"]["get"],
+		"id" | "title" | "description" | "tags" | "isPrivate" | "hideStats"
+	>;
 }) {
 	const [members, invites] = isOwner
 		? await Promise.all([
-				api.members.listMembers({ watchlistId }),
-				api.members.listInvites({ watchlistId }),
+				api.members.listMembers({ watchlistId: watchlist.id }),
+				api.members.listInvites({ watchlistId: watchlist.id }),
 			])
 		: [null, null];
 
@@ -35,11 +41,14 @@ export default async function WatchlistHeader({
 			</div>
 
 			{isOwner ? (
-				<AccessPopover
-					initialMembers={members}
-					initialInvites={invites}
-					watchlistId={watchlistId}
-				/>
+				<div className="flex items-center gap-2">
+					<EditModal watchlist={{ ...watchlist }} />
+					<AccessPopover
+						initialMembers={members}
+						initialInvites={invites}
+						watchlistId={watchlist.id}
+					/>
+				</div>
 			) : null}
 		</div>
 	);

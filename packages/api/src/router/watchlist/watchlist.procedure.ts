@@ -24,6 +24,10 @@ export const watchlistRouter = {
 		.meta({ name: "create-watchlist" })
 		.mutation(({ ctx, input }) => services.createWatchlist(ctx, input)),
 
+	update: protectedProcedure
+		.input(inputs.updateWatchlist)
+		.mutation(({ ctx, input }) => services.updateWatchlist(ctx, input)),
+
 	addEntry: protectedProcedure
 		.input(inputs.addWatchlistEntry)
 		.mutation(({ ctx, input }) => services.addEntry(ctx, input)),

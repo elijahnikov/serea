@@ -25,6 +25,7 @@ import { AvatarGroup } from "@serea/ui/avatar-group";
 import { Button } from "@serea/ui/button";
 import type { RouterOutputs } from "@serea/api";
 import { api } from "~/trpc/react";
+import Loading from "@serea/ui/loading";
 
 type MenuItem = {
 	label: string;
@@ -121,7 +122,9 @@ export default function MovieDropdown({
 				<DropdownMenuGroup>
 					<DropdownMenuItem className="pointer-events-none">
 						<CheckCheck size={16} />
-						{entry.watched && entry.watched.length > 0 ? (
+						{toggleAllWatched.isPending || toggleWatch.isPending ? (
+							<Loading type="spinner" size="xs" />
+						) : entry.watched && entry.watched.length > 0 ? (
 							<AvatarGroup
 								size="sm"
 								items={entry.watched.slice(0, 4).map((watched) => {

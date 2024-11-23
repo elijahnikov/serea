@@ -5,8 +5,7 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
 import WatchlistHeader from "./header";
-import MainSection from "./main-section";
-import Tags from "./tags";
+import WatchlistBody from "./watchlist-body";
 
 export default async function SingleWatchlist({ id }: { id: string }) {
 	const session = await getSession();
@@ -24,19 +23,14 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 				<WatchlistHeader
 					owner={watchlist.user}
 					isOwner={session?.user.id === watchlist.userId}
-					watchlistId={watchlist.id}
+					watchlist={{ ...watchlist }}
 				/>
 			</Suspense>
-			<div className="flex flex-col gap-4 lg:flex-row">
-				<MainSection
-					initialEntries={entries}
-					view={view?.value as "grid" | "row" | null}
-					watchlist={watchlist}
-				/>
-				<div className="w-full mt-16 lg:w-1/3 order-first lg:order-last">
-					<Tags tags={watchlist.tags} />
-				</div>
-			</div>
+			<WatchlistBody
+				initialWatchlist={watchlist}
+				initialEntries={entries}
+				view={view?.value as "grid" | "row" | null}
+			/>
 		</>
 	);
 }

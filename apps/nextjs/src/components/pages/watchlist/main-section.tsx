@@ -14,22 +14,8 @@ export default function MainSection({
 }: {
 	watchlist: Omit<RouterOutputs["watchlist"]["get"], "user">;
 	initialEntries: RouterOutputs["watchlist"]["getEntries"];
-	view: "grid" | "row" | null;
+	view: "grid" | "row";
 }) {
-	const [selectedView, setSelectedView] = useState<"grid" | "row">(
-		view ?? "grid",
-	);
-
-	const { data: entries } = api.watchlist.getEntries.useQuery(
-		{
-			id: watchlist.id,
-		},
-		{
-			initialData: initialEntries ?? undefined,
-			staleTime: Number.POSITIVE_INFINITY,
-		},
-	);
-
 	return (
 		<div className="w-full order-last gap-6 flex flex-col lg:order-first">
 			<div className="mt-4">
@@ -54,8 +40,8 @@ export default function MainSection({
 			</div>
 			<Entries
 				watchlistId={watchlist.id}
-				view={selectedView}
-				entries={entries}
+				view={view}
+				entries={initialEntries}
 			/>
 		</div>
 	);

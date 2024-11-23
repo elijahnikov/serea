@@ -33,6 +33,18 @@ export const createWatchlist = z.object({
 });
 export type CreateWatchlistInput = z.infer<typeof createWatchlist>;
 
+export const updateWatchlist = z.object({
+	id: z.string(),
+	title: z.string().min(2, {
+		message: "Title must be at least 2 characters.",
+	}),
+	description: z.string().optional(),
+	tags: z.string().array(),
+	private: z.boolean().optional(),
+	hideStats: z.boolean().optional(),
+});
+export type UpdateWatchlistInput = z.infer<typeof updateWatchlist>;
+
 export const deleteWatchlistEntry = z.object({
 	watchlistId: z.string(),
 	entryId: z.string(),
