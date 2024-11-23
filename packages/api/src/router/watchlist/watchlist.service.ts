@@ -3,13 +3,15 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	AddWatchlistEntryInput,
 	CreateWatchlistInput,
+	DeleteWatchlistEntryInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
 	GetWatchlistLikesInput,
+	UpdateEntryOrderInput,
 } from "./watchlist.input";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
-import { eq, sql } from "@serea/db";
+import { and, eq, gt, lt, sql } from "@serea/db";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
@@ -131,7 +133,6 @@ export const addEntry = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
-	// Combine watchlist existence check and existing entry check into a single query
 	const [watchlistAndEntry] = await ctx.db
 		.select({
 			watchlist: watchlist,
@@ -147,7 +148,10 @@ export const addEntry = async (
 		.groupBy(watchlist.id, entry.id);
 
 	if (!watchlistAndEntry?.watchlist) {
-		throw new Error("Watchlist not found");
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Watchlist not found",
+		});
 	}
 
 	if (watchlistAndEntry.entry) {
@@ -156,7 +160,6 @@ export const addEntry = async (
 
 	const newOrder = (watchlistAndEntry.maxOrder ?? 0) + 1;
 
-	// Combine insert and update into a single transaction
 	const [newEntry] = await ctx.db.transaction(async (tx) => {
 		const [createdEntry] = await tx
 			.insert(entry)
@@ -180,4 +183,134 @@ export const addEntry = async (
 	});
 
 	return newEntry;
+};
+
+export const deleteEntry = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteWatchlistEntryInput,
+) => {
+	const checkEntry = await ctx.db.query.entry.findFirst({
+		where: (table, { eq }) => eq(table.id, input.entryId),
+	});
+
+	if (!checkEntry) {
+		throw new Error("Entry not found");
+	}
+
+	const deletedOrder = entry.order;
+
+	const [deleted] = await ctx.db
+		.delete(entry)
+		.where(
+			and(
+				eq(entry.watchlistId, input.watchlistId),
+				eq(entry.id, input.entryId),
+			),
+		)
+		.returning();
+
+	if (!deleted) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: "Could not delete entry",
+		});
+	}
+
+	const [deletedEntry] = await ctx.db
+		.update(entry)
+		.set({ order: sql`${entry.order} - 1` })
+		.where(
+			and(
+				eq(entry.watchlistId, input.watchlistId),
+				gt(entry.order, deletedOrder),
+			),
+		)
+		.returning();
+
+	if (deletedEntry) {
+		await ctx.db
+			.update(watchlist)
+			.set({
+				updatedAt: new Date(),
+				numberOfEntries: sql`${watchlist.numberOfEntries} - 1`,
+			})
+			.where(eq(watchlist.id, input.watchlistId));
+	}
+
+	return true;
+};
+
+export const updateEntryOrder = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateEntryOrderInput,
+) => {
+	const currentEntry = await ctx.db.query.entry.findFirst({
+		where: (table, { eq, and }) =>
+			and(
+				eq(table.id, input.entryId),
+				eq(table.watchlistId, input.watchlistId),
+			),
+	});
+
+	if (!currentEntry) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Entry not found",
+		});
+	}
+
+	const oldOrder = currentEntry.order;
+
+	if (input.newOrder > oldOrder) {
+		await ctx.db
+			.update(entry)
+			.set({ order: sql`${entry.order} - 1` })
+			.where(
+				and(
+					eq(entry.watchlistId, input.watchlistId),
+					gt(entry.order, oldOrder),
+					lt(entry.order, input.newOrder + 1),
+				),
+			);
+	} else if (input.newOrder < oldOrder) {
+		await ctx.db
+			.update(entry)
+			.set({ order: sql`${entry.order} + 1` })
+			.where(
+				and(
+					eq(entry.watchlistId, input.watchlistId),
+					lt(entry.order, oldOrder),
+					gt(entry.order, input.newOrder - 1),
+				),
+			);
+	}
+
+	const [updatedEntry] = await ctx.db.transaction(async (tx) => {
+		const [updatedEntry] = await tx
+			.update(entry)
+			.set({ order: input.newOrder })
+			.where(
+				and(
+					eq(entry.id, input.entryId),
+					eq(entry.watchlistId, input.watchlistId),
+				),
+			)
+			.returning();
+
+		await tx
+			.update(watchlist)
+			.set({ updatedAt: new Date() })
+			.where(eq(watchlist.id, input.watchlistId));
+
+		return [updatedEntry];
+	});
+
+	if (!updatedEntry) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: "Failed to update entry order",
+		});
+	}
+
+	return updatedEntry;
 };

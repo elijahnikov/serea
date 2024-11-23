@@ -86,7 +86,7 @@ export const entry = pgTable(
 			.defaultNow()
 			.notNull(),
 		updatedAt: t
-			.timestamp("updated_at", { mode: "date", withTimezone: true })
+			.timestamp("updated_at", { mode: "string", withTimezone: true })
 			.$onUpdateFn(() => sql`now()`),
 	}),
 	(t) => ({

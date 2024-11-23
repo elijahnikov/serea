@@ -9,7 +9,11 @@ import {
 	useSensor,
 	useSensors,
 } from "@dnd-kit/core";
-import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import {
+	arrayMove,
+	rectSortingStrategy,
+	SortableContext,
+} from "@dnd-kit/sortable";
 import type { RouterOutputs } from "@serea/api";
 import { TooltipProvider } from "@serea/ui/tooltip";
 import { useEffect, useState } from "react";
@@ -28,14 +32,42 @@ export default function EntriesGrid({
 }) {
 	const [open, setOpen] = useState(false);
 	const [localEntries, setLocalEntries] = useState(entries);
-	const { addEntry, deleteEntry, addMovie, updateEntryOrder } = useEntries();
+
+	const { addEntry, deleteEntry, addMovie, updateEntryOrder } = useEntries({
+		entries,
+		localEntries,
+		setLocalEntries,
+	});
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor),
 	);
 
-	const handleDragEnd = (event: DragEndEvent) => {};
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+		if (!localEntries) return;
+		if (active.id !== over?.id) {
+			const oldIndex = localEntries.findIndex(
+				(entry) => entry.id === active.id,
+			);
+			const newIndex = localEntries.findIndex((entry) => entry.id === over?.id);
+
+			const newEntries = arrayMove(localEntries, oldIndex, newIndex).map(
+				(entry, index) => ({
+					...entry,
+					order: index,
+				}),
+			);
+			setLocalEntries(newEntries);
+
+			updateEntryOrder.mutate({
+				watchlistId,
+				entryId: active.id as string,
+				newOrder: newIndex,
+			});
+		}
+	};
 
 	const handleDeleteEntry = (entryId: string) => {
 		deleteEntry.mutate({ watchlistId, entryId });

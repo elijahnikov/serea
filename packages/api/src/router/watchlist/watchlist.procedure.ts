@@ -34,7 +34,7 @@ export const watchlistRouter = {
 
 	deleteEntry: protectedProcedure
 		.input(inputs.deleteWatchlistEntry)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.deleteEntry(ctx, input)),
 
 	toggleLike: protectedProcedure
 		.input(inputs.toggleWatchlistLike)
@@ -42,5 +42,5 @@ export const watchlistRouter = {
 
 	updateEntryOrder: protectedProcedure
 		.input(inputs.updateEntryOrder)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.updateEntryOrder(ctx, input)),
 } satisfies TRPCRouterRecord;
