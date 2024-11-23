@@ -8,7 +8,7 @@ export const watchedRouter = {
 	// QUERIES
 	getWatchlistProgress: protectedProcedure
 		.input(inputs.getWatchlistProgress)
-		.query(({ ctx, input }) => {}),
+		.query(({ ctx, input }) => services.getWatchlistProgress(ctx, input)),
 
 	getWatchStatus: protectedProcedure
 		.input(inputs.getWatchStatus)

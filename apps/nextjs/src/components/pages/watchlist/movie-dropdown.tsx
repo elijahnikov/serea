@@ -51,11 +51,13 @@ export default function MovieDropdown({
 	const toggleWatch = api.watched.toggleWatched.useMutation({
 		onSuccess: () => {
 			void trpcUtils.watchlist.getEntries.invalidate();
+			void trpcUtils.watched.getWatchlistProgress.invalidate();
 		},
 	});
 	const toggleAllWatched = api.watched.toggleAllWatched.useMutation({
 		onSuccess: () => {
 			void trpcUtils.watchlist.getEntries.invalidate();
+			void trpcUtils.watched.getWatchlistProgress.invalidate();
 		},
 	});
 

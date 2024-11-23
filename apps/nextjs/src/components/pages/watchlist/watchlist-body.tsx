@@ -39,16 +39,11 @@ export default function WatchlistBody({
 		},
 	);
 	return (
-		<div className="flex flex-col gap-4 lg:flex-row">
-			<MainSection
-				initialEntries={entries}
-				view={selectedView}
-				watchlist={watchlist}
-				initialLikes={initialLikes}
-			/>
-			<div className="w-full mt-16 lg:w-1/3 order-first lg:order-last">
-				<Tags tags={watchlist.tags} />
-			</div>
-		</div>
+		<MainSection
+			initialEntries={entries}
+			view={selectedView}
+			watchlist={watchlist}
+			initialLikes={initialLikes}
+		/>
 	);
 }

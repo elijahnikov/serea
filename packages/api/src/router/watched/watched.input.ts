@@ -13,9 +13,9 @@ export const toggleAllWatched = z.object({
 export type ToggleAllWatchedInput = z.infer<typeof toggleAllWatched>;
 
 export const getWatchlistProgress = z.object({
-	watchlistId: z.string(),
+	id: z.string(),
 });
-
+export type GetWatchlistProgressInput = z.infer<typeof getWatchlistProgress>;
 export const getWatchStatus = z.object({
 	watchlistId: z.string(),
 	entryId: z.string(),

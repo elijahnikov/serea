@@ -1,6 +1,7 @@
 import { watched } from "@serea/db/schema";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	GetWatchlistProgressInput,
 	ToggleAllWatchedInput,
 	ToggleWatchedInput,
 } from "./watched.input";
@@ -101,4 +102,38 @@ export const toggleAllWatched = async (
 	);
 
 	return true;
+};
+
+export const getWatchlistProgress = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistProgressInput,
+) => {
+	const watchlist = await ctx.db.query.watchlist.findFirst({
+		where: (table, { eq }) => eq(table.id, input.id),
+		columns: {
+			numberOfEntries: true,
+		},
+	});
+	if (!watchlist) {
+		throw new TRPCError({ code: "NOT_FOUND", message: "Watchlist not found" });
+	}
+
+	const members = await ctx.db.query.member.findMany({
+		where: (table, { eq }) => eq(table.watchlistId, input.id),
+		with: {
+			watched: {
+				columns: {
+					id: true,
+				},
+			},
+			user: {
+				columns: {
+					id: true,
+					name: true,
+					image: true,
+				},
+			},
+		},
+	});
+	return { members, entriesLength: watchlist.numberOfEntries ?? 0 };
 };

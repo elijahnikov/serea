@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import { api } from "~/trpc/server";
 import WatchlistHeader from "./header";
 import WatchlistBody from "./watchlist-body";
+import Tags from "./tags";
+import MembersProgress from "./member-progress";
 
 export default async function SingleWatchlist({ id }: { id: string }) {
 	const session = await getSession();
@@ -13,6 +15,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 	const watchlist = await api.watchlist.get({ id });
 	const entries = await api.watchlist.getEntries({ id });
 	const likes = await api.watchlist.getLikes({ id });
+	const watchlistProgress = await api.watched.getWatchlistProgress({ id });
 
 	const cookieStore = cookies();
 	const view = cookieStore.get("selected-view");
@@ -26,12 +29,20 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 					watchlist={{ ...watchlist }}
 				/>
 			</Suspense>
-			<WatchlistBody
-				initialWatchlist={watchlist}
-				initialEntries={entries}
-				initialLikes={likes}
-				view={view?.value as "grid" | "row" | null}
-			/>
+			<div className="flex flex-col gap-4 lg:flex-row">
+				<WatchlistBody
+					initialWatchlist={watchlist}
+					initialEntries={entries}
+					initialLikes={likes}
+					view={view?.value as "grid" | "row" | null}
+				/>
+				<div className="w-full mt-16 gap-6 flex flex-col lg:w-1/3 order-first lg:order-last">
+					<Tags tags={watchlist.tags} />
+					<Suspense fallback={<p>loading3...</p>}>
+						<MembersProgress watchlistId={id} initialData={watchlistProgress} />
+					</Suspense>
+				</div>
+			</div>
 		</>
 	);
 }
