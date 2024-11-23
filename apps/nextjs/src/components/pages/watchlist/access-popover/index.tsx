@@ -31,6 +31,7 @@ export default function AccessPopover({
 			},
 			{
 				initialData: initialInvites ?? undefined,
+				staleTime: Number.POSITIVE_INFINITY,
 			},
 		);
 
@@ -41,6 +42,7 @@ export default function AccessPopover({
 			},
 			{
 				initialData: initialMembers ?? undefined,
+				staleTime: Number.POSITIVE_INFINITY,
 			},
 		);
 

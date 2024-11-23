@@ -1,3 +1,5 @@
+"use client";
+
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { RouterOutputs } from "@serea/api";
@@ -6,6 +8,7 @@ import { TooltipContent, TooltipRoot, TooltipTrigger } from "@serea/ui/tooltip";
 import Image from "next/image";
 import { useState } from "react";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
+import MovieDropdown from "../../movie-dropdown";
 
 export default function SortableEntryItem({
 	entry,
@@ -87,13 +90,13 @@ function EntryItem({
 							}`}
 							onClick={(e) => e.stopPropagation()}
 						>
-							{/* <MovieDropdown
+							<MovieDropdown
 								isOpen={isDropdownOpen}
 								role={role}
 								entry={entry}
 								onDeleteEntry={onDeleteEntry}
 								onOpenChange={setIsDropdownOpen}
-							/> */}
+							/>
 						</div>
 						<div className={isDropdownOpen ? "pointer-events-none" : ""}>
 							{entry.movie.posterBlurHash !== null ? (

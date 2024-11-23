@@ -29,7 +29,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
 				<MainSection
-					entries={entries}
+					initialEntries={entries}
 					view={view?.value as "grid" | "row" | null}
 					watchlist={watchlist}
 				/>

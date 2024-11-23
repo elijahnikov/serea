@@ -5,18 +5,29 @@ import Badge from "@serea/ui/badge";
 import moment from "moment";
 import { useState } from "react";
 import Entries from "./entries";
+import { api } from "~/trpc/react";
 
 export default function MainSection({
 	watchlist,
 	view,
-	entries,
+	initialEntries,
 }: {
 	watchlist: Omit<RouterOutputs["watchlist"]["get"], "user">;
-	entries: RouterOutputs["watchlist"]["getEntries"];
+	initialEntries: RouterOutputs["watchlist"]["getEntries"];
 	view: "grid" | "row" | null;
 }) {
 	const [selectedView, setSelectedView] = useState<"grid" | "row">(
 		view ?? "grid",
+	);
+
+	const { data: entries } = api.watchlist.getEntries.useQuery(
+		{
+			id: watchlist.id,
+		},
+		{
+			initialData: initialEntries ?? undefined,
+			staleTime: Number.POSITIVE_INFINITY,
+		},
 	);
 
 	return (

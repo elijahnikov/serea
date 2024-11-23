@@ -161,7 +161,6 @@ export const addEntry = async (
 		const [createdEntry] = await tx
 			.insert(entry)
 			.values({
-				id: input.id,
 				watchlistId: input.watchlistId,
 				contentId: input.contentId,
 				userId: currentUserId,

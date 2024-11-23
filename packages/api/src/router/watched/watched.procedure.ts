@@ -1,6 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { protectedProcedure } from "../../trpc";
+
 import * as inputs from "./watched.input";
+import * as services from "./watched.service";
 
 export const watchedRouter = {
 	// QUERIES
@@ -15,9 +17,9 @@ export const watchedRouter = {
 	// MUTATIONS
 	toggleWatched: protectedProcedure
 		.input(inputs.toggleWatched)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.toggleWatched(ctx, input)),
 
 	toggleAllWatched: protectedProcedure
 		.input(inputs.toggleAllWatched)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.toggleAllWatched(ctx, input)),
 } satisfies TRPCRouterRecord;
