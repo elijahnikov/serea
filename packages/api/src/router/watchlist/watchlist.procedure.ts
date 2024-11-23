@@ -8,15 +8,15 @@ export const watchlistRouter = {
 	// QUERIES
 	get: protectedProcedure
 		.input(inputs.getWatchlist)
-		.query(({ ctx, input }) => {}),
+		.query(({ ctx, input }) => services.getWatchlist(ctx, input)),
 
 	getEntries: protectedProcedure
 		.input(inputs.getWatchlistEntries)
-		.query(({ ctx, input }) => {}),
+		.query(({ ctx, input }) => services.getWatchlistEntries(ctx, input)),
 
 	getLikes: protectedProcedure
 		.input(inputs.getWatchlistLikes)
-		.query(({ ctx, input }) => {}),
+		.query(({ ctx, input }) => services.getWatchlistLikes(ctx, input)),
 
 	// MUTATIONS
 	create: protectedProcedure

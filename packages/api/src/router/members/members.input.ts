@@ -2,9 +2,10 @@ import { z } from "zod";
 
 export const watchlistInvite = z.object({
 	watchlistId: z.string(),
-	inviteeEmail: z.string().email(),
+	email: z.string().email(),
 	role: z.enum(["viewer", "editor"]),
 });
+export type CreateInviteInput = z.infer<typeof watchlistInvite>;
 
 export const respondToInvite = z.object({
 	invitationId: z.string(),
@@ -29,10 +30,12 @@ export const deleteInvite = z.object({
 export const listMembers = z.object({
 	watchlistId: z.string(),
 });
+export type ListMembersInput = z.infer<typeof listMembers>;
 
 export const listInvites = z.object({
 	watchlistId: z.string(),
 });
+export type ListInvitesInput = z.infer<typeof listInvites>;
 
 export const getMemberRole = z.object({
 	watchlistId: z.string(),

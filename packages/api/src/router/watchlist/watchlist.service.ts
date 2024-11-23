@@ -1,18 +1,27 @@
-import { entry, member, watchlist } from "@serea/db/schema";
+import { entry, like, member, watchlist } from "@serea/db/schema";
 import type { ProtectedTRPCContext } from "../../trpc";
-import type { CreateWatchlistInput } from "./watchlist.input";
+import type {
+	CreateWatchlistInput,
+	GetWatchlistEntriesInput,
+	GetWatchlistInput,
+	GetWatchlistLikesInput,
+} from "./watchlist.input";
 import { TRPCError } from "@trpc/server";
+import { createId } from "@paralleldrive/cuid2";
+import { eq, sql } from "@serea/db";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
 	input: CreateWatchlistInput,
 ) => {
 	const currentUserId = ctx.session.user.id;
+	const id = createId();
 
 	const [newWatchlist] = await ctx.db
 		.insert(watchlist)
 		.values({
 			...input,
+			id,
 			userId: currentUserId,
 			tags: input.tags.join(","),
 			numberOfEntries: input.entries.length ?? 0,
@@ -43,4 +52,74 @@ export const createWatchlist = async (
 	}
 
 	return newWatchlist.id;
+};
+
+export const getWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistInput,
+) => {
+	const watchlist = await ctx.db.query.watchlist.findFirst({
+		where: (table, { eq }) => eq(table.id, input.id),
+		with: {
+			user: {
+				columns: {
+					id: true,
+					name: true,
+					email: true,
+					image: true,
+				},
+			},
+		},
+	});
+
+	if (!watchlist) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Watchlist not found",
+		});
+	}
+
+	return watchlist;
+};
+
+export const getWatchlistEntries = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistEntriesInput,
+) => {
+	const entries = await ctx.db.query.entry.findMany({
+		where: (table, { eq }) => eq(table.watchlistId, input.id),
+		with: {
+			movie: true,
+			watched: {
+				with: {
+					user: true,
+				},
+			},
+		},
+	});
+
+	return entries;
+};
+
+export const getWatchlistLikes = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistLikesInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const likes = await ctx.db.query.like.findMany({
+		where: (table, { eq, and }) =>
+			and(eq(table.watchlistId, input.id), eq(table.userId, currentUserId)),
+	});
+
+	const likesCount =
+		(await ctx.db
+			.select({ count: sql`count(*)` })
+			.from(like)
+			.where(eq(like.watchlistId, input.id))
+			.then((result) => Number(result[0]?.count))) ?? 0;
+
+	return {
+		count: likesCount,
+		hasLiked: Boolean(likes.length > 0 && currentUserId),
+	};
 };

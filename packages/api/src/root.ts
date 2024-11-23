@@ -1,3 +1,4 @@
+import { membersRouter } from "./router/members/members.procedure";
 import { moviesRouter } from "./router/movies/movies.procedure";
 import { postRouter } from "./router/post";
 import { tmdbRouter } from "./router/tmdb/tmdb.procedure";
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
 	watched: watchedRouter,
 	tmdb: tmdbRouter,
 	movie: moviesRouter,
+	members: membersRouter,
 });
 
 // export type definition of API

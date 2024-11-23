@@ -64,3 +64,9 @@
 		--chart-5: 340 75% 55%;
 	}
 }
+
+@layer utilities {
+	.debug {
+		@apply border border-red-500;
+	}
+}

@@ -41,7 +41,7 @@ export const movieRelations = relations(movie, ({ many }) => ({
 export const watchlist = pgTable(
 	"watchlist",
 	(t) => ({
-		id: t.uuid().notNull().primaryKey().defaultRandom(),
+		id: t.varchar("id", { length: 24 }).primaryKey(),
 		userId: t.text("user_id").notNull(),
 		title: t.varchar({ length: 256 }).notNull(),
 		description: t.text(),
@@ -78,7 +78,7 @@ export const entry = pgTable(
 	(t) => ({
 		id: t.uuid().notNull().primaryKey().defaultRandom(),
 		order: t.integer("order").notNull(),
-		watchlistId: t.uuid("watchlist_id").notNull(),
+		watchlistId: t.varchar("watchlist_id").notNull(),
 		contentId: t.integer("content_id").notNull(),
 		userId: t.text("user_id").notNull(),
 		createdAt: t
@@ -115,7 +115,7 @@ export const invite = pgTable(
 	"watchlist_invite",
 	(t) => ({
 		id: t.uuid().notNull().primaryKey().defaultRandom(),
-		watchlistId: t.uuid("watchlist_id").notNull(),
+		watchlistId: t.varchar("watchlist_id").notNull(),
 		inviteeId: t.text("invitee_id").notNull(),
 		inviterId: t.text("inviter_id").notNull(),
 		role: t
@@ -155,7 +155,7 @@ export const member = pgTable(
 	"watchlist_member",
 	(t) => ({
 		id: t.uuid().notNull().primaryKey().defaultRandom(),
-		watchlistId: t.uuid("watchlist_id").notNull(),
+		watchlistId: t.varchar("watchlist_id").notNull(),
 		userId: t.text("user_id").notNull(),
 		role: t
 			.varchar("role", { length: 256 })
@@ -189,7 +189,7 @@ export const memberRelations = relations(member, ({ one, many }) => ({
 export const like = pgTable(
 	"watchlist_like",
 	(t) => ({
-		watchlistId: t.uuid("watchlist_id").notNull(),
+		watchlistId: t.varchar("watchlist_id").notNull(),
 		userId: t.text("user_id").notNull(),
 	}),
 	(t) => ({
@@ -211,7 +211,7 @@ export const likeRelations = relations(like, ({ one }) => ({
 
 export const watched = pgTable("watched", (t) => ({
 	id: t.uuid().notNull().primaryKey().defaultRandom(),
-	watchlistId: t.uuid("watchlist_id").notNull(),
+	watchlistId: t.varchar("watchlist_id").notNull(),
 	userId: t.text("user_id").notNull(),
 	memberId: t.uuid("member_id").notNull(),
 	entryId: t.uuid("entry_id").notNull(),

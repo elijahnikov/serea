@@ -93,7 +93,7 @@ export default function MovieList({
 			<div className="w-full">
 				<div>
 					<Label className="mb-2">Movies</Label>
-					<div className="bg-white dark:bg-transparent border border-dashed border-surface-200 shadow-wg-xs flex flex-col items-center px-4 w-full max-h-[600px] min-h-[600px] rounded-lg">
+					<div className="bg-transparent border border-dashed border-surface-200 shadow-wg-xs flex flex-col items-center px-4 w-full max-h-[600px] min-h-[600px] rounded-lg">
 						<Popover open={open} onOpenChange={setOpen}>
 							<PopoverTrigger asChild>
 								<Button

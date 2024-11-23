@@ -199,7 +199,7 @@ const SelectItem = React.forwardRef<
 		)}
 		{...props}
 	>
-		<SelectPrimitive.ItemIndicator className="absolute right-3 ml-4 flex shrink-0 items-center justify-center pl-4 text-primary">
+		<SelectPrimitive.ItemIndicator className="absolute right-3 ml-4 flex shrink-0 items-center justify-center pl-4 text-secondary">
 			<CheckIcon className="size-6" />
 		</SelectPrimitive.ItemIndicator>
 

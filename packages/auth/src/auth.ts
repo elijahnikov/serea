@@ -33,6 +33,11 @@ export const config = {
 			clientSecret: env.AUTH_DISCORD_SECRET,
 			redirectURI: "http://localhost:3000/api/auth/callback/discord",
 		},
+		google: {
+			clientId: env.AUTH_GOOGLE_ID,
+			clientSecret: env.AUTH_GOOGLE_SECRET,
+			redirectURI: "http://localhost:3000/api/auth/callback/google",
+		},
 	},
 } satisfies BetterAuthOptions;
 

@@ -51,11 +51,14 @@ export const updateEntryOrder = z.object({
 export const getWatchlist = z.object({
 	id: z.string(),
 });
+export type GetWatchlistInput = z.infer<typeof getWatchlist>;
 
 export const getWatchlistEntries = z.object({
 	id: z.string(),
 });
+export type GetWatchlistEntriesInput = z.infer<typeof getWatchlistEntries>;
 
 export const getWatchlistLikes = z.object({
 	id: z.string(),
 });
+export type GetWatchlistLikesInput = z.infer<typeof getWatchlistLikes>;
