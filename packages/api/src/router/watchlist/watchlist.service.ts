@@ -1,6 +1,7 @@
 import { entry, like, member, watchlist } from "@serea/db/schema";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	AddWatchlistEntryInput,
 	CreateWatchlistInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
@@ -122,4 +123,62 @@ export const getWatchlistLikes = async (
 		count: likesCount,
 		hasLiked: Boolean(likes.length > 0 && currentUserId),
 	};
+};
+
+export const addEntry = async (
+	ctx: ProtectedTRPCContext,
+	input: AddWatchlistEntryInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	// Combine watchlist existence check and existing entry check into a single query
+	const [watchlistAndEntry] = await ctx.db
+		.select({
+			watchlist: watchlist,
+			entry: entry,
+			maxOrder: sql<number>`MAX(${entry.order})`,
+		})
+		.from(watchlist)
+		.leftJoin(
+			entry,
+			sql`${entry.watchlistId} = ${watchlist.id} AND ${entry.contentId} = ${input.contentId}`,
+		)
+		.where(eq(watchlist.id, input.watchlistId))
+		.groupBy(watchlist.id, entry.id);
+
+	if (!watchlistAndEntry?.watchlist) {
+		throw new Error("Watchlist not found");
+	}
+
+	if (watchlistAndEntry.entry) {
+		return watchlistAndEntry.entry;
+	}
+
+	const newOrder = (watchlistAndEntry.maxOrder ?? 0) + 1;
+
+	// Combine insert and update into a single transaction
+	const [newEntry] = await ctx.db.transaction(async (tx) => {
+		const [createdEntry] = await tx
+			.insert(entry)
+			.values({
+				id: input.id,
+				watchlistId: input.watchlistId,
+				contentId: input.contentId,
+				userId: currentUserId,
+				order: newOrder,
+			})
+			.returning();
+
+		await tx
+			.update(watchlist)
+			.set({
+				updatedAt: new Date(),
+				numberOfEntries: sql`${watchlist.numberOfEntries} + 1`,
+			})
+			.where(eq(watchlist.id, input.watchlistId));
+
+		return [createdEntry];
+	});
+
+	return newEntry;
 };

@@ -11,11 +11,11 @@ export const movieTableData = z.object({
 });
 
 export const addWatchlistEntry = z.object({
-	id: z.string(),
 	watchlistId: z.string(),
 	contentId: z.number(),
 	content: movieTableData.omit({ order: true }),
 });
+export type AddWatchlistEntryInput = z.infer<typeof addWatchlistEntry>;
 
 export const cloneWatchlist = z.object({
 	id: z.string(),

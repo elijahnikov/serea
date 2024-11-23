@@ -26,7 +26,7 @@ export const watchlistRouter = {
 
 	addEntry: protectedProcedure
 		.input(inputs.addWatchlistEntry)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.addEntry(ctx, input)),
 
 	clone: protectedProcedure
 		.input(inputs.cloneWatchlist)

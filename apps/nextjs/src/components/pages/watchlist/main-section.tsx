@@ -4,12 +4,15 @@ import type { RouterOutputs } from "@serea/api";
 import Badge from "@serea/ui/badge";
 import moment from "moment";
 import { useState } from "react";
+import Entries from "./entries";
 
 export default function MainSection({
 	watchlist,
 	view,
+	entries,
 }: {
 	watchlist: Omit<RouterOutputs["watchlist"]["get"], "user">;
+	entries: RouterOutputs["watchlist"]["getEntries"];
 	view: "grid" | "row" | null;
 }) {
 	const [selectedView, setSelectedView] = useState<"grid" | "row">(
@@ -17,7 +20,7 @@ export default function MainSection({
 	);
 
 	return (
-		<div className="w-full order-last lg:order-first">
+		<div className="w-full order-last gap-6 flex flex-col lg:order-first">
 			<div className="mt-4">
 				<p className="text-3xl font-semibold">{watchlist.title}</p>
 				<p className=" text-neutral-500 dark:text-neutral-400 my-4 text-md">
@@ -38,6 +41,11 @@ export default function MainSection({
 					</Badge>
 				</div>
 			</div>
+			<Entries
+				watchlistId={watchlist.id}
+				view={selectedView}
+				entries={entries}
+			/>
 		</div>
 	);
 }

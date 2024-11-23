@@ -29,10 +29,13 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
 				<MainSection
+					entries={entries}
 					view={view?.value as "grid" | "row" | null}
 					watchlist={watchlist}
 				/>
-				<Tags tags={watchlist.tags?.split(",") ?? []} />
+				<div className="w-full mt-16 lg:w-1/3 order-first lg:order-last">
+					<Tags tags={watchlist.tags} />
+				</div>
 			</div>
 		</>
 	);

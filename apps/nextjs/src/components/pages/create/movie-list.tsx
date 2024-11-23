@@ -45,6 +45,7 @@ export default function MovieList({
 		createMovie({
 			...newEntry,
 		});
+
 		const currentEntries = form.getValues("entries");
 		if (
 			currentEntries.findIndex(
