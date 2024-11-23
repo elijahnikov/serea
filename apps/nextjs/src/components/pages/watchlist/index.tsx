@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
 import WatchlistHeader from "./header";
+import MainSection from "./main-section";
+import Tags from "./tags";
 
 export default async function SingleWatchlist({ id }: { id: string }) {
 	const session = await getSession();
@@ -25,6 +27,13 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 					watchlistId={watchlist.id}
 				/>
 			</Suspense>
+			<div className="flex flex-col gap-4 lg:flex-row">
+				<MainSection
+					view={view?.value as "grid" | "row" | null}
+					watchlist={watchlist}
+				/>
+				<Tags tags={watchlist.tags?.split(",") ?? []} />
+			</div>
 		</>
 	);
 }

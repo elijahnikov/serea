@@ -2,12 +2,18 @@
 import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
 import Loading from "@serea/ui/loading";
-import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
+import {
+	Popover,
+	PopoverArrow,
+	PopoverContent,
+	PopoverTrigger,
+} from "@serea/ui/popover";
 import { Plus, UserPlus } from "lucide-react";
 import { api } from "~/trpc/react";
 import Members from "./members";
 import Invites from "./invites";
 import InviteForm from "./invite-form";
+import { cn } from "@serea/ui/cn";
 
 export default function AccessPopover({
 	initialMembers,
