@@ -110,3 +110,25 @@ export const createInvite = async (
 
 	return createdInvite;
 };
+
+export const listInvitesForUser = async (ctx: ProtectedTRPCContext) => {
+	const invites = await ctx.db.query.invite.findMany({
+		where: (table, { eq }) => eq(table.inviteeId, ctx.session.user.id),
+		with: {
+			inviter: {
+				columns: {
+					name: true,
+					email: true,
+					image: true,
+				},
+			},
+			watchlist: {
+				columns: {
+					id: true,
+					title: true,
+				},
+			},
+		},
+	});
+	return invites;
+};

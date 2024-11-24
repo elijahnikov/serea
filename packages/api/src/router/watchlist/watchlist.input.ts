@@ -45,6 +45,28 @@ export const updateWatchlist = z.object({
 });
 export type UpdateWatchlistInput = z.infer<typeof updateWatchlist>;
 
+export const updateWatchlistTitle = z.object({
+	id: z.string(),
+	title: z.string().min(2, {
+		message: "Title must be at least 2 characters.",
+	}),
+});
+export type UpdateWatchlistTitleInput = z.infer<typeof updateWatchlistTitle>;
+
+export const updateWatchlistDescription = z.object({
+	id: z.string(),
+	description: z.string().optional(),
+});
+export type UpdateWatchlistDescriptionInput = z.infer<
+	typeof updateWatchlistDescription
+>;
+
+export const updateWatchlistTags = z.object({
+	id: z.string(),
+	tags: z.string().array(),
+});
+export type UpdateWatchlistTagsInput = z.infer<typeof updateWatchlistTags>;
+
 export const deleteWatchlistEntry = z.object({
 	watchlistId: z.string(),
 	entryId: z.string(),
@@ -60,6 +82,7 @@ export const updateEntryOrder = z.object({
 	entryId: z.string(),
 	newOrder: z.number(),
 });
+
 export type UpdateEntryOrderInput = z.infer<typeof updateEntryOrder>;
 export const getWatchlist = z.object({
 	id: z.string(),

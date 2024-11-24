@@ -12,10 +12,13 @@ import {
 } from "@serea/ui/tooltip";
 import { Compass, List, Plus, User } from "lucide-react";
 import Link from "next/link";
-// import { Suspense } from "react";
+
 // import Invites from "./invites";
 // import Notifications from "./notifications";
 import UserAvatar from "./user-avatar";
+import { Suspense } from "react";
+import { api } from "~/trpc/server";
+import Invites from "./invite";
 
 const navigationLinks = [
 	{
@@ -40,10 +43,10 @@ const navigationLinks = [
 	},
 ];
 
-// async function InvitesData() {
-//   const invites = await listInvitesForUser();
-//   return <Invites invites={invites} />;
-// }
+async function InvitesData() {
+	const invites = await api.members.listInvitesForUser();
+	return <Invites invites={invites} />;
+}
 
 export default async function Navigation() {
 	const session = await getSession();
@@ -79,9 +82,9 @@ export default async function Navigation() {
 				</TooltipProvider>
 			</div>
 			<div className="flex items-center justify-center space-y-1 flex-col">
-				{/* <Suspense fallback={<p>loading</p>}>
-          <InvitesData />
-        </Suspense> */}
+				<Suspense fallback={<p>loading</p>}>
+					<InvitesData />
+				</Suspense>
 				{session ? <UserAvatar avatar={{ ...session.user }} /> : null}
 			</div>
 		</div>

@@ -28,6 +28,18 @@ export const watchlistRouter = {
 		.input(inputs.updateWatchlist)
 		.mutation(({ ctx, input }) => services.updateWatchlist(ctx, input)),
 
+	updateTitle: protectedProcedure
+		.input(inputs.updateWatchlistTitle)
+		.mutation(({ ctx, input }) => services.updateTitle(ctx, input)),
+
+	updateDescription: protectedProcedure
+		.input(inputs.updateWatchlistDescription)
+		.mutation(({ ctx, input }) => services.updateDescription(ctx, input)),
+
+	updateTags: protectedProcedure
+		.input(inputs.updateWatchlistTags)
+		.mutation(({ ctx, input }) => services.updateTags(ctx, input)),
+
 	addEntry: protectedProcedure
 		.input(inputs.addWatchlistEntry)
 		.mutation(({ ctx, input }) => services.addEntry(ctx, input)),

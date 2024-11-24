@@ -9,7 +9,10 @@ import type {
 	GetWatchlistLikesInput,
 	ToggleLikeInput,
 	UpdateEntryOrderInput,
+	UpdateWatchlistDescriptionInput,
 	UpdateWatchlistInput,
+	UpdateWatchlistTagsInput,
+	UpdateWatchlistTitleInput,
 } from "./watchlist.input";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
@@ -363,4 +366,49 @@ export const toggleLike = async (
 		);
 
 	return { liked: false };
+};
+
+export const updateTitle = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateWatchlistTitleInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const [updatedWatchlist] = await ctx.db
+		.update(watchlist)
+		.set({ title: input.title })
+		.where(and(eq(watchlist.id, input.id), eq(watchlist.userId, currentUserId)))
+		.returning();
+
+	return updatedWatchlist;
+};
+
+export const updateDescription = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateWatchlistDescriptionInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const [updatedWatchlist] = await ctx.db
+		.update(watchlist)
+		.set({ description: input.description })
+		.where(and(eq(watchlist.id, input.id), eq(watchlist.userId, currentUserId)))
+		.returning();
+
+	return updatedWatchlist;
+};
+
+export const updateTags = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateWatchlistTagsInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const [updatedWatchlist] = await ctx.db
+		.update(watchlist)
+		.set({ tags: input.tags.join(",") })
+		.where(and(eq(watchlist.id, input.id), eq(watchlist.userId, currentUserId)))
+		.returning();
+
+	return updatedWatchlist;
 };

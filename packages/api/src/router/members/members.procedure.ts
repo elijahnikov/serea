@@ -14,7 +14,9 @@ export const membersRouter = {
 		.input(inputs.listInvites)
 		.query(({ ctx, input }) => services.listInvites(ctx, input)),
 
-	listInvitesForUser: protectedProcedure.query(({ ctx, input }) => {}),
+	listInvitesForUser: protectedProcedure.query(({ ctx, input }) =>
+		services.listInvitesForUser(ctx),
+	),
 
 	getMemberRole: protectedProcedure
 		.input(inputs.getMemberRole)
