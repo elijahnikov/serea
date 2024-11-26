@@ -266,12 +266,18 @@ importers:
       '@types/react-dom':
         specifier: catalog:react18
         version: 18.3.1
+      '@types/react-input-autosize':
+        specifier: ^2.2.4
+        version: 2.2.4
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
       jiti:
         specifier: ^1.21.6
         version: 1.21.6
+      react-input-autosize:
+        specifier: ^3.0.0
+        version: 3.0.0(react@18.3.1)
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.14(ts-node@10.9.2(@types/node@20.16.11)(typescript@5.6.3))
@@ -3198,6 +3204,9 @@ packages:
 
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
+
+  '@types/react-input-autosize@2.2.4':
+    resolution: {integrity: sha512-7O028jRZHZo3mj63h3HSvB0WpvPXNWN86sajHTi0+CtjA4Ym+DFzO9RzrSbfFURe5ZWsq6P72xk7MInI6aGWJA==}
 
   '@types/react@18.3.11':
     resolution: {integrity: sha512-r6QZ069rFTjrEYgFdOck1gK7FLVsgJE7tTz0pQBczlBNUhBNk0MQH4UbnFSwjpQLMkLzgqvBBa+qGpLje16eTQ==}
@@ -6219,6 +6228,11 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-input-autosize@3.0.0:
+    resolution: {integrity: sha512-nL9uS7jEs/zu8sqwFE5MAPx6pPkNAriACQ2rGLlqmKr2sPGtN7TXTyDdQt4lbNXVx7Uzadb40x8qotIuru6Rhg==}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -10812,6 +10826,10 @@ snapshots:
     dependencies:
       '@types/react': 18.3.11
 
+  '@types/react-input-autosize@2.2.4':
+    dependencies:
+      '@types/react': 18.3.11
+
   '@types/react@18.3.11':
     dependencies:
       '@types/prop-types': 15.7.13
@@ -14140,6 +14158,11 @@ snapshots:
 
   react-hook-form@7.53.0(react@18.3.1):
     dependencies:
+      react: 18.3.1
+
+  react-input-autosize@3.0.0(react@18.3.1):
+    dependencies:
+      prop-types: 15.8.1
       react: 18.3.1
 
   react-is@16.13.1: {}

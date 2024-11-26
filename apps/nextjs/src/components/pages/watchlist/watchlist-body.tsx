@@ -1,12 +1,12 @@
 "use client";
 
-import MainSection from "./main-section";
 import type { RouterOutputs } from "@serea/api";
 import { api } from "~/trpc/react";
 import { useState } from "react";
-import Tags from "./tags";
+import MainSection from "./main-section";
 
 export default function WatchlistBody({
+	isOwner = false,
 	initialWatchlist,
 	view,
 	initialEntries,
@@ -16,6 +16,7 @@ export default function WatchlistBody({
 	initialEntries: RouterOutputs["watchlist"]["getEntries"];
 	initialLikes: RouterOutputs["watchlist"]["getLikes"];
 	view: "grid" | "row" | null;
+	isOwner?: boolean;
 }) {
 	const [selectedView, setSelectedView] = useState<"grid" | "row">(
 		view ?? "grid",
@@ -40,6 +41,7 @@ export default function WatchlistBody({
 	);
 	return (
 		<MainSection
+			isOwner={isOwner}
 			initialEntries={entries}
 			view={selectedView}
 			watchlist={watchlist}

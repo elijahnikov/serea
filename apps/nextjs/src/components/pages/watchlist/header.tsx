@@ -2,9 +2,6 @@ import type { RouterOutputs } from "@serea/api";
 import { AvatarRoot, AvatarWedges } from "@serea/ui/avatar";
 import { api } from "~/trpc/server";
 import AccessPopover from "./access-popover";
-import { PencilLine } from "lucide-react";
-import { Button } from "@serea/ui/button";
-import EditModal from "./edit-modal";
 
 export default async function WatchlistHeader({
 	owner,
@@ -42,7 +39,6 @@ export default async function WatchlistHeader({
 
 			{isOwner ? (
 				<div className="flex items-center gap-2">
-					<EditModal watchlist={{ ...watchlist }} />
 					<AccessPopover
 						initialMembers={members}
 						initialInvites={invites}

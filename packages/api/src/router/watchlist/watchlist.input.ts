@@ -55,7 +55,7 @@ export type UpdateWatchlistTitleInput = z.infer<typeof updateWatchlistTitle>;
 
 export const updateWatchlistDescription = z.object({
 	id: z.string(),
-	description: z.string().optional(),
+	description: z.string().nullable(),
 });
 export type UpdateWatchlistDescriptionInput = z.infer<
 	typeof updateWatchlistDescription

@@ -31,13 +31,17 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
 				<WatchlistBody
+					isOwner={session?.user.id === watchlist.userId}
 					initialWatchlist={watchlist}
 					initialEntries={entries}
 					initialLikes={likes}
 					view={view?.value as "grid" | "row" | null}
 				/>
 				<div className="w-full mt-16 gap-6 flex flex-col lg:w-1/3 order-first lg:order-last">
-					<Tags tags={watchlist.tags} />
+					<Tags
+						watchlist={{ ...watchlist }}
+						isOwner={session?.user.id === watchlist.userId}
+					/>
 					<Suspense fallback={<p>loading3...</p>}>
 						<MembersProgress watchlistId={id} initialData={watchlistProgress} />
 					</Suspense>
