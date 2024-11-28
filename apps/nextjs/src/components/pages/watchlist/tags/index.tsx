@@ -2,9 +2,9 @@
 
 import type { RouterOutputs } from "@serea/api";
 import Badge from "@serea/ui/badge";
+import { cn } from "@serea/ui/cn";
 import { useState } from "react";
 import EditingTags from "./editing-tags";
-import { cn } from "@serea/ui/cn";
 
 export default function Tags({
 	watchlist,
@@ -13,8 +13,6 @@ export default function Tags({
 	watchlist: Pick<RouterOutputs["watchlist"]["get"], "tags" | "id">;
 	isOwner?: boolean;
 }) {
-	const { tags } = watchlist;
-
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 
 	if (isEditing && isOwner) {
@@ -28,7 +26,7 @@ export default function Tags({
 		);
 	}
 
-	if (!tags) return null;
+	if (!watchlist.tags) return null;
 
 	return (
 		<div className="flex flex-col ">
@@ -44,7 +42,7 @@ export default function Tags({
 						"hover:bg-neutral-200 dark:hover:bg-neutral-800/50 cursor-pointer rounded-lg",
 				)}
 			>
-				{tags.split(",").map((tag, index) => (
+				{watchlist.tags.split(",").map((tag, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 					<Badge key={index} stroke className="text-sm text-secondary-500">
 						{tag}

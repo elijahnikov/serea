@@ -1,7 +1,11 @@
+import { createId } from "@paralleldrive/cuid2";
+import { and, eq, gt, lt, sql } from "@serea/db";
 import { entry, like, member, watchlist } from "@serea/db/schema";
+import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	AddWatchlistEntryInput,
+	CloneWatchlistInput,
 	CreateWatchlistInput,
 	DeleteWatchlistEntryInput,
 	GetWatchlistEntriesInput,
@@ -14,9 +18,6 @@ import type {
 	UpdateWatchlistTagsInput,
 	UpdateWatchlistTitleInput,
 } from "./watchlist.input";
-import { TRPCError } from "@trpc/server";
-import { createId } from "@paralleldrive/cuid2";
-import { and, eq, gt, lt, sql } from "@serea/db";
 
 export const createWatchlist = async (
 	ctx: ProtectedTRPCContext,
@@ -411,4 +412,58 @@ export const updateTags = async (
 		.returning();
 
 	return updatedWatchlist;
+};
+
+export const cloneWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: CloneWatchlistInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const checkWatchlist = await ctx.db.query.watchlist.findFirst({
+		where: (table, { eq }) => eq(table.id, input.id),
+	});
+	if (!checkWatchlist) {
+		throw new Error("Watchlist not found");
+	}
+
+	const watchlistEntries = await ctx.db.query.entry.findMany({
+		where: (table, { eq }) => eq(table.watchlistId, input.id),
+	});
+
+	const newWatchlistTransaction = await ctx.db.transaction(async (tx) => {
+		const newWatchlistId = createId();
+		const [newWatchlist] = await tx
+			.insert(watchlist)
+			.values({
+				...checkWatchlist,
+				id: newWatchlistId,
+				userId: currentUserId,
+				title: input.title,
+			})
+			.returning();
+
+		if (newWatchlist) {
+			if (watchlistEntries.length > 0) {
+				const entriesInsert = watchlistEntries.map(({ id, ...entry }) => ({
+					...entry,
+					order: entry.order,
+					userId: currentUserId,
+					watchlistId: newWatchlistId,
+				}));
+				await tx.insert(entry).values(entriesInsert);
+			}
+
+			await tx.insert(member).values({
+				watchlistId: newWatchlist.id,
+				userId: currentUserId,
+				role: "owner",
+			});
+		}
+		return newWatchlist?.id;
+	});
+	if (!newWatchlistTransaction) {
+		throw new Error("Failed to clone watchlist");
+	}
+	return newWatchlistTransaction;
 };

@@ -19,7 +19,9 @@ export type AddWatchlistEntryInput = z.infer<typeof addWatchlistEntry>;
 
 export const cloneWatchlist = z.object({
 	id: z.string(),
+	title: z.string(),
 });
+export type CloneWatchlistInput = z.infer<typeof cloneWatchlist>;
 
 export const createWatchlist = z.object({
 	title: z.string().min(2, {

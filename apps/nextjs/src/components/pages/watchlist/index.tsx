@@ -5,17 +5,19 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
 import WatchlistHeader from "./header";
-import WatchlistBody from "./watchlist-body";
-import Tags from "./tags";
+import MainSection from "./main-section";
 import MembersProgress from "./member-progress";
+import Tags from "./tags";
 
 export default async function SingleWatchlist({ id }: { id: string }) {
 	const session = await getSession();
 
-	const watchlist = await api.watchlist.get({ id });
-	const entries = await api.watchlist.getEntries({ id });
-	const likes = await api.watchlist.getLikes({ id });
-	const watchlistProgress = await api.watched.getWatchlistProgress({ id });
+	const [watchlist, entries, likes, watchlistProgress] = await Promise.all([
+		api.watchlist.get({ id }),
+		api.watchlist.getEntries({ id }),
+		api.watchlist.getLikes({ id }),
+		api.watched.getWatchlistProgress({ id }),
+	]);
 
 	const cookieStore = cookies();
 	const view = cookieStore.get("selected-view");
@@ -30,7 +32,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 				/>
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
-				<WatchlistBody
+				<MainSection
 					isOwner={session?.user.id === watchlist.userId}
 					initialWatchlist={watchlist}
 					initialEntries={entries}

@@ -3,24 +3,47 @@
 import type { RouterOutputs } from "@serea/api";
 import Badge from "@serea/ui/badge";
 import moment from "moment";
+import { useState } from "react";
+import { api } from "~/trpc/react";
 import Actions from "../actions";
 import Entries from "../entries";
 import Description from "./editing/description";
 import Title from "./editing/title";
 
 export default function MainSection({
-	watchlist,
+	isOwner = false,
+	initialWatchlist,
 	view,
 	initialEntries,
 	initialLikes,
-	isOwner = false,
 }: {
-	watchlist: Omit<RouterOutputs["watchlist"]["get"], "user">;
+	initialWatchlist: RouterOutputs["watchlist"]["get"];
 	initialEntries: RouterOutputs["watchlist"]["getEntries"];
 	initialLikes: RouterOutputs["watchlist"]["getLikes"];
-	view: "grid" | "row";
+	view: "grid" | "row" | null;
 	isOwner?: boolean;
 }) {
+	const [selectedView, setSelectedView] = useState<"grid" | "row">(
+		view ?? "grid",
+	);
+
+	const { data: watchlist } = api.watchlist.get.useQuery(
+		{
+			id: initialWatchlist.id,
+		},
+		{
+			initialData: initialWatchlist ?? undefined,
+		},
+	);
+
+	const { data: entries } = api.watchlist.getEntries.useQuery(
+		{
+			id: watchlist.id,
+		},
+		{
+			initialData: initialEntries ?? undefined,
+		},
+	);
 	return (
 		<div className="w-full order-last gap-6 flex flex-col lg:order-first">
 			<div className="mt-4">
@@ -41,11 +64,16 @@ export default function MainSection({
 					</Badge>
 				</div>
 			</div>
-			<Actions watchlistId={watchlist.id} initialLikes={initialLikes} />
+			<Actions
+				setSelectedView={setSelectedView}
+				watchlistId={watchlist.id}
+				watchlistTitle={watchlist.title}
+				initialLikes={initialLikes}
+			/>
 			<Entries
 				watchlistId={watchlist.id}
-				view={view}
-				entries={initialEntries}
+				view={selectedView}
+				entries={entries}
 			/>
 		</div>
 	);

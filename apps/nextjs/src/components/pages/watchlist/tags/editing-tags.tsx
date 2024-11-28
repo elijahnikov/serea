@@ -6,7 +6,8 @@ import { Form, FormControl, FormField, FormItem } from "@serea/ui/form";
 import Input from "@serea/ui/input";
 import Loading from "@serea/ui/loading";
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -24,9 +25,9 @@ export default function EditingTags({
 	watchlist: Pick<RouterOutputs["watchlist"]["get"], "tags" | "id">;
 	setIsEditing: (editing: boolean) => void;
 }) {
-	const [loading, setLoading] = useState<boolean>(false);
 	const formRef = useRef<HTMLDivElement>(null);
 
+	const router = useRouter();
 	const trpcUtils = api.useUtils();
 	const updateTags = api.watchlist.updateTags.useMutation({
 		onSuccess: () => {
@@ -103,7 +104,7 @@ export default function EditingTags({
 	}, [onSubmit]);
 
 	return (
-		<div ref={formRef} className="flex flex-col items-center gap-2">
+		<div ref={formRef} className="flex flex-col gap-2">
 			<div className="flex items-center gap-2">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
@@ -116,7 +117,7 @@ export default function EditingTags({
 										<Input
 											onKeyDown={handleTagInput}
 											placeholder="Add tags..."
-											className={cn(!updateTags.isPending && "-ml-6")}
+											className={cn("max-w-[150px]")}
 										/>
 									</FormControl>
 								</FormItem>
@@ -128,7 +129,7 @@ export default function EditingTags({
 					<Loading type="spinner" color="secondary" size="xs" />
 				)}
 			</div>
-			<div className="flex flex-wrap gap-2">
+			<div className="flex justify-start flex-wrap gap-2">
 				{tagsValue.length > 0 &&
 					tagsValue.map((tag, index) => (
 						<Badge
