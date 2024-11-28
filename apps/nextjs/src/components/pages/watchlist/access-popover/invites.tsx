@@ -2,7 +2,9 @@ import type { RouterOutputs } from "@serea/api";
 import { AvatarWedges } from "@serea/ui/avatar";
 import { Button } from "@serea/ui/button";
 import Loading from "@serea/ui/loading";
+import { LoadingButton } from "@serea/ui/loading-button";
 import { Trash } from "lucide-react";
+import { api } from "~/trpc/react";
 
 export default function Invites({
 	invites,
@@ -11,6 +13,15 @@ export default function Invites({
 	invites: RouterOutputs["members"]["listInvites"] | undefined;
 	isLoading: boolean;
 }) {
+	const trpcUtils = api.useUtils();
+	const deleteInvite = api.members.deleteInvite.useMutation({
+		onSuccess: () => trpcUtils.members.listInvites.invalidate(),
+	});
+
+	const handleDeleteInvite = (inviteId: string) => {
+		deleteInvite.mutate({ invitationId: inviteId });
+	};
+
 	if (!invites || invites.length === 0) return null;
 	return (
 		<div className="gap-2 flex flex-col">
@@ -22,7 +33,12 @@ export default function Invites({
 				{!isLoading ? (
 					<div className="w-full">
 						{invites.map((invite) => (
-							<InviteRow key={invite.id} invite={invite} />
+							<InviteRow
+								key={invite.id}
+								invite={invite}
+								handleDeleteInvite={handleDeleteInvite}
+								isDeletingInvite={deleteInvite.isPending}
+							/>
 						))}
 					</div>
 				) : null}
@@ -33,7 +49,13 @@ export default function Invites({
 
 const InviteRow = ({
 	invite,
-}: { invite: RouterOutputs["members"]["listInvites"][number] }) => {
+	handleDeleteInvite,
+	isDeletingInvite,
+}: {
+	invite: RouterOutputs["members"]["listInvites"][number];
+	handleDeleteInvite: (inviteId: string) => void;
+	isDeletingInvite: boolean;
+}) => {
 	return (
 		<div className="flex items-center gap-2 w-full">
 			<AvatarWedges
@@ -47,13 +69,15 @@ const InviteRow = ({
 					</p>
 					<p className="text-sm text-secondary-500">{invite.invitee.email}</p>
 				</div>
-				<Button
-					className="rounded-full h-10 w-10"
+				<LoadingButton
+					className="rounded-full h-8 w-8"
 					variant={"outline"}
-					size="xs-icon"
+					spinnerSize="xxs"
+					loading={isDeletingInvite}
+					onClick={() => handleDeleteInvite(invite.id)}
 				>
 					<Trash size={16} />
-				</Button>
+				</LoadingButton>
 			</div>
 		</div>
 	);

@@ -12,13 +12,10 @@ import {
 } from "@serea/ui/tooltip";
 import { Compass, List, Plus, User } from "lucide-react";
 import Link from "next/link";
-
-// import Invites from "./invites";
-// import Notifications from "./notifications";
-import UserAvatar from "./user-avatar";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
-import Invites from "./invite";
+import Invites from "./invites";
+import UserAvatar from "./user-avatar";
 
 const navigationLinks = [
 	{
@@ -45,7 +42,7 @@ const navigationLinks = [
 
 async function InvitesData() {
 	const invites = await api.members.listInvitesForUser();
-	return <Invites invites={invites} />;
+	return <Invites initialInvites={invites} />;
 }
 
 export default async function Navigation() {

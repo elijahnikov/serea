@@ -14,7 +14,7 @@ export const membersRouter = {
 		.input(inputs.listInvites)
 		.query(({ ctx, input }) => services.listInvites(ctx, input)),
 
-	listInvitesForUser: protectedProcedure.query(({ ctx, input }) =>
+	listInvitesForUser: protectedProcedure.query(({ ctx }) =>
 		services.listInvitesForUser(ctx),
 	),
 
@@ -29,17 +29,17 @@ export const membersRouter = {
 
 	respond: protectedProcedure
 		.input(inputs.respondToInvite)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.respondToInvite(ctx, input)),
 
 	updateRole: protectedProcedure
 		.input(inputs.updateRole)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.updateRole(ctx, input)),
 
 	deleteMember: protectedProcedure
 		.input(inputs.deleteMember)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.deleteMember(ctx, input)),
 
 	deleteInvite: protectedProcedure
 		.input(inputs.deleteInvite)
-		.mutation(({ ctx, input }) => {}),
+		.mutation(({ ctx, input }) => services.deleteInvite(ctx, input)),
 } satisfies TRPCRouterRecord;

@@ -1,19 +1,12 @@
 "use client";
 import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
-import Loading from "@serea/ui/loading";
-import {
-	Popover,
-	PopoverArrow,
-	PopoverContent,
-	PopoverTrigger,
-} from "@serea/ui/popover";
-import { Plus, UserPlus } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
+import { Plus } from "lucide-react";
 import { api } from "~/trpc/react";
-import Members from "./members";
-import Invites from "./invites";
 import InviteForm from "./invite-form";
-import { cn } from "@serea/ui/cn";
+import Invites from "./invites";
+import Members from "./members";
 
 export default function AccessPopover({
 	initialMembers,
@@ -60,7 +53,11 @@ export default function AccessPopover({
 				<div className="flex flex-col mb-2 gap-4">
 					<h1 className="text-xl font-medium">Invite</h1>
 					<InviteForm watchlistId={watchlistId} />
-					<Members members={members} isLoading={membersLoading} />
+					<Members
+						members={members}
+						isLoading={membersLoading}
+						watchlistId={watchlistId}
+					/>
 					<Invites invites={invites} isLoading={invitesLoading} />
 				</div>
 			</PopoverContent>
