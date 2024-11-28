@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import CloneButton from "./clone-button";
 import LikeButton from "./like-button";
 import ShareButton from "./share-button";
+import ViewToggle from "./view-toggle";
 
 export default function Actions({
 	initialLikes,
@@ -37,16 +38,7 @@ export default function Actions({
 					watchlistId={watchlistId}
 				/>
 			</div>
-
-			<ToggleGroup
-				size="sm"
-				orientation="horizontal"
-				defaultValue="grid"
-				type="single"
-			>
-				<ToggleGroupItem value="grid" before={<GridIcon />} />
-				<ToggleGroupItem value="masonry" before={<RowsIcon />} />
-			</ToggleGroup>
+			<ViewToggle setSelectedView={setSelectedView} />
 		</div>
 	);
 }

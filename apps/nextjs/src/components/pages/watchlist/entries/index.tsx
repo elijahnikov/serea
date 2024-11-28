@@ -21,7 +21,12 @@ export default function Entries({
 					role={"owner"}
 				/>
 			) : (
-				<EntriesRows entries={entries} />
+				// biome-ignore lint/a11y/useValidAriaRole: <explanation>
+				<EntriesRows
+					watchlistId={watchlistId}
+					entries={entries}
+					role={"owner"}
+				/>
 			)}
 		</div>
 	);
