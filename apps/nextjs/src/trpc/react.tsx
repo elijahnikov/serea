@@ -1,14 +1,21 @@
 "use client";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import {
+	TRPCClientError,
+	type TRPCLink,
+	loggerLink,
+	unstable_httpBatchStreamLink,
+} from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
+import { useState } from "react";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "@serea/api";
 
+import { observable } from "@trpc/server/observable";
+import { toast } from "sonner";
 import { env } from "~/env";
 import { createQueryClient } from "./query-client";
 
@@ -25,6 +32,37 @@ const getQueryClient = () => {
 	}
 };
 
+export const customLink: TRPCLink<AppRouter> = () => {
+	// here we just got initialized in the app - this happens once per app
+	// useful for storing cache for instance
+	return ({ next, op }) => {
+		// this is when passing the result to the next link
+		// each link needs to return an observable which propagates results
+		return observable((observer) => {
+			const unsubscribe = next(op).subscribe({
+				next(value) {
+					observer.next(value);
+				},
+				error(err) {
+					observer.error(err);
+					if (
+						err instanceof TRPCClientError &&
+						err.data?.code === "TOO_MANY_REQUESTS"
+					) {
+						toast.error(
+							"You are making too many requests. Please try again later.",
+						);
+					}
+				},
+				complete() {
+					observer.complete();
+				},
+			});
+			return unsubscribe;
+		});
+	};
+};
+
 export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
@@ -33,6 +71,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 	const [trpcClient] = useState(() =>
 		api.createClient({
 			links: [
+				customLink,
 				loggerLink({
 					enabled: (op) =>
 						env.NODE_ENV === "development" ||
@@ -40,7 +79,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 				}),
 				unstable_httpBatchStreamLink({
 					transformer: SuperJSON,
-					url: getBaseUrl() + "/api/trpc",
+					url: `${getBaseUrl()}/api/trpc`,
 					headers() {
 						const headers = new Headers();
 						headers.set("x-trpc-source", "nextjs-react");

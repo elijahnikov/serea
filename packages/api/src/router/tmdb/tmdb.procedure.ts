@@ -9,5 +9,7 @@ export const tmdbRouter = {
 		.input(inputs.searchMovies)
 		.query(({ input }) => services.searchMovies(input)),
 
-	trendingThisWeek: publicProcedure.query(services.trendingThisWeek),
+	trendingThisWeek: publicProcedure
+		.meta({ name: "get-trending-this-week" })
+		.query(services.trendingThisWeek),
 } satisfies TRPCRouterRecord;

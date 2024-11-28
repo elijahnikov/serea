@@ -1,14 +1,9 @@
 {
-	"name": "@serea/api",
-	"version": "0.1.0",
+	"name": "@serea/kv",
 	"private": true,
+	"version": "0.1.0",
 	"type": "module",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./src/index.ts"
-		}
-	},
+	"main": "./src/index.ts",
 	"license": "MIT",
 	"scripts": {
 		"build": "tsc",
@@ -19,14 +14,9 @@
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
-		"@paralleldrive/cuid2": "^2.2.2",
-		"@serea/auth": "workspace:*",
-		"@serea/db": "workspace:*",
-		"@serea/kv": "workspace:^",
-		"@serea/validators": "workspace:*",
-		"@trpc/server": "catalog:",
-		"@upstash/ratelimit": "^2.0.4",
-		"superjson": "2.2.1",
+		"@t3-oss/env-nextjs": "^0.11.1",
+		"@upstash/redis": "^1.34.3",
+		"server-only": "^0.0.1",
 		"zod": "catalog:"
 	},
 	"devDependencies": {

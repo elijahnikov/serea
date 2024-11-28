@@ -10,5 +10,6 @@ export const moviesRouter = {
 	// MUTATIONS
 	addMovie: protectedProcedure
 		.input(inputs.addMovie)
+		.meta({ name: "add-movie" })
 		.mutation(({ ctx, input }) => service.addMovie(ctx, input)),
 } satisfies TRPCRouterRecord;

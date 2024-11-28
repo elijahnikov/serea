@@ -1,10 +1,10 @@
-import { db } from "@serea/db/client";
-import { emailOTP, oAuthProxy } from "better-auth/plugins";
-import { betterAuth, type BetterAuthOptions } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { env } from "../env";
 import { expo } from "@better-auth/expo";
+import { db } from "@serea/db/client";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { emailOTP, oAuthProxy } from "better-auth/plugins";
 import { Resend } from "resend";
+import { env } from "../env";
 
 const resend = new Resend(env.RESEND_API_KEY);
 

@@ -18,28 +18,29 @@ export const membersRouter = {
 		services.listInvitesForUser(ctx),
 	),
 
-	getMemberRole: protectedProcedure
-		.input(inputs.getMemberRole)
-		.query(({ ctx, input }) => {}),
-
 	// MUTATIONS
 	invite: protectedProcedure
 		.input(inputs.watchlistInvite)
+		.meta({ name: "create-invite" })
 		.mutation(({ ctx, input }) => services.createInvite(ctx, input)),
 
 	respond: protectedProcedure
 		.input(inputs.respondToInvite)
+		.meta({ name: "respond-to-invite" })
 		.mutation(({ ctx, input }) => services.respondToInvite(ctx, input)),
 
 	updateRole: protectedProcedure
 		.input(inputs.updateRole)
+		.meta({ name: "update-role" })
 		.mutation(({ ctx, input }) => services.updateRole(ctx, input)),
 
 	deleteMember: protectedProcedure
 		.input(inputs.deleteMember)
+		.meta({ name: "delete-member" })
 		.mutation(({ ctx, input }) => services.deleteMember(ctx, input)),
 
 	deleteInvite: protectedProcedure
 		.input(inputs.deleteInvite)
+		.meta({ name: "delete-invite" })
 		.mutation(({ ctx, input }) => services.deleteInvite(ctx, input)),
 } satisfies TRPCRouterRecord;

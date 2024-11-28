@@ -10,16 +10,14 @@ export const watchedRouter = {
 		.input(inputs.getWatchlistProgress)
 		.query(({ ctx, input }) => services.getWatchlistProgress(ctx, input)),
 
-	getWatchStatus: protectedProcedure
-		.input(inputs.getWatchStatus)
-		.query(({ ctx, input }) => {}),
-
 	// MUTATIONS
 	toggleWatched: protectedProcedure
 		.input(inputs.toggleWatched)
+		.meta({ name: "toggle-watched" })
 		.mutation(({ ctx, input }) => services.toggleWatched(ctx, input)),
 
 	toggleAllWatched: protectedProcedure
 		.input(inputs.toggleAllWatched)
+		.meta({ name: "toggle-all-watched" })
 		.mutation(({ ctx, input }) => services.toggleAllWatched(ctx, input)),
 } satisfies TRPCRouterRecord;

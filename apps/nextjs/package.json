@@ -23,6 +23,7 @@
 		"@serea/api": "workspace:*",
 		"@serea/auth": "workspace:*",
 		"@serea/db": "workspace:*",
+		"@serea/kv": "workspace:*",
 		"@serea/ui": "workspace:*",
 		"@serea/validators": "workspace:*",
 		"@t3-oss/env-nextjs": "^0.11.1",

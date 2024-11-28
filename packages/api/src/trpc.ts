@@ -1,3 +1,6 @@
+import { type Session, getSession } from "@serea/auth";
+import { db } from "@serea/db/client";
+import { client as RedisClient } from "@serea/kv";
 /**
  * YOU PROBABLY DON'T NEED TO EDIT THIS FILE, UNLESS:
  * 1. You want to modify request context (see Part 1)
@@ -6,12 +9,16 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
+import { Ratelimit } from "@upstash/ratelimit";
+
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { db } from "@serea/db/client";
-import { getSession, type Session } from "@serea/auth";
 
+const ratelimit = new Ratelimit({
+	limiter: Ratelimit.fixedWindow(10, "10s"),
+	redis: RedisClient,
+});
 /**
  * Isomorphic Session getter for API requests
  * - Expo requests will have a session token in the Authorization header
@@ -40,10 +47,12 @@ export const createTRPCContext = async (opts: {
 	const authToken = opts.headers.get("Authorization") ?? null;
 	const session = await isomorphicGetSession(opts.headers);
 
+	const ip = opts.headers.get("x-forwarded-for");
 	const source = opts.headers.get("x-trpc-source") ?? "unknown";
 	console.log(">>> tRPC Request from", source, "by", session?.user);
 
 	return {
+		ip,
 		session,
 		db,
 		token: authToken,
@@ -95,12 +104,6 @@ export const createTRPCRouter = t.router;
 const timingMiddleware = t.middleware(async ({ next, path }) => {
 	const start = Date.now();
 
-	if (t._config.isDev) {
-		// artificial delay in dev 100-500ms
-		const waitMs = Math.floor(Math.random() * 400) + 100;
-		await new Promise((resolve) => setTimeout(resolve, waitMs));
-	}
-
 	const result = await next();
 
 	const end = Date.now();
@@ -113,14 +116,38 @@ const loggingMiddleware = t.middleware(async ({ next, input, meta }) => {
 	const result = await next({ ctx: undefined });
 
 	if (process.env.NODE_ENV === "development") {
+		typeof meta !== "undefined" &&
+			"name" in meta &&
+			console.log(`[TRPC] -> ${meta.name} called`);
 		console.log("Input ->", input);
-		console.log("Result ->", result.ok);
+		console.log("Result ->", result.ok === true ? result.data : result.error);
 		console.log("Metadata ->", meta);
 
 		return result;
 	}
 
 	return result;
+});
+
+const rateLimitingMiddleware = t.middleware(async ({ next, meta, ctx }) => {
+	const ip = ctx.ip;
+
+	if (typeof meta !== "undefined" && "name" in meta) {
+		const { success, remaining } = await ratelimit.limit(`${ip}-${meta.name}`);
+
+		if (!success) {
+			throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+		}
+
+		return next({
+			ctx: {
+				ratelimit: {
+					remaining,
+				},
+			},
+		});
+	}
+	return next({ ctx: undefined });
 });
 
 /**
@@ -142,6 +169,8 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  */
 export const protectedProcedure = t.procedure
 	.use(timingMiddleware)
+	.use(loggingMiddleware)
+	.use(rateLimitingMiddleware)
 	.use(({ ctx, next }) => {
 		if (!ctx.session?.user) {
 			throw new TRPCError({ code: "UNAUTHORIZED" });

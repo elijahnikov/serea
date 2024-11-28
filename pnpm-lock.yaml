@@ -202,6 +202,9 @@ importers:
       '@serea/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@serea/kv':
+        specifier: workspace:*
+        version: link:../../packages/kv
       '@serea/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -302,12 +305,18 @@ importers:
       '@serea/db':
         specifier: workspace:*
         version: link:../db
+      '@serea/kv':
+        specifier: workspace:^
+        version: link:../kv
       '@serea/validators':
         specifier: workspace:*
         version: link:../validators
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.0.0-rc.477
+      '@upstash/ratelimit':
+        specifier: ^2.0.4
+        version: 2.0.4
       superjson:
         specifier: 2.2.1
         version: 2.2.1
@@ -392,6 +401,28 @@ importers:
       drizzle-kit:
         specifier: ^0.26.2
         version: 0.26.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.6.3
+
+  packages/kv:
+    dependencies:
+      '@t3-oss/env-nextjs':
+        specifier: ^0.11.1
+        version: 0.11.1(typescript@5.6.3)(zod@3.23.8)
+      '@upstash/redis':
+        specifier: ^1.34.3
+        version: 1.34.3
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
+    devDependencies:
+      '@serea/typescript':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
       typescript:
         specifier: 'catalog:'
         version: 5.6.3
@@ -3241,6 +3272,16 @@ packages:
   '@types/yargs@17.0.33':
     resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
 
+  '@upstash/core-analytics@0.0.10':
+    resolution: {integrity: sha512-7qJHGxpQgQr9/vmeS1PktEwvNAF7TI4iJDi8Pu2CFZ9YUGHZH4fOP5TfYlZ4aVxfopnELiE4BS4FBjyK7V1/xQ==}
+    engines: {node: '>=16.0.0'}
+
+  '@upstash/ratelimit@2.0.4':
+    resolution: {integrity: sha512-rKZWlZXXK93Xv1cz5/eCbGN4ZbvN3dWbjT2V6Of/3vqQGzd3TnD/xS3Okxp8EoG7L4MeLpy6UsRuMKGnuDZFAQ==}
+
+  '@upstash/redis@1.34.3':
+    resolution: {integrity: sha512-VT25TyODGy/8ljl7GADnJoMmtmJ1F8d84UXfGonRRF8fWYJz7+2J6GzW+a6ETGtk4OyuRTt7FRSvFG5GvrfSdQ==}
+
   '@urql/core@2.3.6':
     resolution: {integrity: sha512-PUxhtBh7/8167HJK6WqBv6Z0piuiaZHQGYbhwpNL9aIQmLROPEdaUYkY4wh45wPQXcTpnd11l0q3Pw+TI11pdw==}
     peerDependencies:
@@ -3868,6 +3909,9 @@ packages:
 
   crypt@0.0.2:
     resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   crypto-random-string@1.0.0:
     resolution: {integrity: sha512-GsVpkFPlycH7/fRR7Dhcmnoii54gV1nz7y4CWyeFS14N+JVBBhY+r8amRHE4BwSYal7BPTDp8isvAlCxyFt3Hg==}
@@ -6584,6 +6628,9 @@ packages:
   serve-static@1.16.2:
     resolution: {integrity: sha512-VqpjJZKadQB/PEbEwvFdO43Ax5dFBZ2UECszz8bQ7pi7wt//PWe1P6MN7eCnjsatYtBT6EuiClbjSWP2WrIoTw==}
     engines: {node: '>= 0.8.0'}
+
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
 
   set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
@@ -10868,6 +10915,18 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
+  '@upstash/core-analytics@0.0.10':
+    dependencies:
+      '@upstash/redis': 1.34.3
+
+  '@upstash/ratelimit@2.0.4':
+    dependencies:
+      '@upstash/core-analytics': 0.0.10
+
+  '@upstash/redis@1.34.3':
+    dependencies:
+      crypto-js: 4.2.0
+
   '@urql/core@2.3.6(graphql@15.8.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@15.8.0)
@@ -11614,6 +11673,8 @@ snapshots:
       which: 2.0.2
 
   crypt@0.0.2: {}
+
+  crypto-js@4.2.0: {}
 
   crypto-random-string@1.0.0: {}
 
@@ -14613,6 +14674,8 @@ snapshots:
       send: 0.19.0
     transitivePeerDependencies:
       - supports-color
+
+  server-only@0.0.1: {}
 
   set-blocking@2.0.0: {}
 
