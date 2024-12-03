@@ -39,6 +39,7 @@
 		"plaiceholder": "^3.0.0",
 		"react": "catalog:react18",
 		"react-dom": "catalog:react18",
+		"react-infinite-scroll-component": "^6.1.0",
 		"superjson": "2.2.1",
 		"zod": "catalog:"
 	},

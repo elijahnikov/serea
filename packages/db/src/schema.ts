@@ -1,21 +1,6 @@
 import { relations, sql } from "drizzle-orm";
-import { index, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { index, pgTable, primaryKey, uniqueIndex } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-
-export const Post = pgTable("post", (t) => ({
-	id: t.uuid().notNull().primaryKey().defaultRandom(),
-	title: t.varchar({ length: 256 }).notNull(),
-	content: t.text().notNull(),
-	createdAt: t
-		.timestamp("created_at", { mode: "date", withTimezone: true })
-		.defaultNow()
-		.notNull(),
-	updatedAt: t
-		.timestamp("updated_at", { mode: "date", withTimezone: true })
-		.$onUpdateFn(() => sql`now()`),
-}));
 
 export const movie = pgTable("movie", (t) => ({
 	id: t.uuid().notNull().primaryKey().defaultRandom(),
@@ -71,6 +56,7 @@ export const watchlistRelations = relations(watchlist, ({ many, one }) => ({
 	members: many(member),
 	likes: many(like),
 	watched: many(watched),
+	comments: many(comment),
 }));
 
 export const entry = pgTable(
@@ -239,13 +225,50 @@ export const watchedRelations = relations(watched, ({ one }) => ({
 	}),
 }));
 
-export const CreatePostSchema = createInsertSchema(Post, {
-	title: z.string().max(256),
-	content: z.string().max(256),
-}).omit({
-	id: true,
-	createdAt: true,
-	updatedAt: true,
-});
+export const comment = pgTable(
+	"comment",
+	(t) => ({
+		id: t.varchar("id", { length: 24 }).primaryKey(),
+		watchlistId: t.varchar("watchlist_id").notNull(),
+		parentId: t.varchar("parent_id", { length: 24 }),
+		userId: t.text("user_id").notNull(),
+		content: t.text().notNull(),
+		replyCount: t.integer("reply_count").notNull().default(0),
+		createdAt: t
+			.timestamp("created_at", { mode: "date", withTimezone: true })
+			.defaultNow()
+			.notNull(),
+		updatedAt: t
+			.timestamp("updated_at", { mode: "string", withTimezone: true })
+			.$onUpdateFn(() => sql`now()`),
+	}),
+	(t) => ({
+		watchlistIdx: index("comment_watchlist_idx").on(t.watchlistId),
+		parentIdx: index("comment_parent_idx").on(t.parentId),
+		createdAtIdIdx: uniqueIndex("comment_created_at_id_idx").on(
+			t.createdAt,
+			t.id,
+		),
+	}),
+);
+
+export const commentRelations = relations(comment, ({ one, many }) => ({
+	watchlist: one(watchlist, {
+		fields: [comment.watchlistId],
+		references: [watchlist.id],
+	}),
+	user: one(user, {
+		fields: [comment.userId],
+		references: [user.id],
+	}),
+	parent: one(comment, {
+		fields: [comment.parentId],
+		references: [comment.id],
+		relationName: "parent",
+	}),
+	replies: many(comment, {
+		relationName: "parent",
+	}),
+}));
 
 export * from "./auth-schema";

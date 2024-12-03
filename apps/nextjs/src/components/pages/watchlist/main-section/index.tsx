@@ -45,7 +45,7 @@ export default function MainSection({
 		},
 	);
 	return (
-		<div className="w-full order-last gap-6 flex flex-col lg:order-first">
+		<div className="gap-6 flex flex-col">
 			<div className="mt-4">
 				<Title isOwner={isOwner} watchlist={{ ...watchlist }} />
 				<Description isOwner={isOwner} watchlist={{ ...watchlist }} />

@@ -26,6 +26,8 @@
 		"@serea/validators": "workspace:*",
 		"@trpc/server": "catalog:",
 		"@upstash/ratelimit": "^2.0.4",
+		"drizzle-pagination": "^1.0.12",
+		"nanoid": "^5.0.9",
 		"superjson": "2.2.1",
 		"zod": "catalog:"
 	},

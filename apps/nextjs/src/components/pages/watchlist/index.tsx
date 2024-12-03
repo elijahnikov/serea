@@ -4,6 +4,7 @@ import { getSession } from "@serea/auth";
 import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { api } from "~/trpc/server";
+import Comments from "./comments";
 import WatchlistHeader from "./header";
 import MainSection from "./main-section";
 import MembersProgress from "./member-progress";
@@ -32,13 +33,18 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 				/>
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
-				<MainSection
-					isOwner={session?.user.id === watchlist.userId}
-					initialWatchlist={watchlist}
-					initialEntries={entries}
-					initialLikes={likes}
-					view={view?.value as "grid" | "row" | null}
-				/>
+				<div className="w-full order-last gap-6 flex flex-col lg:order-first">
+					<MainSection
+						isOwner={session?.user.id === watchlist.userId}
+						initialWatchlist={watchlist}
+						initialEntries={entries}
+						initialLikes={likes}
+						view={view?.value as "grid" | "row" | null}
+					/>
+					<Suspense fallback={<p>loading3...</p>}>
+						<Comments watchlistId={id} />
+					</Suspense>
+				</div>
 				<div className="w-full mt-16 gap-6 flex flex-col lg:w-1/3 order-first lg:order-last">
 					<Tags
 						watchlist={{ ...watchlist }}

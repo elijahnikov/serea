@@ -1,4 +1,6 @@
-export const runtime = "edge";
+"use client";
+
+import { toast } from "sonner";
 
 export default function HomePage() {
 	// // You can await this here if you don't want to show Suspense fallback below
@@ -31,5 +33,14 @@ export default function HomePage() {
 	// 		</main>
 	// 	</HydrateClient>
 	// );
-	return <p>123</p>;
+	return (
+		// biome-ignore lint/a11y/useButtonType: <explanation>
+		<button
+			onClick={() =>
+				toast.error("You are making too many requests. Please try again later.")
+			}
+		>
+			123
+		</button>
+	);
 }
