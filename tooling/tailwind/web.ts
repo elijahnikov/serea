@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
-
+import { fontFamily } from "tailwindcss/defaultTheme";
 import base from "./base";
 
 export default {
@@ -15,6 +15,9 @@ export default {
 			},
 		},
 		extend: {
+			fontFamily: {
+				serea: ["var(--font-serea)"],
+			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",

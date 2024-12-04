@@ -1,24 +1,50 @@
-import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "@serea/ui/theme";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-
-import { ThemeProvider } from "@serea/ui/theme";
+import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
-import { env } from "~/env";
-import { Toaster } from "@serea/ui/sonner";
 import { cn } from "@serea/ui/cn";
+import { Toaster } from "@serea/ui/sonner";
+import { env } from "~/env";
+
+const sereaFont = localFont({
+	src: [
+		{
+			path: "./fonts/OpenRunde-Regular.woff2",
+			weight: "400",
+			style: "normal",
+		},
+		{
+			path: "./fonts/OpenRunde-Medium.woff2",
+			weight: "500",
+			style: "normal",
+		},
+		{
+			path: "./fonts/OpenRunde-Semibold.woff2",
+			weight: "600",
+			style: "normal",
+		},
+		{
+			path: "./fonts/OpenRunde-Bold.woff2",
+			weight: "700",
+			style: "normal",
+		},
+	],
+	variable: "--font-serea",
+});
 
 export const metadata: Metadata = {
 	metadataBase: new URL(
 		env.VERCEL_ENV === "production"
-			? "https://turbo.t3.gg"
+			? "https://serea.co"
 			: "http://localhost:3000",
 	),
-	title: "Create T3 Turbo",
+	title: "Serea",
 	description: "Simple monorepo with shared backend for web & mobile apps",
 	openGraph: {
 		title: "Create T3 Turbo",
@@ -45,9 +71,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 		<html lang="en" suppressHydrationWarning>
 			<body
 				className={cn(
-					"min-h-screen bg-stone-100 dark:bg-background font-sans text-foreground antialiased",
-					GeistSans.variable,
-					GeistMono.variable,
+					"min-h-screen bg-background font-serea text-foreground antialiased",
+					sereaFont.variable,
 				)}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
+import { wedgesPalette, wedgesTW } from "@lemonsqueezy/wedges";
 import baseConfig from "@serea/tailwind-config/web";
-import { wedgesTW, wedgesPalette } from "@lemonsqueezy/wedges";
 
 export default {
 	content: [
