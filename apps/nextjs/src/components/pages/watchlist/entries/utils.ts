@@ -1,6 +1,6 @@
-import { api } from "~/trpc/react";
-import { toast } from "sonner";
 import type { RouterOutputs } from "@serea/api";
+import { toast } from "sonner";
+import { api } from "~/trpc/react";
 
 type Entry = RouterOutputs["watchlist"]["getEntries"][number];
 

@@ -27,7 +27,6 @@ export default function EditingTags({
 }) {
 	const formRef = useRef<HTMLDivElement>(null);
 
-	const router = useRouter();
 	const trpcUtils = api.useUtils();
 	const updateTags = api.watchlist.updateTags.useMutation({
 		onSuccess: () => {

@@ -139,6 +139,11 @@ export const addEntry = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
+	const maxOrderResult = await ctx.db
+		.select({ maxOrder: sql<number>`COALESCE(MAX(${entry.order}), 0)` })
+		.from(entry)
+		.where(eq(entry.watchlistId, input.watchlistId));
+
 	const [watchlistAndEntry] = await ctx.db
 		.select({
 			watchlist: watchlist,
@@ -164,7 +169,7 @@ export const addEntry = async (
 		return watchlistAndEntry.entry;
 	}
 
-	const newOrder = (watchlistAndEntry.maxOrder ?? 0) + 1;
+	const newOrder = (maxOrderResult[0]?.maxOrder ?? 0) + 1;
 
 	const [newEntry] = await ctx.db.transaction(async (tx) => {
 		const [createdEntry] = await tx

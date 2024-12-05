@@ -1,8 +1,9 @@
 import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
+import { cn } from "@serea/ui/cn";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { EditingDescription } from "./editing-description";
-import { cn } from "@serea/ui/cn";
 
 export default function Description({
 	watchlist,
@@ -12,6 +13,25 @@ export default function Description({
 	isOwner?: boolean;
 }) {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
+
+	if (
+		!isEditing &&
+		(!watchlist.description || watchlist.description.trim() === "") &&
+		isOwner
+	) {
+		return (
+			<div className="w-full my-4">
+				<Button
+					className="w-full h-16 hover:bg-neutral-200 dark:hover:bg-neutral-800/50"
+					variant={"tertiary"}
+					onClick={() => setIsEditing(true)}
+					before={<PlusIcon className="w-4 h-4" />}
+				>
+					Add a description
+				</Button>
+			</div>
+		);
+	}
 
 	if (isEditing && isOwner) {
 		return (

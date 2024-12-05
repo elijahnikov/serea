@@ -2,7 +2,9 @@
 
 import type { RouterOutputs } from "@serea/api";
 import Badge from "@serea/ui/badge";
+import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import EditingTags from "./editing-tags";
 
@@ -17,11 +19,33 @@ export default function Tags({
 
 	if (isEditing && isOwner) {
 		return (
-			<div className="flex flex-col">
+			<div className="flex flex-col mt-4">
 				<p className="font-medium dark:text-neutral-400 text-neutral-600 text-sm mb-2">
 					Tagged
 				</p>
 				<EditingTags watchlist={watchlist} setIsEditing={setIsEditing} />
+			</div>
+		);
+	}
+
+	if (
+		!isEditing &&
+		(!watchlist.tags || watchlist.tags.trim() === "") &&
+		isOwner
+	) {
+		return (
+			<div className="w-full flex flex-col mt-4">
+				<p className="font-medium dark:text-neutral-400 text-neutral-600 text-sm mb-2">
+					Tagged
+				</p>
+				<Button
+					className="w-full hover:bg-neutral-200 dark:hover:bg-neutral-800/50"
+					variant={"tertiary"}
+					onClick={() => setIsEditing(true)}
+					before={<PlusIcon className="w-4 h-4" />}
+				>
+					Add tags
+				</Button>
 			</div>
 		);
 	}

@@ -45,7 +45,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 						<Comments watchlistId={id} />
 					</Suspense>
 				</div>
-				<div className="w-full mt-16 gap-6 flex flex-col lg:w-1/3 order-first lg:order-last">
+				<div className="w-full mt-6 gap-6 flex flex-col lg:w-1/3 order-first lg:order-last">
 					<Tags
 						watchlist={{ ...watchlist }}
 						isOwner={session?.user.id === watchlist.userId}
