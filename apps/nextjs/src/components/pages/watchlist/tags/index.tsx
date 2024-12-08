@@ -39,8 +39,8 @@ export default function Tags({
 					Tagged
 				</p>
 				<Button
-					className="w-full hover:bg-neutral-200 dark:hover:bg-neutral-800/50"
-					variant={"tertiary"}
+					className="w-full"
+					variant={"outline"}
 					onClick={() => setIsEditing(true)}
 					before={<PlusIcon className="w-4 h-4" />}
 				>

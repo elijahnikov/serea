@@ -22,8 +22,8 @@ export default function Description({
 		return (
 			<div className="w-full my-4">
 				<Button
-					className="w-full h-16 hover:bg-neutral-200 dark:hover:bg-neutral-800/50"
-					variant={"tertiary"}
+					className="w-full h-16"
+					variant={"outline"}
 					onClick={() => setIsEditing(true)}
 					before={<PlusIcon className="w-4 h-4" />}
 				>
