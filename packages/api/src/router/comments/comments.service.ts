@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "@serea/db";
+import { and, eq, isNull, sql } from "@serea/db";
 import { comment } from "@serea/db/schema";
 import { withCursorPagination } from "drizzle-pagination";
 import { nanoid } from "nanoid";
@@ -15,27 +15,37 @@ export const getComments = async (
 ) => {
 	const { watchlistId, cursor } = rest;
 
-	const comments = await ctx.db.query.comment.findMany({
-		...withCursorPagination({
-			limit,
-			cursors: [
-				[comment.createdAt, "desc", cursor ? new Date(cursor) : undefined],
-			],
-			where: and(
-				eq(comment.watchlistId, watchlistId),
-				isNull(comment.parentId),
-			),
-		}),
-		with: {
-			user: true,
-			replies: {
-				where: (comments, { eq }) => eq(comments.parentId, comments.id),
+	const [comments, totalComments] = await Promise.all([
+		ctx.db.query.comment.findMany({
+			...withCursorPagination({
+				limit,
+				cursors: [
+					[comment.createdAt, "desc", cursor ? new Date(cursor) : undefined],
+				],
+				where: and(
+					eq(comment.watchlistId, watchlistId),
+					isNull(comment.parentId),
+				),
+			}),
+			with: {
+				user: true,
+				replies: {
+					where: (comments, { eq }) => eq(comments.parentId, comments.id),
+				},
 			},
-		},
-	});
+		}),
+		ctx.db
+			.select({ count: sql<number>`count(*)` })
+			.from(comment)
+			.where(
+				and(eq(comment.watchlistId, watchlistId), isNull(comment.parentId)),
+			)
+			.then((result) => result[0]?.count ?? 0),
+	]);
 
 	return {
 		comments,
+		totalComments,
 		nextCursor: comments.length
 			? comments[comments.length - 1]?.createdAt
 			: null,

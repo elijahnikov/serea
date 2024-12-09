@@ -33,7 +33,7 @@ export default async function SingleWatchlist({ id }: { id: string }) {
 				/>
 			</Suspense>
 			<div className="flex flex-col gap-4 lg:flex-row">
-				<div className="w-full order-last gap-6 flex flex-col lg:order-first">
+				<div className="w-full mb-8 order-last gap-6 flex flex-col lg:order-first">
 					<MainSection
 						isOwner={session?.user.id === watchlist.userId}
 						initialWatchlist={watchlist}

@@ -20,10 +20,12 @@ const createCommentSchema = z.object({
 });
 
 export default function CommentForm({ watchlistId }: { watchlistId: string }) {
+	const trpcUtils = api.useUtils();
 	const createComment = api.comments.create.useMutation({
 		onSuccess: () => {
 			form.reset({ content: "" });
 			toast.success("You have successfully commented on this watchlist.");
+			trpcUtils.comments.get.invalidate({ watchlistId });
 		},
 	});
 

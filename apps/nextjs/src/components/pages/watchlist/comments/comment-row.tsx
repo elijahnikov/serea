@@ -1,34 +1,56 @@
 import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
-import { Heart, HeartIcon, MessageCircle } from "lucide-react";
+import { Heart } from "lucide-react";
 import moment from "moment";
+import { useState } from "react";
 import SereaAvatar from "~/components/common/serea-avatar";
+import CommentDropdown from "./comment-dropdown";
 
 export default function CommentRow({
 	comment,
-}: { comment: RouterOutputs["comments"]["get"]["comments"][number] }) {
+	currentUser,
+}: {
+	comment: RouterOutputs["comments"]["get"]["comments"][number];
+	currentUser: string;
+}) {
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 	return (
-		<div className="bg-background first-of-type:rounded-t-lg last-of-type:rounded-b-lg border-surface-50 py-4 flex flex-col justify-center w-full">
+		<div className="group bg-background border-b first-of-type:rounded-t-lg last-of-type:rounded-b-lg border-surface-50 py-4 flex flex-col justify-center w-full">
 			<div className="flex items-center gap-2 justify-between w-full ">
 				<div className="flex items-center gap-2">
-					<SereaAvatar
-						url={comment.user.image}
-						name={comment.user.name}
-						size={"xs"}
-					/>
-					<div className="text-sm font-medium">
-						<span className="font-bold">{comment.user.name}</span>{" "}
-						<span className="text-neutral-400">says</span>
+					<div className="flex items-center gap-2">
+						<SereaAvatar
+							url={comment.user.image}
+							name={comment.user.name}
+							size={"xs"}
+						/>
+						<div className="text-sm font-medium">
+							<span className="font-bold">{comment.user.name}</span>{" "}
+						</div>
 					</div>
+					<p className="text-xs text-neutral-400">
+						{moment(comment.createdAt).fromNow()}
+					</p>
 				</div>
-				<p className="text-xs text-neutral-400">
-					{moment(comment.createdAt).fromNow()}
-				</p>
+				<div
+					className={
+						"z-40 group-hover:opacity-100 opacity-0 transition-opacity duration-200"
+					}
+				>
+					<CommentDropdown
+						isOpen={isDropdownOpen}
+						onOpenChange={setIsDropdownOpen}
+						isOwner={currentUser === comment.user.id}
+					/>
+				</div>
 			</div>
-			<p className="mt-2">{comment.content}</p>
+			<p className="mt-2 text-sm dark:text-neutral-400 text-neutral-600">
+				{comment.content}
+			</p>
 			<div className="flex items-center gap-2 mt-2">
-				<Button size={"xs-icon"} variant={"transparent"}>
+				<Button size={"xs-icon"} variant={"outline"}>
 					<div className="flex items-center space-x-1">
 						<Heart
 							size={14}

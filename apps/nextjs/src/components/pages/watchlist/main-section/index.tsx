@@ -48,8 +48,7 @@ export default function MainSection({
 		<div className="gap-6 flex flex-col">
 			<div className="mt-4">
 				<Title isOwner={isOwner} watchlist={{ ...watchlist }} />
-				<Description isOwner={isOwner} watchlist={{ ...watchlist }} />
-				<div className="flex gap-2">
+				<div className="flex gap-2 mt-2">
 					<Badge stroke className="text-xs text-secondary-500">
 						<span>Created</span>{" "}
 						<span className="font-semibold text-black dark:text-white">
@@ -63,6 +62,7 @@ export default function MainSection({
 						</span>
 					</Badge>
 				</div>
+				<Description isOwner={isOwner} watchlist={{ ...watchlist }} />
 			</div>
 			<Actions
 				setSelectedView={setSelectedView}
