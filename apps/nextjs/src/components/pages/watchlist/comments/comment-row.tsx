@@ -3,6 +3,7 @@ import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
 import { Heart } from "lucide-react";
 import moment from "moment";
+
 import { useState } from "react";
 import SereaAvatar from "~/components/common/serea-avatar";
 import CommentDropdown from "./comment-dropdown";
@@ -14,8 +15,7 @@ export default function CommentRow({
 	comment: RouterOutputs["comments"]["get"]["comments"][number];
 	currentUser: string;
 }) {
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	return (
 		<div className="group bg-background border-b first-of-type:rounded-t-lg last-of-type:rounded-b-lg border-surface-50 py-4 flex flex-col justify-center w-full">
 			<div className="flex items-center gap-2 justify-between w-full ">
@@ -34,15 +34,17 @@ export default function CommentRow({
 						{moment(comment.createdAt).fromNow()}
 					</p>
 				</div>
+				{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 				<div
-					className={
-						"z-40 group-hover:opacity-100 opacity-0 transition-opacity duration-200"
-					}
+					className={`z-40 group-hover:opacity-100 opacity-0 transition-opacity duration-200 ${
+						isDropdownOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+					}`}
+					onClick={(e) => e.stopPropagation()}
 				>
 					<CommentDropdown
-						isOpen={isDropdownOpen}
 						onOpenChange={setIsDropdownOpen}
 						isOwner={currentUser === comment.user.id}
+						commentId={comment.id}
 					/>
 				</div>
 			</div>

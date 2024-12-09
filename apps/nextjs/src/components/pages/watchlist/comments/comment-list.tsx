@@ -3,6 +3,7 @@
 import type { RouterOutputs } from "@serea/api";
 import Badge from "@serea/ui/badge";
 import { LoadingButton } from "@serea/ui/loading-button";
+import { useState } from "react";
 import { api } from "~/trpc/react";
 import CommentForm from "./comment-form";
 import CommentRow from "./comment-row";

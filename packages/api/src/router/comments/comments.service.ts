@@ -7,6 +7,7 @@ import type {
 	CreateCommentInput,
 	DeleteCommentInput,
 	GetCommentsInput,
+	ReportCommentInput,
 } from "./comments.input";
 
 export const getComments = async (
@@ -77,4 +78,11 @@ export const deleteComment = async (
 				eq(comment.userId, ctx.session.user.id),
 			),
 		);
+};
+
+export const reportComment = async (
+	ctx: ProtectedTRPCContext,
+	input: ReportCommentInput,
+) => {
+	return false;
 };

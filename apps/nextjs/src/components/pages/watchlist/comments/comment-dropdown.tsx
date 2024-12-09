@@ -1,60 +1,44 @@
 "use client";
 
 import type React from "react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
-import {
-	CalendarClockIcon,
-	CheckCheck,
-	Ellipsis,
-	EyeIcon,
-	FlagIcon,
-	TrashIcon,
-	UserCheckIcon,
-} from "lucide-react";
+import { Ellipsis, FlagIcon, TrashIcon } from "lucide-react";
 
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
 
-import type { RouterOutputs } from "@serea/api";
-import { AvatarGroup } from "@serea/ui/avatar-group";
 import { Button } from "@serea/ui/button";
-import Loading from "@serea/ui/loading";
+import { useConfirm } from "~/hooks/use-confirm";
 import { api } from "~/trpc/react";
 
 type MenuItem = {
 	label: string;
 	icon: React.ReactNode;
-	onSelect: (watchlistId: string, entryId: string) => void;
+	onSelect: (commentId: string) => void;
 	variant?: "destructive" | "default";
 };
 
 export default function CommentDropdown({
 	onOpenChange,
-	isOpen,
 	isOwner,
+	commentId,
 }: {
 	onOpenChange: (isOpen: boolean) => void;
-	isOpen: boolean;
+	commentId: string;
 	isOwner: boolean;
 }) {
+	const { confirm } = useConfirm();
+
 	const trpcUtils = api.useUtils();
-	const toggleWatch = api.watched.toggleWatched.useMutation({
+	const { mutate: deleteComment, ...rest } = api.comments.delete.useMutation({
 		onSuccess: () => {
-			void trpcUtils.watchlist.getEntries.invalidate();
-			void trpcUtils.watched.getWatchlistProgress.invalidate();
-		},
-	});
-	const toggleAllWatched = api.watched.toggleAllWatched.useMutation({
-		onSuccess: () => {
-			void trpcUtils.watchlist.getEntries.invalidate();
-			void trpcUtils.watched.getWatchlistProgress.invalidate();
+			void trpcUtils.comments.get.invalidate();
 		},
 	});
 
@@ -68,11 +52,17 @@ export default function CommentDropdown({
 			{
 				label: "Delete",
 				icon: <TrashIcon size={16} />,
-				onSelect: () => {},
+				onSelect: (commentId: string) =>
+					confirm({
+						message: "You will not be able to undo this action.",
+						title: "Delete comment?",
+						onConfirm: () => deleteComment({ commentId }),
+						loading: rest.isPending,
+					}),
 				variant: "destructive",
 			},
 		],
-		[],
+		[deleteComment, confirm, rest.isPending],
 	);
 
 	const viewerDropdownItems: MenuItem[] = useMemo(
@@ -103,7 +93,7 @@ export default function CommentDropdown({
 						<DropdownMenuItem
 							destructive={item.variant === "destructive"}
 							key={item.label}
-							// onSelect={() => item.onSelect(entry.watchlistId, entry.id)}
+							onSelect={() => item.onSelect(commentId)}
 						>
 							{item.icon}
 							<span>{item.label}</span>

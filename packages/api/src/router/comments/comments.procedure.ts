@@ -20,4 +20,8 @@ export const commentsRouter = {
 		.input(inputs.deleteComment)
 		.meta({ name: "delete-comment" })
 		.mutation(({ ctx, input }) => services.deleteComment(ctx, input)),
+
+	report: protectedProcedure
+		.input(inputs.reportComment)
+		.mutation(({ ctx, input }) => services.reportComment(ctx, input)),
 } satisfies TRPCRouterRecord;

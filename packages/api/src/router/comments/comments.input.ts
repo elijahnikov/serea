@@ -17,3 +17,8 @@ export const deleteComment = z.object({
 	commentId: z.string(),
 });
 export type DeleteCommentInput = z.infer<typeof deleteComment>;
+
+export const reportComment = z.object({
+	commentId: z.string(),
+});
+export type ReportCommentInput = z.infer<typeof reportComment>;

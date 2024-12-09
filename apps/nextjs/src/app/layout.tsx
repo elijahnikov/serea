@@ -11,6 +11,7 @@ import "~/app/globals.css";
 import { cn } from "@serea/ui/cn";
 import { Toaster } from "@serea/ui/sonner";
 import { env } from "~/env";
+import { ConfirmDialogProvider } from "~/hooks/use-confirm";
 
 const sereaFont = localFont({
 	src: [
@@ -76,7 +77,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 				)}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					<TRPCReactProvider>{props.children}</TRPCReactProvider>
+					<TRPCReactProvider>
+						<ConfirmDialogProvider>{props.children}</ConfirmDialogProvider>
+					</TRPCReactProvider>
 					<Toaster position="bottom-center" />
 				</ThemeProvider>
 			</body>
