@@ -14,7 +14,6 @@ import {
 } from "@serea/ui/dropdown-menu";
 
 import { Button } from "@serea/ui/button";
-import { useConfirm } from "~/hooks/use-confirm";
 import { api } from "~/trpc/react";
 
 type MenuItem = {
@@ -33,10 +32,8 @@ export default function CommentDropdown({
 	commentId: string;
 	isOwner: boolean;
 }) {
-	const { confirm } = useConfirm();
-
 	const trpcUtils = api.useUtils();
-	const { mutate: deleteComment, ...rest } = api.comments.delete.useMutation({
+	const deleteComment = api.comments.delete.useMutation({
 		onSuccess: () => {
 			void trpcUtils.comments.get.invalidate();
 		},
@@ -47,22 +44,16 @@ export default function CommentDropdown({
 			{
 				label: "Report",
 				icon: <FlagIcon size={16} />,
-				onSelect: () => {},
+				onSelect: (commentId: string) => console.log(commentId),
 			},
 			{
 				label: "Delete",
 				icon: <TrashIcon size={16} />,
-				onSelect: (commentId: string) =>
-					confirm({
-						message: "You will not be able to undo this action.",
-						title: "Delete comment?",
-						onConfirm: () => deleteComment({ commentId }),
-						loading: rest.isPending,
-					}),
+				onSelect: (commentId: string) => console.log(commentId),
 				variant: "destructive",
 			},
 		],
-		[deleteComment, confirm, rest.isPending],
+		[],
 	);
 
 	const viewerDropdownItems: MenuItem[] = useMemo(

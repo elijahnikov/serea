@@ -1,6 +1,4 @@
 import { ThemeProvider } from "@serea/ui/theme";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 
@@ -11,7 +9,6 @@ import "~/app/globals.css";
 import { cn } from "@serea/ui/cn";
 import { Toaster } from "@serea/ui/sonner";
 import { env } from "~/env";
-import { ConfirmDialogProvider } from "~/hooks/use-confirm";
 
 const sereaFont = localFont({
 	src: [
@@ -77,9 +74,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 				)}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					<TRPCReactProvider>
-						<ConfirmDialogProvider>{props.children}</ConfirmDialogProvider>
-					</TRPCReactProvider>
+					<TRPCReactProvider>{props.children}</TRPCReactProvider>
 					<Toaster position="bottom-center" />
 				</ThemeProvider>
 			</body>
