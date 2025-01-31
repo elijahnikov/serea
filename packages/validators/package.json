@@ -1,5 +1,5 @@
 {
-  "name": "@acme/validators",
+  "name": "@serea/validators",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -22,8 +22,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@serea/tsconfig": "workspace:*",
     "typescript": "catalog:"
   }
 }

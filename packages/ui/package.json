@@ -1,5 +1,5 @@
 {
-  "name": "@acme/ui",
+  "name": "@serea/ui",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -39,9 +39,9 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@serea/tailwind-config": "workspace:*",
+    "@serea/tsconfig": "workspace:*",
     "@types/react": "catalog:react18",
     "react": "catalog:react18",
     "typescript": "catalog:",

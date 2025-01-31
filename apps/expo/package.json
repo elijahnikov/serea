@@ -1,5 +1,5 @@
 {
-  "name": "@acme/expo",
+  "name": "@serea/expo",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
@@ -43,13 +43,13 @@
     "superjson": "2.2.1"
   },
   "devDependencies": {
-    "@acme/api": "workspace:*",
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
     "@biomejs/biome": "1.9.4",
+    "@serea/api": "workspace:*",
+    "@serea/tailwind-config": "workspace:*",
+    "@serea/tsconfig": "workspace:*",
     "@types/babel__core": "^7.20.5",
     "@types/react": "catalog:react18",
     "tailwindcss": "catalog:",

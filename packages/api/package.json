@@ -1,5 +1,5 @@
 {
-  "name": "@acme/api",
+  "name": "@serea/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -19,16 +19,16 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/db": "workspace:*",
-    "@acme/validators": "workspace:*",
+    "@serea/auth": "workspace:*",
+    "@serea/db": "workspace:*",
+    "@serea/validators": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.1",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@serea/tsconfig": "workspace:*",
     "typescript": "catalog:"
   }
 }

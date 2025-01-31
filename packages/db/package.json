@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@serea/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -32,8 +32,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/tsconfig": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@serea/tsconfig": "workspace:*",
     "dotenv-cli": "^7.4.4",
     "prisma": "^6.3.0",
     "typescript": "catalog:"

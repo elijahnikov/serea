@@ -1,5 +1,5 @@
 {
-  "name": "@acme/auth-proxy",
+  "name": "@serea/auth-proxy",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,9 +13,9 @@
     "@auth/core": "0.37.2"
   },
   "devDependencies": {
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
     "@biomejs/biome": "1.9.4",
+    "@serea/tailwind-config": "workspace:*",
+    "@serea/tsconfig": "workspace:*",
     "@types/node": "^20.17.7",
     "h3": "^1.13.0",
     "nitropack": "^2.10.4",
