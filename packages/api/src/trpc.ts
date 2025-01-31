@@ -6,7 +6,7 @@
  * tl;dr - this is where all the tRPC server stuff is created and plugged in.
  * The pieces you will need to use are documented accordingly near the end
  */
-import { initTRPC, TRPCError } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -20,9 +20,9 @@ import { db } from "@acme/db";
  * - Next.js requests will have a session token in cookies
  */
 const isomorphicGetSession = async (headers: Headers) => {
-  const authToken = headers.get("Authorization") ?? null;
-  if (authToken) return validateToken(authToken);
-  return auth();
+	const authToken = headers.get("Authorization") ?? null;
+	if (authToken) return validateToken(authToken);
+	return auth();
 };
 
 /**
@@ -38,20 +38,20 @@ const isomorphicGetSession = async (headers: Headers) => {
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: {
-  headers: Headers;
-  session: Session | null;
+	headers: Headers;
+	session: Session | null;
 }) => {
-  const authToken = opts.headers.get("Authorization") ?? null;
-  const session = await isomorphicGetSession(opts.headers);
+	const authToken = opts.headers.get("Authorization") ?? null;
+	const session = await isomorphicGetSession(opts.headers);
 
-  const source = opts.headers.get("x-trpc-source") ?? "unknown";
-  console.log(">>> tRPC Request from", source, "by", session?.user);
+	const source = opts.headers.get("x-trpc-source") ?? "unknown";
+	console.log(">>> tRPC Request from", source, "by", session?.user);
 
-  return {
-    session,
-    db,
-    token: authToken,
-  };
+	return {
+		session,
+		db,
+		token: authToken,
+	};
 };
 
 /**
@@ -61,14 +61,14 @@ export const createTRPCContext = async (opts: {
  * transformer
  */
 const t = initTRPC.context<typeof createTRPCContext>().create({
-  transformer: superjson,
-  errorFormatter: ({ shape, error }) => ({
-    ...shape,
-    data: {
-      ...shape.data,
-      zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-    },
-  }),
+	transformer: superjson,
+	errorFormatter: ({ shape, error }) => ({
+		...shape,
+		data: {
+			...shape.data,
+			zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+		},
+	}),
 });
 
 /**
@@ -97,14 +97,14 @@ export const createTRPCRouter = t.router;
  * network latency that would occur in production but not in local development.
  */
 const timingMiddleware = t.middleware(async ({ next, path }) => {
-  const start = Date.now();
+	const start = Date.now();
 
-  const result = await next();
+	const result = await next();
 
-  const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
+	const end = Date.now();
+	console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
 
-  return result;
+	return result;
 });
 
 /**
@@ -125,15 +125,15 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session?.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
-      },
-    });
-  });
+	.use(timingMiddleware)
+	.use(({ ctx, next }) => {
+		if (!ctx.session?.user) {
+			throw new TRPCError({ code: "UNAUTHORIZED" });
+		}
+		return next({
+			ctx: {
+				// infers the `session` as non-nullable
+				session: { ...ctx.session, user: ctx.session.user },
+			},
+		});
+	});
