@@ -1,8 +1,8 @@
 "use client";
 
 import type { RouterOutputs } from "@serea/api";
-import { cn } from "@serea/ui";
 import { Button } from "@serea/ui/button";
+import { cn } from "@serea/ui/cn";
 import {
 	Form,
 	FormControl,
@@ -12,7 +12,6 @@ import {
 	useForm,
 } from "@serea/ui/form";
 import { Input } from "@serea/ui/input";
-import { toast } from "@serea/ui/toast";
 import { z } from "zod";
 
 import { api } from "~/trpc/react";
@@ -32,13 +31,6 @@ export function CreatePostForm() {
 		onSuccess: async () => {
 			form.reset();
 			await utils.post.invalidate();
-		},
-		onError: (err) => {
-			toast.error(
-				err.data?.code === "UNAUTHORIZED"
-					? "You must be logged in to post"
-					: "Failed to create post",
-			);
 		},
 	});
 
@@ -88,7 +80,7 @@ export function PostList() {
 	return (
 		<div className="flex w-full flex-col gap-4">
 			{posts.map((p) => {
-				return <p>{p.name}</p>;
+				return <p key={p.id}>{p.name}</p>;
 			})}
 		</div>
 	);

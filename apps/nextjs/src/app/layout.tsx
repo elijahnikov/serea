@@ -1,35 +1,29 @@
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata, Viewport } from "next";
 
-import { cn } from "@serea/ui";
 import { ThemeProvider, ThemeToggle } from "@serea/ui/theme";
-import { Toaster } from "@serea/ui/toast";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
 import "~/app/globals.css";
 
+import localFont from "next/font/local";
+
+import { cn } from "@serea/ui/cn";
 import { env } from "~/env";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(
 		env.VERCEL_ENV === "production"
-			? "https://turbo.t3.gg"
+			? "https://app.serea.co"
 			: "http://localhost:3000",
 	),
-	title: "Create T3 Turbo",
+	title: "Serea",
 	description: "Simple monorepo with shared backend for web & mobile apps",
 	openGraph: {
-		title: "Create T3 Turbo",
+		title: "Serea",
 		description: "Simple monorepo with shared backend for web & mobile apps",
-		url: "https://create-t3-turbo.vercel.app",
-		siteName: "Create T3 Turbo",
-	},
-	twitter: {
-		card: "summary_large_image",
-		site: "@jullerino",
-		creator: "@jullerino",
+		url: "https://app.serea.co",
+		siteName: "Serea",
 	},
 };
 
@@ -40,14 +34,39 @@ export const viewport: Viewport = {
 	],
 };
 
+const sereaFont = localFont({
+	src: [
+		{
+			path: "../lib/fonts/OpenRunde-Regular.woff2",
+			weight: "400",
+			style: "normal",
+		},
+		{
+			path: "../lib/fonts/OpenRunde-Medium.woff2",
+			weight: "500",
+			style: "normal",
+		},
+		{
+			path: "../lib/fonts/OpenRunde-Semibold.woff2",
+			weight: "600",
+			style: "normal",
+		},
+		{
+			path: "../lib/fonts/OpenRunde-Bold.woff2",
+			weight: "700",
+			style: "normal",
+		},
+	],
+	variable: "--font-serea",
+});
+
 export default function RootLayout(props: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
 				className={cn(
-					"min-h-screen bg-background font-sans text-foreground antialiased",
-					GeistSans.variable,
-					GeistMono.variable,
+					"min-h-screen bg-background font-serea text-foreground antialiased",
+					sereaFont.variable,
 				)}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -55,7 +74,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 					<div className="absolute bottom-4 right-4">
 						<ThemeToggle />
 					</div>
-					<Toaster />
+					{/* <Toaster /> */}
 				</ThemeProvider>
 			</body>
 		</html>
