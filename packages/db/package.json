@@ -17,8 +17,8 @@
     "build": "tsc",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "dev": "tsc",
-    "format": "prettier --check . --ignore-path ../../.gitignore",
-    "lint": "eslint",
+    "lint": "biome lint .",
+    "format": "biome format . ",
     "generate-schema": "pnpm with-env prisma generate --schema ./src/schema.prisma",
     "push": "pnpm with-env prisma db push --skip-generate",
     "studio": "pnpm with-env prisma studio --port 5556",
@@ -32,14 +32,10 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
+    "@biomejs/biome": "1.9.4",
     "dotenv-cli": "^7.4.4",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
     "prisma": "^6.3.0",
     "typescript": "catalog:"
-  },
-  "prettier": "@acme/prettier-config"
+  }
 }
