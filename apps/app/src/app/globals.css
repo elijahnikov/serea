@@ -29,6 +29,8 @@
     --secondary-hover: 0 0% 85%;
     --secondary-active: 0 0% 87%;
     --secondary-foreground: 0 0% 32%;
+
+    --radius: 0.5rem;
   }
 
   .dark {
