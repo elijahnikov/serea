@@ -1,6 +1,3 @@
-import { auth } from "@serea/auth";
-import { type NextRequest, NextResponse } from "next/server";
-
 export { auth as middleware } from "@serea/auth";
 
 // Or like this if you need to do something here.

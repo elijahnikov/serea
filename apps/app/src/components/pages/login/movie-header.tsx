@@ -25,7 +25,7 @@ export default async function MovieHeader() {
 		: [];
 
 	return (
-		<div className="rounded-lg justify-center relative flex h-full px-4 bg-surface dark:bg-carbon-dark-100 border">
+		<div className="rounded-lg justify-center relative flex h-full px-4 bg-carbon-100 dark:bg-carbon-dark-100 border">
 			<Marquee vertical className="max-h-[96vh] py-1 [--duration:60s]">
 				{part1?.map((movie) => (
 					<MovieCard key={movie.id} movie={movie} />

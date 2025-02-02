@@ -36,15 +36,22 @@ export const authConfig = {
 	secret: env.AUTH_SECRET,
 	providers: [Discord],
 	callbacks: {
-		session: (opts) => {
+		session: async (opts) => {
 			if (!("user" in opts))
 				throw new Error("unreachable with session strategy");
+
+			const userDetails = await db.user.findFirst({
+				where: {
+					id: opts.user.id,
+				},
+			});
 
 			return {
 				...opts.session,
 				user: {
 					...opts.session.user,
 					id: opts.user.id,
+					onboarded: userDetails?.onboarded,
 				},
 			};
 		},

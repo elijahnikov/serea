@@ -12,7 +12,7 @@ export default async function MainLayout({
 		return redirect("/login");
 	}
 
-	if (session && !session.user?.onboarded) {
+	if (!session.user.onboarded) {
 		return redirect("/onboarding");
 	}
 

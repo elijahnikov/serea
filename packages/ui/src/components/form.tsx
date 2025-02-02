@@ -19,7 +19,6 @@ import {
 import type { ZodType, ZodTypeDef } from "zod";
 
 import { cn } from "@serea/ui/cn";
-
 import { Label } from "./label";
 
 const useForm = <
@@ -121,7 +120,9 @@ const FormLabel = React.forwardRef<
 			className={cn(error && "text-destructive", className)}
 			htmlFor={formItemId}
 			{...props}
-		/>
+		>
+			{props.children}
+		</Label>
 	);
 });
 FormLabel.displayName = "FormLabel";

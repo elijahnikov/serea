@@ -1,5 +1,5 @@
-import { cache } from "react";
 import NextAuth from "next-auth";
+import { cache } from "react";
 
 import { authConfig } from "./config";
 
@@ -16,7 +16,7 @@ const auth = cache(defaultAuth);
 export { handlers, auth, signIn, signOut };
 
 export {
-  invalidateSessionToken,
-  validateToken,
-  isSecureContext,
+	invalidateSessionToken,
+	validateToken,
+	isSecureContext,
 } from "./config";
