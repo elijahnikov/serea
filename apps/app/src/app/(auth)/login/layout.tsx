@@ -1,4 +1,5 @@
 import { auth } from "@serea/auth";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function AuthLayout({
@@ -8,6 +9,9 @@ export default async function AuthLayout({
 }) {
 	const session = await auth();
 
+	if (session && !session.user?.onboarded) {
+		return redirect("/onboarding");
+	}
 	if (session) {
 		return redirect("/");
 	}

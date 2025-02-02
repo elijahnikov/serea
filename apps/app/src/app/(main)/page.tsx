@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 
 import { HydrateClient, api } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
+import { AuthShowcase } from "../_components/auth-showcase";
 import {
 	CreatePostForm,
 	PostCardSkeleton,
 	PostList,
-} from "./_components/posts";
+} from "../_components/posts";
 
 export default function HomePage() {
 	// You can await this here if you don't want to show Suspense fallback below
