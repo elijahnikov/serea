@@ -10,20 +10,21 @@ import {
 	FormMessage,
 	useForm,
 } from "@serea/ui/form";
+import { Spinner } from "@serea/ui/spinner";
 
 import { Input } from "@serea/ui/input";
 import { Textarea } from "@serea/ui/textarea";
 import { z } from "zod";
-import { UploadButton } from "~/lib/utils/uploadthing";
+import { UploadButton, useUploadThing } from "~/lib/utils/uploadthing";
 
 import { Label } from "@serea/ui/label";
-import { UploadIcon, UserIcon } from "lucide-react";
+import { CircleIcon, PersonStanding, UploadIcon, UserIcon } from "lucide-react";
 import * as React from "react";
 
 const onboardingSchema = z.object({
 	image: z.string().optional(),
 	username: z.string().min(2).max(20),
-	bio: z.string().min(0).max(100),
+	bio: z.string().min(0).max(100).optional(),
 });
 
 type OnboardingFormProps = {
@@ -34,7 +35,13 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 		schema: onboardingSchema,
 		defaultValues: {
 			username: user.user.name ?? "",
-			bio: "",
+			image: user.user.image ?? "",
+		},
+	});
+
+	const upload = useUploadThing("imageUploader", {
+		onClientUploadComplete: (e) => {
+			form.setValue("image", e[0]?.url);
 		},
 	});
 
@@ -51,48 +58,40 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 				>
 					<div className="flex flex-col gap-2 items-left">
 						<Label>Avatar</Label>
-						<UploadButton
-							onClientUploadComplete={(e) => {
-								form.setValue("image", e[0]?.url);
-							}}
-							endpoint="imageUploader"
-							content={{
-								button({ ready, isUploading, uploadProgress }) {
-									if (isUploading) {
-										return (
-											<div className="flex items-center space-x-1">
-												{/* <LoadingSpinner size={12} /> */}
-												<p className="text-neutral-500">
-													Uploading... {uploadProgress}%
-												</p>
-											</div>
-										);
-									}
-									if (ready)
-										return (
-											<div className="p-2">
-												{(user.user.image ?? imageWatch) ? (
-													<img
-														src={imageWatch ?? user.user.image ?? ""}
-														alt="User avatar"
-														className="w-24 h-24 rounded-full"
-													/>
-												) : (
-													<div className="h-24 w-24 flex ring-1 ring-inset ring-secondary justify-center items-center border shadow-sm-dark rounded-full">
-														<UserIcon className="w-8 h-8 text-secondary-foreground" />
-													</div>
-												)}
-											</div>
-										);
-								},
-							}}
-							appearance={{
-								container:
-									"ring-0 w-full flex items-left border-none focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:outline-none",
-								button: "min-h-max bg-transparent mr-auto max-w-max",
-								allowedContent: "hidden",
-							}}
-						/>
+						<div className="relative w-24">
+							<input
+								type="file"
+								className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+								onChange={async (e) => {
+									const file = e.target.files?.[0];
+									if (!file) return;
+									await upload.startUpload([file]);
+								}}
+								accept="image/*"
+							/>
+							{upload.isUploading ? (
+								<div className="w-24 p-[2px] h-24 bg-white rounded-full flex items-center justify-center border">
+									<Spinner size="sm" />
+								</div>
+							) : (
+								<div className="p-[2px]">
+									{(user.user.image ?? imageWatch) ? (
+										<img
+											src={imageWatch ?? user.user.image ?? ""}
+											alt="User avatar"
+											className="w-24 h-24 rounded-full object-cover"
+										/>
+									) : (
+										<div className="h-24 w-24 flex ring-1 ring-inset ring-secondary justify-center items-center border shadow-sm-dark rounded-full hover:bg-secondary/5 transition-colors">
+											<UserIcon className="w-8 h-8 text-secondary-foreground" />
+										</div>
+									)}
+								</div>
+							)}
+						</div>
+						<span className="text-xs text-muted-foreground">
+							Upload an image that represents you best.
+						</span>
 					</div>
 					<FormField
 						control={form.control}
@@ -121,9 +120,11 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 								<FormControl>
 									<Textarea
 										{...field}
+										optional
 										placeholder="Enter your bio"
-										label="Bio"
-										helperText="Tell other users a bit about yourself."
+										label="Biography"
+										helperText="Tell other users a bit about yourself. Max 200 characters."
+										className="max-h-[50px]"
 									/>
 								</FormControl>
 								<FormMessage />

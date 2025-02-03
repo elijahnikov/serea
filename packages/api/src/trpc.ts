@@ -137,3 +137,8 @@ export const protectedProcedure = t.procedure
 			},
 		});
 	});
+
+export type TPRCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+export type ProtectedTRPCContext = TPRCContext & {
+	session: NonNullable<TPRCContext["session"]>;
+};

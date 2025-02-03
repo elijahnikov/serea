@@ -1,4 +1,4 @@
-import { authRouter } from "./router/auth";
+import { authRouter } from "./router/auth/auth.procedure";
 import { postRouter } from "./router/post";
 import { tmdbRouter } from "./router/tmdb/tmdb.procedure";
 import { createTRPCRouter } from "./trpc";
