@@ -27,7 +27,7 @@ export default function LoginButtons() {
 						"use server";
 						await signIn(social.id);
 					}}
-					variant={"outline"}
+					variant={"secondary"}
 					key={social.id}
 				>
 					<div className="w-full items-center flex space-x-1">

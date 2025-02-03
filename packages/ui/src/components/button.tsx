@@ -1,45 +1,35 @@
-"use client";
-
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@serea/ui/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 
+import { cn } from "@serea/ui/cn";
+
 const buttonVariants = cva(
-	"select-none cursor-default font-medium animate transition-colors  disabled:pointer-events-none disabled:opacity-50 duration-100 inline-flex items-center justify-center whitespace-nowrap",
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
 	{
 		variants: {
 			variant: {
-				primary:
-					"bg-primary active:bg-primary-active hover:bg-primary-hover ring-1 ring-inset ring-primary-ring border-primary-border border-b outline-primary-outline text-white",
+				default:
+					"bg-blue-500 text-primary-foreground hover:bg-blue-500/90 active:bg-blue-500/80",
 				destructive:
-					"bg-destructive active:bg-destructive-active hover:bg-destructive-hover ring-1 ring-inset ring-destructive-border  border-b border-destructive-ring outline-destructive-outline text-white",
-				black:
-					"bg-carbon-dark-100 dark:shadow-sm-dark shadow-xs text-white dark:text-secondary-foreground border-b ring-1 ring-inset ring-carbon-dark-500 border-carbon-dark-300 dark:ring-carbon-dark-400 dark:border-carbon-dark-500 active:bg-carbon-dark-300 hover:bg-carbon-dark-200",
-				secondary:
-					"bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-secondary-foreground",
+					"bg-destructive text-destructive-foreground hover:bg-destructive/90",
 				outline:
-					"shadow-xs dark:shadow-sm-dark ring-1 ring-inset dark:ring-carbon-dark-500 ring-carbon-dark-500/20 dark:hover:bg-secondary-hover hover:bg-secondary-hover bg-white dark:bg-carbon-dark-300 active:bg-secondary-active text-secondary-foreground",
-				transparent:
-					"bg-transparent text-secondary-foreground hover:bg-secondary-hover active:bg-secondary-active",
-				link: "p-0 hover:underline hover:text-primary underline-offset-4",
-			},
-			shape: {
-				rounded: "rounded-lg",
-				square: "rounded-none",
-				pill: "rounded-full",
+					"border border-input hover:bg-stone-100 hover:text-accent-foreground",
+				secondary:
+					"bg-stone-200 text-secondary-foreground hover:bg-stone-200/80 active:bg-stone-300",
+				ghost: "hover:bg-accent hover:text-accent-foreground",
+				link: "text-primary underline-offset-4 hover:underline",
 			},
 			size: {
-				xs: "text-xs px-1 py-1 leading-4",
-				sm: "text-sm px-2 py-2 leading-4",
-				md: "text-md px-3 py-2 leading-5",
-				lg: "text-lg leading-5 px-4 py-2",
+				default: "h-9 px-4 py-2",
+				sm: "h-8 rounded-md px-3 text-xs",
+				lg: "h-10 rounded-md px-8",
+				icon: "h-9 w-9",
 			},
 		},
 		defaultVariants: {
-			variant: "primary",
-			size: "sm",
-			shape: "rounded",
+			variant: "default",
+			size: "default",
 		},
 	},
 );
@@ -47,24 +37,23 @@ const buttonVariants = cva(
 export const iconVariants = cva("text-current m-0 p-0", {
 	variants: {
 		variant: {
-			primary: "",
+			default: "",
 			secondary: "",
 			outline: "",
 			destructive: "",
-			transparent: "",
+			ghost: "",
 			link: "",
-			black: "",
 		},
 		size: {
-			xs: "size-4",
-			sm: "size-4",
-			md: "size-5",
+			icon: "size-4",
+			default: "size-4",
+			sm: "size-5",
 			lg: "size-6",
 		},
 	},
 	defaultVariants: {
-		variant: "primary",
-		size: "sm",
+		variant: "default",
+		size: "default",
 	},
 });
 
@@ -80,9 +69,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 	(
 		{
 			className,
-			shape = "rounded",
-			variant = "primary",
-			size = "sm",
+			variant = "default",
+			size = "default",
 			before,
 			disabled,
 			after,
@@ -135,7 +123,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		return (
 			<Component
 				className={cn(
-					buttonVariants({ variant, size, shape }),
+					buttonVariants({ variant, size }),
 					variant === "link" && children && "focus-visible:outline-0",
 					className,
 				)}

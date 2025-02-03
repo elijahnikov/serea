@@ -32,13 +32,13 @@ export default async function OnboardingComponent() {
 					<div className="flex items-center justify-between">
 						<div className="flex flex-col">
 							<h1 className="font-medium text-lg">Onboarding</h1>
-							<p className="text-sm text-carbon-500">
+							<p className="text-sm text-muted-foreground">
 								Please fill in the following details to get started
 							</p>
 						</div>
 						<form>
 							<Button
-								variant="outline"
+								variant="secondary"
 								formAction={async () => {
 									"use server";
 									await signOut();

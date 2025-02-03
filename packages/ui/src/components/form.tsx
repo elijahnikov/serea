@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type * as LabelPrimitive from "@radix-ui/react-label";
-import { Slot } from "@radix-ui/react-slot";
+import * as Slot from "@radix-ui/react-slot";
 import * as React from "react";
 import type {
 	ControllerProps,
@@ -19,6 +19,7 @@ import {
 import type { ZodType, ZodTypeDef } from "zod";
 
 import { cn } from "@serea/ui/cn";
+
 import { Label } from "./label";
 
 const useForm = <
@@ -120,22 +121,20 @@ const FormLabel = React.forwardRef<
 			className={cn(error && "text-destructive", className)}
 			htmlFor={formItemId}
 			{...props}
-		>
-			{props.children}
-		</Label>
+		/>
 	);
 });
 FormLabel.displayName = "FormLabel";
 
 const FormControl = React.forwardRef<
-	React.ElementRef<typeof Slot>,
-	React.ComponentPropsWithoutRef<typeof Slot>
+	React.ElementRef<typeof Slot.Slot>,
+	React.ComponentPropsWithoutRef<typeof Slot.Slot>
 >(({ ...props }, ref) => {
 	const { error, formItemId, formDescriptionId, formMessageId } =
 		useFormField();
 
 	return (
-		<Slot
+		<Slot.Slot
 			ref={ref}
 			id={formItemId}
 			aria-describedby={

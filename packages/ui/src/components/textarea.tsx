@@ -1,52 +1,22 @@
 import * as React from "react";
-import { cn } from "../utils/cn";
-import { Label } from "./label";
 
-export type InputProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-	label?: string;
-	required?: boolean;
-	disabled?: boolean;
-	tooltip?: React.ReactNode;
-	helperText?: React.ReactNode;
-};
+import { cn } from "@serea/ui/cn";
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, InputProps>(
-	(
-		{
-			className,
-			disabled = false,
-			label,
-			required,
-			tooltip,
-			helperText,
-			...props
-		},
-		ref,
-	) => {
-		return (
-			<div className={cn("flex flex-col", label ? "gap-2" : "gap-0")}>
-				{label && (
-					<Label tooltip={tooltip} required={required} disabled={disabled}>
-						{label}
-					</Label>
-				)}
-				{!label && required && <span className="text-red-500">*</span>}
-				<textarea
-					disabled={disabled}
-					className={cn(
-						"flex h-16 w-full rounded-lg border-0 dark:border font-medium bg-input shadow-overlay dark:shadow-sm-dark px-3 py-1 text-sm transition-colors placeholder:text-secondary-foreground/50 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-						className,
-					)}
-					ref={ref}
-					{...props}
-				/>
-				{helperText && (
-					<div className="text-xs text-secondary-foreground">{helperText}</div>
-				)}
-			</div>
-		);
-	},
-);
+const Textarea = React.forwardRef<
+	HTMLTextAreaElement,
+	React.ComponentProps<"textarea">
+>(({ className, ...props }, ref) => {
+	return (
+		<textarea
+			className={cn(
+				"flex min-h-[60px] w-full rounded-md border border-stone-200/60 bg-background px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stone-200 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+				className,
+			)}
+			ref={ref}
+			{...props}
+		/>
+	);
+});
 Textarea.displayName = "Textarea";
 
 export { Textarea };

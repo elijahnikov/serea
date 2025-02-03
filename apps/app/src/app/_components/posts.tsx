@@ -35,29 +35,28 @@ export function CreatePostForm() {
 	});
 
 	return (
-		// <Form {...form}>
-		// 	<form
-		// 		className="flex w-full max-w-2xl flex-col gap-4"
-		// 		onSubmit={form.handleSubmit((data) => {
-		// 			createPost.mutate({ name: data.name });
-		// 		})}
-		// 	>
-		// 		<FormField
-		// 			control={form.control}
-		// 			name="name"
-		// 			render={({ field }) => (
-		// 				<FormItem>
-		// 					<FormControl>
-		// 						<Input {...field} placeholder="Title" />
-		// 					</FormControl>
-		// 					<FormMessage />
-		// 				</FormItem>
-		// 			)}
-		// 		/>
-		// 		<Button>Create</Button>
-		// 	</form>
-		// </Form>
-		<></>
+		<Form {...form}>
+			<form
+				className="flex w-full max-w-2xl flex-col gap-4"
+				onSubmit={form.handleSubmit((data) => {
+					createPost.mutate({ name: data.name });
+				})}
+			>
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input {...field} placeholder="Title" />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button variant={"secondary"}>Create</Button>
+			</form>
+		</Form>
 	);
 }
 

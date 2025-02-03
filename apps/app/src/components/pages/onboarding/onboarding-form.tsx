@@ -16,7 +16,6 @@ import { Textarea } from "@serea/ui/textarea";
 import { z } from "zod";
 import { UploadButton } from "~/lib/utils/uploadthing";
 
-import { Card } from "@serea/ui/card";
 import { Label } from "@serea/ui/label";
 import { UploadIcon, UserIcon } from "lucide-react";
 import * as React from "react";
