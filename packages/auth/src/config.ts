@@ -1,5 +1,6 @@
 import { skipCSRFCheck } from "@auth/core";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+
 import type {
 	DefaultSession,
 	NextAuthConfig,
@@ -7,8 +8,9 @@ import type {
 } from "next-auth";
 import Discord from "next-auth/providers/discord";
 
-import { db } from "@serea/db";
+import { db } from "@serea/db/client";
 
+import { Account, Session, User } from "@serea/db/schema";
 import { env } from "../env";
 
 declare module "next-auth" {
@@ -20,7 +22,11 @@ declare module "next-auth" {
 	}
 }
 
-const adapter = PrismaAdapter(db);
+const adapter = DrizzleAdapter(db, {
+	usersTable: User,
+	accountsTable: Account,
+	sessionsTable: Session,
+});
 
 export const isSecureContext = env.NODE_ENV !== "development";
 
@@ -40,10 +46,8 @@ export const authConfig = {
 			if (!("user" in opts))
 				throw new Error("unreachable with session strategy");
 
-			const userDetails = await db.user.findFirst({
-				where: {
-					id: opts.user.id,
-				},
+			const userDetails = await db.query.User.findFirst({
+				where: (table, { eq }) => eq(table.id, opts.user.id),
 			});
 
 			return {

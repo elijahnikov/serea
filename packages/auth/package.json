@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@auth/core": "0.37.2",
-    "@auth/prisma-adapter": "^2.7.4",
     "@serea/db": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.1",
     "next": "^14.2.15",

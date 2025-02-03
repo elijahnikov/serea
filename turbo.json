@@ -6,15 +6,15 @@
       "dependsOn": ["^topo"]
     },
     "build": {
-      "dependsOn": ["^build", "^generate"],
+      "dependsOn": ["^build"],
       "outputs": [".cache/tsbuildinfo.json", "dist/**"]
     },
     "dev": {
-      "dependsOn": ["^dev", "^generate"],
+      "dependsOn": ["^dev"],
       "cache": false,
       "persistent": false
     },
-		"format": {
+    "format": {
       "dependsOn": ["^topo"]
     },
     "lint": {
@@ -28,12 +28,6 @@
       "cache": false
     },
     "//#clean": {
-      "cache": false
-    },
-    "generate": {
-      "cache": false
-    },
-    "generate-schema": {
       "cache": false
     },
     "push": {

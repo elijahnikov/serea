@@ -9,14 +9,14 @@ export const onboard = async (
 	if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
 	const userId = ctx.session.user.id;
 
-	const user = await ctx.db.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			name: input.name,
-			image: input.image,
-		},
-	});
-	return user;
+	// const user = await ctx.db.query.User.update({
+	// 	where: {
+	// 		id: userId,
+	// 	},
+	// 	data: {
+	// 		name: input.name,
+	// 		image: input.image,
+	// 	},
+	// });
+	// return user;
 };

@@ -12,7 +12,8 @@ import { ZodError } from "zod";
 
 import type { Session } from "@serea/auth";
 import { auth, validateToken } from "@serea/auth";
-import { db } from "@serea/db";
+// import { db } from "@serea/db";
+import { db } from "@serea/db/client";
 
 /**
  * Isomorphic Session getter for API requests
