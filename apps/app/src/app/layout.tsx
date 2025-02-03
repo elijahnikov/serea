@@ -11,6 +11,10 @@ import localFont from "next/font/local";
 import { cn } from "@serea/ui/cn";
 import { env } from "~/env";
 
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { utFileRouter } from "~/app/api/uploadthing/core";
+
 export const metadata: Metadata = {
 	metadataBase: new URL(
 		env.VERCEL_ENV === "production"
@@ -70,9 +74,10 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 				)}
 			>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-					<TRPCReactProvider>{props.children}</TRPCReactProvider>
-
-					{/* <Toaster /> */}
+					<TRPCReactProvider>
+						<NextSSRPlugin routerConfig={extractRouterConfig(utFileRouter)} />
+						{props.children}
+					</TRPCReactProvider>
 				</ThemeProvider>
 			</body>
 		</html>

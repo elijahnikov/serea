@@ -51,9 +51,6 @@ export default async function OnboardingComponent() {
 					<OnboardingForm user={user} />
 				</Card>
 			</div>
-			<div className="w-full h-full hidden xl:block">
-				<MovieHeader />
-			</div>
 		</div>
 	);
 }

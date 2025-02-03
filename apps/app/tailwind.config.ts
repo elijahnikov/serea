@@ -1,8 +1,9 @@
 import type { Config } from "tailwindcss";
+import { withUt } from "uploadthing/tw";
 
 import baseConfig from "@serea/tailwind-config/web";
 
-export default {
+export default withUt({
 	content: [
 		...baseConfig.content,
 		"./src/**/*.{ts,tsx}",
@@ -10,4 +11,4 @@ export default {
 	],
 	presets: [baseConfig],
 	plugins: [],
-} satisfies Config;
+}) satisfies Config;
