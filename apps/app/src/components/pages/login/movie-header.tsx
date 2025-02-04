@@ -65,13 +65,13 @@ export const MoviePosterSkeleton = () => {
 	const LoadingCard = () => (
 		<div className="w-[200px]">
 			<AspectRatio ratio={2 / 3}>
-				<div className="h-full rounded-md w-full border bg-carbon-dark-500" />
+				<div className="h-full rounded-md w-full border bg-carbon-300 dark:bg-carbon-dark-500" />
 			</AspectRatio>
 		</div>
 	);
 
 	return (
-		<div className="rounded-lg justify-center relative opacity-90 flex h-full px-4 bg-carbon-dark-100 border">
+		<div className="rounded-lg justify-center relative opacity-90 flex h-full px-4 bg-carbon-100 dark:bg-carbon-dark-100 border">
 			<Marquee vertical className="max-h-[96vh] py-1 [--duration:60s]">
 				{Array.from({ length: 6 }).map((_, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

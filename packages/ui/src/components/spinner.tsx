@@ -25,7 +25,7 @@ const Spinner = React.forwardRef<
 	<div role="status" className={cn(className)} {...props} ref={ref}>
 		<svg
 			className={cn(
-				"animate-spin text-transparent dark:fill-white fill-black",
+				"animate-spin text-transparent fill-black",
 				spinnerVariants({ size }),
 			)}
 			viewBox="0 0 100 101"

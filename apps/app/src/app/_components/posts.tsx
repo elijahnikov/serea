@@ -80,47 +80,39 @@ export function PostList() {
 	return (
 		<div className="flex w-full flex-col gap-4">
 			{posts.map((p) => {
-				return <p key={p.id}>{p.name}</p>;
+				return <PostCard key={p.id} post={p} />;
 			})}
 		</div>
 	);
 }
 
-// export function PostCard(props: {
-//   post: RouterOutputs["post"]["all"][number];
-// }) {
-//   const utils = api.useUtils();
-//   const deletePost = api.post.delete.useMutation({
-//     onSuccess: async () => {
-//       await utils.post.invalidate();
-//     },
-//     onError: (err) => {
-//       toast.error(
-//         err.data?.code === "UNAUTHORIZED"
-//           ? "You must be logged in to delete a post"
-//           : "Failed to delete post",
-//       );
-//     },
-//   });
+export function PostCard(props: {
+	post: RouterOutputs["post"]["all"][number];
+}) {
+	const utils = api.useUtils();
+	const deletePost = api.post.delete.useMutation({
+		onSuccess: async () => {
+			await utils.post.invalidate();
+		},
+	});
 
-//   return (
-//     <div className="flex flex-row rounded-lg bg-muted p-4">
-//       <div className="flex-grow">
-//         <h2 className="text-2xl font-bold text-primary">{props.post.title}</h2>
-//         <p className="mt-2 text-sm">{props.post.content}</p>
-//       </div>
-//       <div>
-//         <Button
-//           variant="ghost"
-//           className="cursor-pointer text-sm font-bold uppercase text-primary hover:bg-transparent hover:text-white"
-//           onClick={() => deletePost.mutate(props.post.id)}
-//         >
-//           Delete
-//         </Button>
-//       </div>
-//     </div>
-//   );
-// }
+	return (
+		<div className="flex flex-row rounded-lg bg-muted p-4">
+			<div className="flex-grow">
+				<h2 className="text-2xl font-bold text-primary">{props.post.title}</h2>
+			</div>
+			<div>
+				<Button
+					variant="ghost"
+					className="cursor-pointer text-sm font-bold uppercase text-primary hover:bg-transparent hover:text-white"
+					onClick={() => deletePost.mutate(props.post.id)}
+				>
+					Delete
+				</Button>
+			</div>
+		</div>
+	);
+}
 
 export function PostCardSkeleton(props: { pulse?: boolean }) {
 	const { pulse = true } = props;

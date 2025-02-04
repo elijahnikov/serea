@@ -28,7 +28,7 @@ export default async function OnboardingComponent() {
 						serea
 					</p>
 				</div>
-				<Card className="h-[70%] p-4 sm:min-w-[500px] md:w-1/2 md:max-w-[500px] w-full justify-center relative flex px-4 flex-col">
+				<Card className="min-h-[70%] h-max p-4 sm:min-w-[500px] md:w-1/2 md:max-w-[500px] w-full justify-center relative flex px-4 flex-col">
 					<div className="flex items-center justify-between">
 						<div className="flex flex-col">
 							<h1 className="font-medium text-lg">Onboarding</h1>

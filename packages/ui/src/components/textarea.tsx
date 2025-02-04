@@ -46,7 +46,9 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, InputProps>(
 					{...props}
 				/>
 				{helperText && (
-					<span className="text-xs text-muted-foreground">{helperText}</span>
+					<span className="-mt-1 ml-1 font-medium text-xs text-muted-foreground">
+						{helperText}
+					</span>
 				)}
 			</div>
 		);

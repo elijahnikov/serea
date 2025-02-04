@@ -8,4 +8,8 @@ export const userRouter = {
 	onboard: protectedProcedure
 		.input(inputs.onboardInput)
 		.mutation(({ ctx, input }) => services.onboard(ctx, input)),
+
+	checkUsername: protectedProcedure
+		.input(inputs.checkUsernameInput)
+		.query(({ ctx, input }) => services.checkUsername(ctx, input)),
 } satisfies TRPCRouterRecord;

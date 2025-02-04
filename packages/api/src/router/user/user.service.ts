@@ -1,6 +1,8 @@
+import { eq } from "@serea/db";
+import { User } from "@serea/db/schema";
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
-import type { OnboardInput } from "./user.input";
+import type { CheckUsernameInput, OnboardInput } from "./user.input";
 
 export const onboard = async (
 	ctx: ProtectedTRPCContext,
@@ -9,14 +11,34 @@ export const onboard = async (
 	if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
 	const userId = ctx.session.user.id;
 
-	// const user = await ctx.db.query.User.update({
-	// 	where: {
-	// 		id: userId,
-	// 	},
-	// 	data: {
-	// 		name: input.name,
-	// 		image: input.image,
-	// 	},
-	// });
-	// return user;
+	await ctx.db
+		.update(User)
+		.set({
+			...input,
+			name: input.name,
+			image: input.image,
+			biography: input.bio,
+			onboarded: true,
+		})
+		.where(eq(User.id, userId));
+
+	return {
+		success: true,
+	};
+};
+
+export const checkUsername = async (
+	ctx: ProtectedTRPCContext,
+	input: CheckUsernameInput,
+) => {
+	const usernameExists = await ctx.db.query.User.findFirst({
+		where: eq(User.name, input.username),
+		columns: {
+			name: true,
+		},
+	});
+
+	return {
+		exists: !!usernameExists,
+	};
 };
