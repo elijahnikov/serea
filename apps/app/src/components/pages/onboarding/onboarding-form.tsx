@@ -21,6 +21,7 @@ import { UploadButton, useUploadThing } from "~/lib/utils/uploadthing";
 import { cn } from "@serea/ui/cn";
 import { Label } from "@serea/ui/label";
 import {
+	ArrowRightIcon,
 	CircleIcon,
 	GlobeIcon,
 	PersonStanding,
@@ -196,7 +197,15 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 											helperText={
 												<span className="flex items-center text-muted-foreground font-medium">
 													app.serea.co/
-													<p className="text-black">{usernameWatch}</p>
+													<p
+														className={cn(
+															!checkUsername.data?.exists
+																? "text-green-600"
+																: "text-black",
+														)}
+													>
+														{usernameWatch}
+													</p>
 												</span>
 											}
 										/>
@@ -338,6 +347,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 						</div>
 					</div>
 					<LoadingButton
+						after={<ArrowRightIcon />}
 						className="mt-auto self-end w-full"
 						loading={onboard.isPending}
 					>
