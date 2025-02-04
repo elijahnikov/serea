@@ -19,6 +19,7 @@ export const onboard = async (
 			image: input.image,
 			biography: input.bio,
 			onboarded: true,
+			genres: input.genres,
 		})
 		.where(eq(User.id, userId));
 

@@ -23,6 +23,11 @@ export default {
 				sm: "calc(var(--radius) - 4px)",
 			},
 			keyframes: {
+				"bounce-in": {
+					"0%": { transform: "scale(0)" },
+					"50%": { transform: "scale(1.2)" },
+					"100%": { transform: "scale(1)" },
+				},
 				"caret-blink": {
 					"0%,70%,100%": { opacity: "1" },
 					"20%,50%": { opacity: "0" },
@@ -45,6 +50,7 @@ export default {
 				},
 			},
 			animation: {
+				"bounce-in": "bounce-in 0.5s ease-out",
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				marquee: "marquee var(--duration) linear infinite",

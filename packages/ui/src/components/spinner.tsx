@@ -4,6 +4,10 @@ import * as React from "react";
 
 const spinnerVariants = cva("", {
 	variants: {
+		color: {
+			white: "fill-white",
+			black: "fill-black",
+		},
 		size: {
 			sm: "h-4 w-4",
 			md: "h-6 w-6",
@@ -14,19 +18,20 @@ const spinnerVariants = cva("", {
 	},
 	defaultVariants: {
 		size: "md",
+		color: "white",
 	},
 });
 
 const Spinner = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof spinnerVariants>
->(({ className, size, ...props }, ref) => (
+>(({ className, size, color, ...props }, ref) => (
 	// biome-ignore lint/a11y/useSemanticElements: <explanation>
 	<div role="status" className={cn(className)} {...props} ref={ref}>
 		<svg
 			className={cn(
-				"animate-spin text-transparent fill-black",
-				spinnerVariants({ size }),
+				"animate-spin text-transparent",
+				spinnerVariants({ size, color }),
 			)}
 			viewBox="0 0 100 101"
 			fill="none"

@@ -8,6 +8,7 @@ export const onboardInput = z.object({
 	instagram: z.string().optional(),
 	tiktok: z.string().optional(),
 	twitter: z.string().optional(),
+	genres: z.array(z.string()),
 });
 export type OnboardInput = z.infer<typeof onboardInput>;
 

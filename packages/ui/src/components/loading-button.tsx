@@ -17,6 +17,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 	(
 		{
 			loading = false,
+			variant = "default",
 			className,
 			spinnerSize,
 			children,
@@ -29,8 +30,9 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 		return (
 			<Button
 				ref={ref}
-				before={before}
-				after={after}
+				variant={variant}
+				before={before && !loading ? before : undefined}
+				after={after && !loading ? after : undefined}
 				{...props}
 				disabled={props.disabled ? props.disabled : loading}
 				className={cn(className, "relative")}
@@ -38,7 +40,10 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 				<span className={cn(loading ? "opacity-0" : "")}>{children}</span>
 				{loading ? (
 					<div className="absolute inset-0 text-current grid place-items-center">
-						<Spinner size={spinnerSize} />
+						<Spinner
+							color={variant === "default" ? "white" : "black"}
+							size={spinnerSize}
+						/>
 					</div>
 				) : null}
 			</Button>

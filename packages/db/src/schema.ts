@@ -33,6 +33,7 @@ export const User = pgTable("user", (t) => ({
 	instagram: t.varchar({ length: 255 }),
 	tiktok: t.varchar({ length: 255 }),
 	twitter: t.varchar({ length: 255 }),
+	genres: t.text().array(),
 }));
 
 export const UserRelations = relations(User, ({ many }) => ({

@@ -91,3 +91,25 @@ export const SOCIAL_LOGIN_ICONS = {
 		</svg>
 	),
 };
+
+export const genres = [
+	"Action",
+	"Adventure",
+	"Animation",
+	"Biography",
+	"Comedy",
+	"Crime",
+	"Documentary",
+	"Drama",
+	"Family",
+	"Fantasy",
+	"Film-Noir",
+	"History",
+	"Horror",
+	"Mystery",
+	"Romance",
+	"Sci-Fi",
+	"Thriller",
+	"War",
+	"Western",
+];
