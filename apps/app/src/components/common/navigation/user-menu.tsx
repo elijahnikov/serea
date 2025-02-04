@@ -1,14 +1,22 @@
 import { Button } from "@serea/ui/button";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@serea/ui/avatar";
-import { cn } from "@serea/ui/cn";
+
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
+import {
+	LogOutIcon,
+	MenuIcon,
+	SettingsIcon,
+	UserCircleIcon,
+} from "lucide-react";
 
 export default function UserMenu({
 	user,
@@ -16,6 +24,7 @@ export default function UserMenu({
 	user: {
 		name: string;
 		image: string;
+		email: string;
 	};
 }) {
 	return (
@@ -40,7 +49,34 @@ export default function UserMenu({
 					<span className="w-full">{user.name}</span>
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent>1</DropdownMenuContent>
+			<DropdownMenuContent className="relative left-4 min-w-[240px]">
+				<DropdownMenuLabel className="flex gap-2 items-center">
+					<div className="flex px-3 flex-col gap-0">
+						<span className="text-sm font-medium">{user.name}</span>
+						<span className="text-xs font-normal text-muted-foreground">
+							{user.email}
+						</span>
+					</div>
+				</DropdownMenuLabel>
+				<DropdownMenuSeparator />
+				<DropdownMenuGroup>
+					<DropdownMenuItem>
+						<UserCircleIcon />
+						<span>Profile</span>
+					</DropdownMenuItem>
+					<DropdownMenuItem>
+						<SettingsIcon />
+						<span>Settings</span>
+					</DropdownMenuItem>
+				</DropdownMenuGroup>
+				<DropdownMenuSeparator />
+				<DropdownMenuGroup>
+					<DropdownMenuItem className="text-red-500 hover:text-red-600">
+						<LogOutIcon />
+						<span>Logout</span>
+					</DropdownMenuItem>
+				</DropdownMenuGroup>
+			</DropdownMenuContent>
 		</DropdownMenu>
 	);
 }

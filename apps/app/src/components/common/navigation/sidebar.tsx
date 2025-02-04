@@ -43,6 +43,7 @@ export default async function Sidebar() {
 							user={{
 								name: String(user?.user.name),
 								image: user?.user.image ?? "",
+								email: String(user?.user.email),
 							}}
 						/>
 					</div>
