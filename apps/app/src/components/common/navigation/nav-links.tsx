@@ -1,18 +1,8 @@
-import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
-import {
-	CommandIcon,
-	FileTextIcon,
-	FilmIcon,
-	HomeIcon,
-	ListIcon,
-	MenuIcon,
-	StarIcon,
-	VideoIcon,
-	ZapIcon,
-} from "lucide-react";
+import { FileTextIcon, HomeIcon, ListIcon, VideoIcon } from "lucide-react";
 import Link from "next/link";
+import QuickActions from "./quick-actions";
 
 const links = [
 	{
@@ -67,23 +57,7 @@ export default function NavLinks() {
 					</Button>
 				);
 			})}
-			<Button
-				className="group"
-				before={
-					<ZapIcon className="group-hover:rotate-180 transition-all duration-200" />
-				}
-				after={
-					<Badge
-						color="blue"
-						className="min-w-max text-xs [&_svg]:size-2.5 px-2 py-2 h-5"
-						before={<CommandIcon />}
-					>
-						K
-					</Badge>
-				}
-			>
-				Quick actions
-			</Button>
+			<QuickActions />
 		</div>
 	);
 }

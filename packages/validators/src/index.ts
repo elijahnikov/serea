@@ -24,3 +24,24 @@ export const trendingMoviesSchema = z.object({
 	total_pages: z.number(),
 	total_results: z.number(),
 });
+
+export const movieTableData = z.object({
+	contentId: z.number(),
+	title: z.string(),
+	overview: z.string().optional(),
+	poster: z.string().nullable(),
+	backdrop: z.string().nullable(),
+	releaseDate: z.string(),
+	order: z.number(),
+});
+export type MovieTableData = z.infer<typeof movieTableData>;
+
+export const createWatchlistSchema = z.object({
+	title: z.string().min(1, { message: "Title is required" }),
+	description: z.string().optional(),
+	tags: z.array(z.string()),
+	entries: z.array(movieTableData),
+	private: z.boolean().default(false),
+	hideStats: z.boolean().default(false),
+});
+export type CreateWatchlistSchema = z.infer<typeof createWatchlistSchema>;

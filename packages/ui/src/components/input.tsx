@@ -40,18 +40,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				)}
 				{!label && required && <span className="text-red-500">*</span>}
 				<div
-					className="flex h-9 w-full rounded-md border border-stone-200/60 bg-background px-3 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stone-200 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+					className="flex h-9 w-full rounded-md border border-stone-200/60 bg-stone-100 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stone-200 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 					aria-disabled={disabled}
 				>
 					{prefix && (
-						<div className="pr-2 text-muted-foreground w-max whitespace-nowrap flex items-center justify-center border-r border-stone-200/60 -my-1">
+						<div className="pr-2 rounded-l-md pl-3 text-muted-foreground w-max whitespace-nowrap bg-white flex items-center justify-center border-r border-stone-200/60 -my-1">
 							{prefix}
 						</div>
 					)}
 					<input
 						type={type}
 						className={cn(
-							"focus-visible:outline-none bg-transparent w-full disabled:cursor-not-allowed focus-visible:ring-0 focus-visible:ring-ring placeholder:text-muted-foreground",
+							"focus-visible:outline-none px-3 bg-transparent w-full disabled:cursor-not-allowed focus-visible:ring-0 focus-visible:ring-ring placeholder:text-muted-foreground",
 							prefix && "pl-2",
 							suffix && "pr-2",
 							className,
