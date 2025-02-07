@@ -17,7 +17,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 	(
 		{
 			loading = false,
-			variant = "default",
+			variant = "primary",
 			className,
 			spinnerSize,
 			children,
@@ -41,7 +41,7 @@ const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
 				{loading ? (
 					<div className="absolute inset-0 text-current grid place-items-center">
 						<Spinner
-							color={variant === "default" ? "white" : "black"}
+							color={variant === "primary" ? "white" : "black"}
 							size={spinnerSize}
 						/>
 					</div>

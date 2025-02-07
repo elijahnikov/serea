@@ -62,7 +62,7 @@ export default function QuickActions() {
 				<DialogTrigger asChild>
 					<Button
 						onClick={() => setOpen(true)}
-						className="group shadow-md focus-visible:ring-0 focus:ring-0 focus-visible:outline-none"
+						className="group shadow-md"
 						before={
 							<ZapIcon className="group-hover:rotate-180 transition-all duration-200" />
 						}

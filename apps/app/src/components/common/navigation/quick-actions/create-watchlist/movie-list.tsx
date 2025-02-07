@@ -90,7 +90,7 @@ export default function MovieList({ form }: MovieListProps) {
 	return (
 		<div>
 			<Label className="mb-2">Movies</Label>
-			<div className="bg-transparent border border-dashed border-stone-200 shadow-sm flex flex-col items-center px-4 w-full max-h-[500px] min-h-[500px] rounded-lg">
+			<div className="bg-white border border-dashed border-stone-200 shadow-sm flex flex-col items-center px-4 w-full max-h-[500px] min-h-[500px] rounded-lg">
 				<Popover open={open} onOpenChange={setOpen} modal>
 					<PopoverTrigger asChild>
 						<Button className="mt-4" before={<PlusIcon />}>
@@ -153,7 +153,7 @@ function MovieCard({ movie, index, removeEntry }: MovieCardProps) {
 		<div
 			ref={setNodeRef}
 			style={style}
-			className="flex space-x-2 relative bg-stone-100 p-1 w-full rounded-sm border"
+			className="flex space-x-2 relative bg-carbon-100 p-1 w-full rounded-md border"
 		>
 			<div className="min-h-full flex items-center justify-center ml-1">
 				<div {...attributes} {...listeners}>

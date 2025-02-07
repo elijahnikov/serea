@@ -250,7 +250,6 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 										<FormControl>
 											<Textarea
 												{...field}
-												optional
 												placeholder="Enter your bio"
 												label="Brief Bio"
 												helperText={
@@ -414,7 +413,7 @@ export default function OnboardingForm({ user }: OnboardingFormProps) {
 				{formStep === "recommendations" && (
 					<div className="flex w-full  gap-2 items-center">
 						<Button
-							variant={"secondary"}
+							variant={"outline"}
 							before={<ArrowLeftIcon />}
 							className="mt-auto self-end max-w-[100px]"
 							onClick={() => setFormStep("about")}

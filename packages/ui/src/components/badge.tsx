@@ -13,16 +13,15 @@ export const badgeVariants = cva(
 				lg: "text-lg leading-6 px-3",
 			},
 			color: {
-				primary:
-					"bg-background text-secondary-foreground border border-stone-200/60 dark:border-stone-500",
+				primary: "bg-carbon-200 text-secondary-foreground",
 				green:
-					"dark:bg-green-800 dark:border-green-700 border dark:text-green-200 bg-green-400 border-green-500 text-green-900",
+					"dark:bg-green-800 border-b-[1px] ring-1 ring-inset ring-green-300 dark:border-green-700 dark:text-green-200 bg-green-400 border-green-500 text-green-900",
 				yellow:
 					"dark:bg-yellow-800 dark:border-yellow-700 dark:text-yellow-200 bg-yellow-400 border-yellow-500 text-yellow-900",
 				red: "dark:bg-red-800 dark:border-red-700 dark:text-red-200 bg-red-400 border-red-500 text-red-900",
 				purple:
 					"dark:bg-purple-800 dark:border-purple-700 dark:text-purple-200 bg-purple-400 border-purple-500 text-purple-900",
-				blue: "dark:bg-blue-800 dark:border-blue-700 dark:text-blue-200 bg-blue-400 border border-blue-500 text-blue-900",
+				blue: "dark:bg-blue-800 dark:border-blue-700 dark:text-blue-200 bg-blue-400 border-blue-500 text-blue-900",
 				indigo:
 					"dark:bg-indigo-800 dark:border-indigo-700 dark:text-indigo-200 bg-indigo-400 border-indigo-500 text-indigo-900",
 				orange:
@@ -39,6 +38,7 @@ export const badgeVariants = cva(
 		defaultVariants: {
 			shape: "rounded",
 			size: "md",
+
 			color: "primary",
 		},
 	},
@@ -84,6 +84,7 @@ export const iconVariants = cva("size-4", {
 });
 
 type BaseProps = {
+	stroke?: boolean;
 	before?: React.ReactElement<HTMLElement>;
 	after?: React.ReactElement<HTMLElement>;
 };
@@ -100,6 +101,7 @@ const Badge = React.forwardRef<BadgeElement, BadgeProps>((props, ref) => {
 		children,
 		before,
 		after,
+		stroke = true,
 		size = "sm",
 		color = "primary",
 		shape = "rounded",

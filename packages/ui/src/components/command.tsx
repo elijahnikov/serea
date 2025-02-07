@@ -14,7 +14,7 @@ const Command = React.forwardRef<
 	<CommandPrimitive
 		ref={ref}
 		className={cn(
-			"flex h-full w-full flex-col overflow-hidden rounded-md bg-white text-popover-foreground",
+			"flex h-full w-full flex-col overflow-hidden rounded-xl bg-card text-popover-foreground",
 			className,
 		)}
 		{...props}
@@ -86,7 +86,7 @@ const CommandGroup = React.forwardRef<
 	<CommandPrimitive.Group
 		ref={ref}
 		className={cn(
-			"overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
+			"overflow-hidden py-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
 			className,
 		)}
 		{...props}
@@ -114,7 +114,7 @@ const CommandItem = React.forwardRef<
 	<CommandPrimitive.Item
 		ref={ref}
 		className={cn(
-			"relative flex cursor-default gap-2 select-none font-medium items-center rounded-sm px-2 h-9 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-stone-200 data-[selected=true]:text-accent-foreground text-secondary-foreground/70 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+			"relative flex cursor-default gap-2 select-none font-medium items-center  px-2 h-9 text-sm outline-none data-[disabled=true]:pointer-events-none data-[selected=true]:bg-primary data-[selected=true]:text-carbon-100 dark:[data-selected=true]:text-secondary-foreground text-secondary-foreground/70 data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
 			className,
 		)}
 		{...props}

@@ -120,7 +120,7 @@ export default function CreateWatchlist({
 									<FormItem>
 										<FormLabel description="Optional">Description</FormLabel>
 										<FormControl>
-											<Textarea {...field} />
+											<Textarea className="max-h-[100px]" {...field} />
 										</FormControl>
 										<FormDescription>
 											Give your new watchlist an appropriate description.

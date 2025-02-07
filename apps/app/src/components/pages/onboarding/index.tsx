@@ -22,7 +22,7 @@ export default async function OnboardingComponent() {
 					</div>
 					<form>
 						<Button
-							variant="secondary"
+							variant="outline"
 							formAction={async () => {
 								"use server";
 								await signOut();

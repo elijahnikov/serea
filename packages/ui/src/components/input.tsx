@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { cn } from "@serea/ui/cn";
+import * as React from "react";
 import { Label } from "./label";
 
 export type InputProps = Omit<
@@ -15,6 +14,7 @@ export type InputProps = Omit<
 	suffix?: React.ReactNode;
 	helperText?: React.ReactNode;
 };
+
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
 	(
 		{
@@ -24,15 +24,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 			label,
 			required,
 			tooltip,
-			helperText,
 			prefix,
 			suffix,
+			helperText,
 			...props
 		},
 		ref,
 	) => {
 		return (
-			<div className={cn("flex w-full flex-col", label ? "gap-2" : "gap-0")}>
+			<div className={cn("flex flex-col", label ? "gap-2" : "gap-0")}>
 				{label && (
 					<Label tooltip={tooltip} required={required} disabled={disabled}>
 						{label}
@@ -40,18 +40,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				)}
 				{!label && required && <span className="text-red-500">*</span>}
 				<div
-					className="flex h-9 w-full rounded-md border border-stone-200/60 bg-stone-100 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-within:ring-1 focus-within:ring-stone-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 					aria-disabled={disabled}
+					className="flex h-9 w-full rounded-lg border-0 dark:border aria-disabled:cursor-not-allowed font-medium bg-input shadow-overlay dark:shadow-sm-dark aria-disabled:opacity-50 px-3 py-1 text-sm transition-colors placeholder:text-secondary-foreground/50 "
 				>
 					{prefix && (
-						<div className="pr-2 rounded-l-md pl-3 text-muted-foreground w-max whitespace-nowrap bg-white flex items-center justify-center border-r border-stone-200/60 -my-1">
+						<div className="pr-2 dark:text-carbon-900 text-secondary-foreground/75 w-max whitespace-nowrap flex items-center justify-center border-r -my-1">
 							{prefix}
 						</div>
 					)}
 					<input
 						type={type}
+						disabled={disabled}
 						className={cn(
-							"focus-visible:outline-none px-3 bg-transparent w-full disabled:cursor-not-allowed focus-visible:ring-0 focus-visible:ring-ring placeholder:text-muted-foreground",
+							"focus-visible:outline-none bg-transparent w-full disabled:cursor-not-allowed focus-visible:ring-0 focus-visible:ring-ring placeholder:text-secondary-foreground/50",
 							prefix && "pl-2",
 							suffix && "pr-2",
 							className,
@@ -60,15 +61,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 						{...props}
 					/>
 					{suffix && (
-						<div className="pl-3 text-muted-foreground w-max whitespace-nowrap flex items-center justify-center border-l border-stone-200/60 -my-1">
+						<div className="pl-3 dark:text-carbon-900 text-secondary-foreground/75 w-max whitespace-nowrap flex items-center justify-center border-l -my-1">
 							{suffix}
 						</div>
 					)}
 				</div>
 				{helperText && (
-					<span className="-mt-1 ml-1 text-xs text-muted-foreground">
-						{helperText}
-					</span>
+					<div className="text-xs text-secondary-foreground">{helperText}</div>
 				)}
 			</div>
 		);

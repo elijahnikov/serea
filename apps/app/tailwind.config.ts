@@ -16,6 +16,7 @@ export default withUt({
 			serif: ["Instrument Serif", ...fontFamily.serif],
 			mono: ["JetBrains Mono", ...fontFamily.mono],
 		},
+		...baseConfig.theme,
 	},
 	plugins: [],
 }) satisfies Config;

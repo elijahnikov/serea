@@ -34,8 +34,8 @@ export default function NavLinks() {
 				const Icon = link.icon;
 				return (
 					<Button
-						variant="ghost"
-						className="group hover:bg-stone-200/80 text-secondary-foreground/75 hover:text-black text-sm w-full active:bg-stone-300 text-left justify-start items-center self-start"
+						variant="transparent"
+						className="group  text-sm w-full text-left justify-start items-center self-start"
 						asChild
 						key={link.href}
 						before={
@@ -44,13 +44,13 @@ export default function NavLinks() {
 									index % 2 === 0
 										? "group-hover:rotate-6"
 										: "group-hover:-rotate-6",
-									"group-hover:scale-[1.15]  transition-all duration-200 w-6 h-6",
+									"group-hover:scale-[1.15] transition-all duration-200 w-4 h-4",
 								)}
 							/>
 						}
 					>
 						<Link className="w-full" key={link.href} href={link.href}>
-							<span className="group-hover:translate-x-1 transition-all duration-200">
+							<span className="group-hover:translate-x-1 text-sm ml-1 transition-all duration-200">
 								{link.label}
 							</span>
 						</Link>

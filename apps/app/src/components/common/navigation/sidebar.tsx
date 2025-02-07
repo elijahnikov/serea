@@ -15,7 +15,7 @@ export default async function Sidebar() {
 		<>
 			<Sheet>
 				<SheetTrigger asChild className="lg:hidden fixed left-4 top-4">
-					<Button variant="outline" size="icon">
+					<Button variant="outline" size="xs">
 						<MenuIcon className="h-4 w-4" />
 					</Button>
 				</SheetTrigger>

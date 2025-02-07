@@ -33,7 +33,7 @@ export default function UserMenu({
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button
-						variant="ghost"
+						variant="transparent"
 						className="group hover:bg-stone-200/80 text-secondary-foreground/75 hover:text-black text-sm w-full active:bg-stone-300 text-left justify-start items-center self-start"
 						asChild
 						after={
