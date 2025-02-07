@@ -32,8 +32,6 @@ import * as React from "react";
 import { useMeasure } from "react-use";
 import CreateWatchlist from "./create-watchlist";
 
-const MotionDialogContent = motion(DialogContent);
-
 export default function QuickActions() {
 	const [open, setOpen] = React.useState(false);
 	const [view, setView] = React.useState<"commands" | "watchlist">("commands");
@@ -81,6 +79,12 @@ export default function QuickActions() {
 					</Button>
 				</DialogTrigger>
 				<DialogContent
+					onEscapeKeyDown={(e) => {
+						if (view !== "commands") {
+							e.preventDefault();
+							setView("commands");
+						}
+					}}
 					showClose={false}
 					className="overflow-hidden p-0 focus-visible:ring-0 focus:ring-0 focus-visible:outline-none min-w-max"
 				>
@@ -88,7 +92,7 @@ export default function QuickActions() {
 						{view === "commands" && (
 							<Command className="border-0">
 								<div className="relative">
-									<CommandInput placeholder="Type a command or search..." />
+									<CommandInput placeholder="Search for commands, movies, watchlists and users..." />
 									<kbd className="absolute top-2.5 right-4 -me-1 ms-12 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
 										ESC
 									</kbd>
@@ -152,9 +156,9 @@ const AnimatedDialogContent = ({
 			<AnimatePresence mode="wait" initial={false}>
 				<motion.div
 					key={view}
-					initial={{ opacity: 0, y: view !== "commands" ? 10 : -10 }}
-					animate={{ opacity: 1, y: 0 }}
-					exit={{ opacity: 0, y: view !== "commands" ? -10 : 10 }}
+					initial={{ opacity: 0, y: view !== "commands" ? 10 : -10, x: 0 }}
+					animate={{ opacity: 1, y: 0, x: 0 }}
+					exit={{ opacity: 0, y: view !== "commands" ? -10 : 10, x: 0 }}
 					transition={{ duration: 0.1 }}
 					ref={ref}
 				>

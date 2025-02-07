@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
@@ -9,26 +10,28 @@ import {
 	FormItem,
 	FormLabel,
 	FormMessage,
-	useForm,
 } from "@serea/ui/form";
 import { Input } from "@serea/ui/input";
 import { Label } from "@serea/ui/label";
 import { LoadingButton } from "@serea/ui/loading-button";
 import { Switch } from "@serea/ui/switch";
 import { Textarea } from "@serea/ui/textarea";
-import { createWatchlistSchema } from "@serea/validators";
+import {
+	type CreateWatchlistSchema,
+	createWatchlistSchema,
+} from "@serea/validators";
 import { ArrowLeftIcon, CheckIcon, X } from "lucide-react";
-import type * as React from "react";
-import { Controller } from "react-hook-form";
+import * as React from "react";
+import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
-
+import MovieList from "./movie-list";
 export default function CreateWatchlist({
 	goBack,
 }: {
 	goBack: () => void;
 }) {
-	const form = useForm({
-		schema: createWatchlistSchema,
+	const form = useForm<CreateWatchlistSchema>({
+		resolver: zodResolver(createWatchlistSchema),
 		defaultValues: {
 			title: "",
 			description: "",
@@ -72,6 +75,12 @@ export default function CreateWatchlist({
 		console.log(data);
 	};
 
+	React.useEffect(() => {
+		if (isPrivate) {
+			form.setValue("hideStats", false);
+		}
+	}, [isPrivate, form]);
+
 	return (
 		<div className="p-4 flex flex-col mb-4 sm:mb-0 justify-between gap-0 md:gap-4">
 			<div className="flex flex-col">
@@ -84,127 +93,132 @@ export default function CreateWatchlist({
 			</div>
 			<div>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<FormField
-							control={form.control}
-							name="title"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel description="Required" required>
-										Title
-									</FormLabel>
-									<FormControl>
-										<Input
-											placeholder="Enter a title for your watchlist"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel description="Optional">Description</FormLabel>
-									<FormControl>
-										<Textarea {...field} />
-									</FormControl>
-									<FormDescription>
-										Give your new watchlist an appropriate description.
-									</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="tags"
-							render={() => (
-								<div>
+					<form className="flex gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+						<div className="flex flex-col gap-4 max-w-md">
+							<FormField
+								control={form.control}
+								name="title"
+								render={({ field }) => (
 									<FormItem>
-										<FormLabel description="Optional">Tags</FormLabel>
-										<Input onKeyDown={handleTagInput} />
-										<div className="mt-2 flex flex-wrap gap-2">
-											{form.watch("tags").map((tag, index) => (
-												<Badge
-													key={`${tag}_${
-														// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-														index
-													}`}
-													className="cursor-pointer"
-													onClick={() => {
-														const currentTags = form.getValues("tags");
-														form.setValue(
-															"tags",
-															currentTags.filter((_, i) => i !== index),
-														);
-													}}
-												>
-													<div className="flex items-center gap-1">
-														<p>{tag}</p>
-														<X size={14} className="text-neutral-500" />
-													</div>
-												</Badge>
-											))}
-										</div>
+										<FormLabel description="Required" required>
+											Title
+										</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="Enter a title for your watchlist"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="description"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel description="Optional">Description</FormLabel>
+										<FormControl>
+											<Textarea {...field} />
+										</FormControl>
 										<FormDescription>
-											Press enter to add a new tag. Max 10 tags.
+											Give your new watchlist an appropriate description.
 										</FormDescription>
 										<FormMessage />
 									</FormItem>
-								</div>
-							)}
-						/>
-						<Controller
-							control={form.control}
-							name="private"
-							render={({ field: { onChange, ref, value, ...rest } }) => (
-								<div className="flex items-center gap-2">
-									<Switch
-										{...rest}
-										ref={ref}
-										id="make-list-private"
-										checked={value}
-										onCheckedChange={onChange}
-									/>
-									<Label
-										htmlFor="make-list-private"
-										description="When public, anyone with the link can view your list. When private, only you and other members	 have access."
-									>
-										Make list private?
-									</Label>
-								</div>
-							)}
-						/>
-						<Controller
-							control={form.control}
-							name="hideStats"
-							render={({ field: { onChange, ref, value, ...rest } }) => (
-								<div className="flex items-center gap-2">
-									<Switch
-										{...rest}
-										id="hide-progress"
-										ref={ref}
-										checked={value}
-										onCheckedChange={onChange}
-										disabled={isPrivate}
-										className={cn(isPrivate ? "cursor-not-allowed" : "")}
-									/>
-									<Label
-										htmlFor="hide-progress"
-										description="You can choose to hide progress stats from other users that are not part of your watchlist."
-									>
-										Hide progress?
-									</Label>
-								</div>
-							)}
-						/>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="tags"
+								render={() => (
+									<div>
+										<FormItem>
+											<FormLabel description="Optional">Tags</FormLabel>
+											<Input onKeyDown={handleTagInput} />
+											<div className="mt-2 flex flex-wrap gap-2">
+												{form.watch("tags").map((tag, index) => (
+													<Badge
+														key={`${tag}_${
+															// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+															index
+														}`}
+														className="cursor-pointer"
+														onClick={() => {
+															const currentTags = form.getValues("tags");
+															form.setValue(
+																"tags",
+																currentTags.filter((_, i) => i !== index),
+															);
+														}}
+													>
+														<div className="flex items-center gap-1">
+															<p>{tag}</p>
+															<X size={14} className="text-neutral-500" />
+														</div>
+													</Badge>
+												))}
+											</div>
+											<FormDescription>
+												Press enter to add a new tag. Max 10 tags.
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									</div>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="private"
+								render={({ field: { onChange, ref, value, ...rest } }) => (
+									<div className="flex items-center gap-2">
+										<Switch
+											{...rest}
+											ref={ref}
+											id="make-list-private"
+											checked={value}
+											onCheckedChange={onChange}
+										/>
+										<Label
+											htmlFor="make-list-private"
+											description="When public, anyone with the link can view your list. When private, only you and other members	 have access."
+										>
+											Make list private?
+										</Label>
+									</div>
+								)}
+							/>
+							<Controller
+								control={form.control}
+								name="hideStats"
+								render={({ field: { onChange, ref, value, ...rest } }) => (
+									<div className="flex items-center gap-2">
+										<Switch
+											{...rest}
+											id="hide-progress"
+											ref={ref}
+											checked={value}
+											onCheckedChange={onChange}
+											disabled={isPrivate}
+											className={cn(isPrivate ? "cursor-not-allowed" : "")}
+										/>
+										<Label
+											htmlFor="hide-progress"
+											description="You can choose to hide progress stats from other users that are not part of your watchlist."
+										>
+											Hide progress?
+										</Label>
+									</div>
+								)}
+							/>
+						</div>
+						<div>
+							<MovieList form={form} />
+						</div>
 					</form>
 				</Form>
-				<div className="flex w-full  gap-2 items-center">
+				<div className="flex w-full mt-4 gap-2 items-center">
 					<Button
 						variant={"secondary"}
 						before={<ArrowLeftIcon />}

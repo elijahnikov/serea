@@ -39,7 +39,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, InputProps>(
 				{!label && required && <span className="text-red-500">*</span>}
 				<textarea
 					className={cn(
-						"flex min-h-[60px] w-full rounded-md border border-stone-200/60 bg-stone-100 px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-stone-200 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+						"flex min-h-[60px] w-full rounded-md border border-stone-200/60 bg-stone-100 px-3 py-2 text-base placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-stone-300 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
 						className,
 					)}
 					ref={ref}
