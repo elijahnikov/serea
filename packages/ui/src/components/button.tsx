@@ -1,9 +1,10 @@
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@serea/ui/cn";
+
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { cn } from "../utils";
 
 const buttonVariants = cva(
 	"select-none cursor-default font-medium animate transition-colors  disabled:pointer-events-none disabled:opacity-50 duration-100 inline-flex items-center justify-center whitespace-nowrap",

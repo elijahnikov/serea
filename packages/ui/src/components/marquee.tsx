@@ -1,4 +1,4 @@
-import { cn } from "@serea/ui/cn";
+import { cn } from "../utils";
 
 interface MarqueeProps {
 	className?: string;

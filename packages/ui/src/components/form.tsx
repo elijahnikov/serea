@@ -18,7 +18,7 @@ import {
 } from "react-hook-form";
 import type { ZodType, ZodTypeDef } from "zod";
 
-import { cn } from "@serea/ui/cn";
+import { cn } from "../utils";
 
 import { Label } from "./label";
 

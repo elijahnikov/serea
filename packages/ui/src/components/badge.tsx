@@ -1,7 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@serea/ui/cn";
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
+import { cn } from "../utils";
 
 export const badgeVariants = cva(
 	"inline-flex whitespace-nowrap items-center justify-center rounded-md font-medium px-2 py-1.5 antialiased",
@@ -13,7 +13,7 @@ export const badgeVariants = cva(
 				lg: "text-lg leading-6 px-3",
 			},
 			color: {
-				primary: "bg-carbon-200 text-secondary-foreground",
+				primary: "bg-carbon-200 border text-secondary-foreground",
 				green:
 					"dark:bg-green-800 border-b-[1px] ring-1 ring-inset ring-green-300 dark:border-green-700 dark:text-green-200 bg-green-400 border-green-500 text-green-900",
 				yellow:
@@ -38,7 +38,6 @@ export const badgeVariants = cva(
 		defaultVariants: {
 			shape: "rounded",
 			size: "md",
-
 			color: "primary",
 		},
 	},

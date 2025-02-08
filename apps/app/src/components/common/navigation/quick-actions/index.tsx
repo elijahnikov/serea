@@ -4,30 +4,31 @@ import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import {
 	Command,
-	CommandDialog,
 	CommandEmpty,
 	CommandGroup,
 	CommandInput,
 	CommandItem,
 	CommandList,
 	CommandSeparator,
-	CommandShortcut,
 } from "@serea/ui/command";
-import { Dialog, DialogContent, DialogTrigger } from "@serea/ui/dialog";
 import {
-	Calculator,
-	Calendar,
-	CommandIcon,
-	CreditCard,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@serea/ui/dialog";
+import _ from "lodash";
+import {
 	FileTextIcon,
 	ListIcon,
-	SearchIcon,
-	Settings,
-	Smile,
-	User,
+	SettingsIcon,
+	UserIcon,
+	VideoIcon,
 	ZapIcon,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useMeasure } from "react-use";
 import CreateWatchlist from "./create-watchlist";
@@ -35,6 +36,53 @@ import CreateWatchlist from "./create-watchlist";
 export default function QuickActions() {
 	const [open, setOpen] = React.useState(false);
 	const [view, setView] = React.useState<"commands" | "watchlist">("commands");
+
+	const router = useRouter();
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const commands = React.useMemo(() => {
+		return {
+			actions: [
+				{
+					label: "Review a movie",
+					icon: FileTextIcon,
+					onSelect: () => setView("watchlist"),
+				},
+				{
+					label: "Create a new watchlist",
+					icon: ListIcon,
+					onSelect: () => setView("watchlist"),
+				},
+			],
+			pages: [
+				{
+					label: "Profile",
+					icon: UserIcon,
+					onSelect: () => router.push("/profile"),
+				},
+				{
+					label: "Settings",
+					icon: SettingsIcon,
+					onSelect: () => router.push("/settings"),
+				},
+				{
+					label: "Watchlists",
+					icon: ListIcon,
+					onSelect: () => router.push("/watchlists"),
+				},
+				{
+					label: "Reviews",
+					icon: FileTextIcon,
+					onSelect: () => router.push("/reviews"),
+				},
+				{
+					label: "Movies",
+					icon: VideoIcon,
+					onSelect: () => router.push("/users"),
+				},
+			],
+		};
+	}, []);
 
 	React.useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -78,6 +126,9 @@ export default function QuickActions() {
 						Quick actions
 					</Button>
 				</DialogTrigger>
+				<DialogHeader className="hidden" aria-hidden="true">
+					<DialogTitle>Quick actions</DialogTitle>
+				</DialogHeader>
 				<DialogContent
 					onEscapeKeyDown={(e) => {
 						if (view !== "commands") {
@@ -99,35 +150,36 @@ export default function QuickActions() {
 								</div>
 								<CommandList className="border-none">
 									<CommandEmpty>No results found.</CommandEmpty>
-									<CommandGroup className="border-none">
-										<CommandItem>
-											<FileTextIcon
-												strokeWidth={2}
-												className="opacity-60"
-												aria-hidden="true"
-											/>
-											<span>Review a movie</span>
-										</CommandItem>
-										<CommandItem
-											onSelect={() => setView("watchlist")}
-											className="focus-visible:ring-0 focus:ring-0 focus-visible:outline-none"
-										>
-											<ListIcon
-												strokeWidth={2}
-												className="opacity-60"
-												aria-hidden="true"
-											/>
-											<span>Create a new watchlist</span>
-										</CommandItem>
-										<CommandItem>
-											<SearchIcon
-												strokeWidth={2}
-												className="opacity-60"
-												aria-hidden="true"
-											/>
-											<span>Search for a movie</span>
-										</CommandItem>
-									</CommandGroup>
+									{Object.entries(commands).map(([key, value], index) => {
+										return (
+											<React.Fragment key={key}>
+												<CommandGroup
+													heading={_.startCase(key)}
+													className="border-none"
+												>
+													{value.map((command, index) => {
+														const Icon = command.icon;
+														return (
+															<CommandItem
+																onSelect={command.onSelect}
+																key={index}
+															>
+																<Icon
+																	strokeWidth={2}
+																	className="opacity-60"
+																	aria-hidden="true"
+																/>
+																<span>{command.label}</span>
+															</CommandItem>
+														);
+													})}
+												</CommandGroup>
+												{index !== Object.entries(commands).length - 1 && (
+													<CommandSeparator />
+												)}
+											</React.Fragment>
+										);
+									})}
 								</CommandList>
 							</Command>
 						)}

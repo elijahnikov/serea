@@ -52,17 +52,20 @@ export default function CreateWatchlist({
 
 			const currentTags = form.getValues("tags");
 			if (currentTags.length >= 10) {
-				// toast.error("Maximum 10 tags allowed");
+				// toast.error("Maximum 10 tags allowed")
+				input.value = "";
 				return;
 			}
 
 			if (currentTags.includes(value)) {
 				// toast.error("Tag already exists, please use a unique tag.");
+				input.value = "";
 				return;
 			}
 
 			if (value.length > 20) {
 				// toast.error("Tag must be 20 characters or less");
+				input.value = "";
 				return;
 			}
 
@@ -155,7 +158,7 @@ export default function CreateWatchlist({
 													>
 														<div className="flex items-center gap-1">
 															<p>{tag}</p>
-															<X size={14} className="text-neutral-500" />
+															<X size={14} className="text-carbon-900" />
 														</div>
 													</Badge>
 												))}

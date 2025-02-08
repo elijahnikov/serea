@@ -1,5 +1,5 @@
-import { cn } from "@serea/ui/cn";
 import * as React from "react";
+import { cn } from "../utils";
 import { Label } from "./label";
 
 export type InputProps = Omit<
