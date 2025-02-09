@@ -29,6 +29,8 @@ export default function MovieSearch({ callback }: MovieSearchProps) {
 		},
 	);
 
+	const { mutate: addMovie } = api.movie.add.useMutation();
+
 	return (
 		<div className="w-full">
 			<Input
@@ -48,7 +50,17 @@ export default function MovieSearch({ callback }: MovieSearchProps) {
 						<div className="grid grid-cols-4 gap-2">
 							{searchResults.results.map((movie) => (
 								<MovieResult
-									handleClick={callback}
+									handleClick={(movie) => {
+										callback(movie);
+										addMovie({
+											backdrop: movie.backdrop,
+											contentId: movie.contentId,
+											poster: movie.poster,
+											releaseDate: movie.releaseDate,
+											title: movie.title,
+											overview: movie.overview,
+										});
+									}}
 									key={movie.id}
 									movie={movie}
 								/>

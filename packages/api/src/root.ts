@@ -1,4 +1,5 @@
 import { authRouter } from "./router/auth/auth.procedure";
+import { movieRouter } from "./router/movie/movie.procedure";
 import { postRouter } from "./router/post";
 import { tmdbRouter } from "./router/tmdb/tmdb.procedure";
 import { userRouter } from "./router/user/user.procedure";
@@ -9,6 +10,7 @@ export const appRouter = createTRPCRouter({
 	user: userRouter,
 	post: postRouter,
 	tmdb: tmdbRouter,
+	movie: movieRouter,
 });
 
 // export type definition of API
