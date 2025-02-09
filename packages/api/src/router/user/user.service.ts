@@ -1,5 +1,3 @@
-import { eq } from "@serea/db";
-import { User } from "@serea/db/schema";
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type { CheckUsernameInput, OnboardInput } from "./user.input";
@@ -11,17 +9,23 @@ export const onboard = async (
 	if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
 	const userId = ctx.session.user.id;
 
-	await ctx.db
-		.update(User)
-		.set({
+	await ctx.db.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
 			...input,
-			name: input.name,
-			image: input.image,
-			biography: input.bio,
 			onboarded: true,
 			genres: input.genres,
-		})
-		.where(eq(User.id, userId));
+			biography: input.bio,
+			name: input.name,
+			image: input.image,
+			website: input.website,
+			instagram: input.instagram,
+			tiktok: input.tiktok,
+			twitter: input.twitter,
+		},
+	});
 
 	return {
 		success: true,
@@ -32,9 +36,11 @@ export const checkUsername = async (
 	ctx: ProtectedTRPCContext,
 	input: CheckUsernameInput,
 ) => {
-	const usernameExists = await ctx.db.query.User.findFirst({
-		where: eq(User.name, input.username),
-		columns: {
+	const usernameExists = await ctx.db.user.findFirst({
+		where: {
+			name: input.username,
+		},
+		select: {
 			name: true,
 		},
 	});

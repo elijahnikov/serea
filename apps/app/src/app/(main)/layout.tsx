@@ -1,5 +1,10 @@
 import { auth } from "@serea/auth";
-import { Dialog, DialogContent } from "@serea/ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@serea/ui/dialog";
 
 import { redirect } from "next/navigation";
 import Sidebar from "~/components/common/navigation/sidebar";
@@ -21,6 +26,9 @@ export default async function MainLayout({
 			{!session.user.onboarded && (
 				<Dialog open={true}>
 					<DialogContent className="px-5 pt-4 pb-6" showClose={false}>
+						<DialogHeader className="hidden" aria-hidden={true}>
+							<DialogTitle>Onboarding</DialogTitle>
+						</DialogHeader>
 						<OnboardingComponent />
 					</DialogContent>
 				</Dialog>

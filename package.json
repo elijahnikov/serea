@@ -10,6 +10,7 @@
     "build": "turbo run build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo run clean",
+    "db:generate": "turbo -F @serea/db generate-schema",
     "db:push": "turbo -F @serea/db push",
     "db:studio": "turbo -F @serea/db studio",
     "dev": "turbo watch dev --continue",
@@ -19,7 +20,7 @@
     "lint": "turbo run lint --continue --",
     "lint:fix": "turbo run lint --continue -- --apply",
     "lint:ws": "pnpm dlx sherif@latest",
-    "postinstall": "pnpm lint:ws",
+    "postinstall": "pnpm lint:ws && pnpm db:generate",
     "typecheck": "turbo run typecheck",
     "ui-add": "turbo run ui-add"
   },

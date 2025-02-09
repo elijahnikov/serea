@@ -99,11 +99,11 @@ export function PostCard(props: {
 	return (
 		<div className="flex flex-row rounded-lg bg-muted p-4">
 			<div className="flex-grow">
-				<h2 className="text-2xl font-bold text-primary">{props.post.title}</h2>
+				<h2 className="text-2xl font-bold text-primary">{props.post.name}</h2>
 			</div>
 			<div>
 				<Button
-					variant="ghost"
+					variant="outline"
 					className="cursor-pointer text-sm font-bold uppercase text-primary hover:bg-transparent hover:text-white"
 					onClick={() => deletePost.mutate(props.post.id)}
 				>
