@@ -60,9 +60,10 @@ model User {
   tiktok        String?
   twitter       String?
 
-  accounts Account[]
-  sessions Session[]
-  posts    Post[]
+  accounts    Account[]
+  sessions    Session[]
+  posts       Post[]
+  memberships WatchlistMember[]
 }
 
 model VerificationToken {
@@ -85,6 +86,69 @@ model Movie {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  entries WatchlistEntry[]
+
   @@unique([contentId])
   @@index([contentId])
+}
+
+model Watchlist {
+  id     String @id @default(cuid())
+  userId String
+
+  title           String
+  description     String?
+  tags            String[]
+  isPrivate       Boolean  @default(false)
+  hideStats       Boolean  @default(false)
+  numberOfEntries Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries WatchlistEntry[]
+  members WatchlistMember[]
+
+  @@index([userId])
+}
+
+model WatchlistEntry {
+  id          String @id @default(cuid())
+  order       Int
+  watchlistId String
+  contentId   Int
+  userId      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+  movie     Movie     @relation(fields: [contentId], references: [contentId])
+
+  @@index([userId])
+  @@index([watchlistId])
+  @@index([contentId])
+}
+
+enum Role {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model WatchlistMember {
+  id          String @id @default(cuid())
+  watchlistId String
+  userId      String
+
+  role Role @default(VIEWER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([watchlistId])
 }

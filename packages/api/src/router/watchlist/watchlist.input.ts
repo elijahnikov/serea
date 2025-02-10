@@ -8,7 +8,7 @@ export const createWatchlist = z.object({
 	description: z.string().optional(),
 	tags: z.string().array(),
 	entries: movieTableData.array(),
-	private: z.boolean().optional(),
+	isPrivate: z.boolean().optional(),
 	hideStats: z.boolean().optional(),
 });
 export type CreateWatchlistInput = z.infer<typeof createWatchlist>;

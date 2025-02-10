@@ -41,7 +41,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 				{!label && required && <span className="text-red-500">*</span>}
 				<div
 					aria-disabled={disabled}
-					className="flex h-9 w-full rounded-lg border-0 dark:border aria-disabled:cursor-not-allowed font-medium bg-input shadow-overlay dark:shadow-sm-dark aria-disabled:opacity-50 px-3 py-1 text-sm transition-colors placeholder:text-secondary-foreground/50 "
+					className="flex h-9 w-full rounded-lg border-0 dark:border aria-disabled:cursor-not-allowed bg-input shadow-overlay dark:shadow-sm-dark aria-disabled:opacity-50 px-3 py-1 text-sm transition-colors placeholder:text-secondary-foreground/50 "
 				>
 					{prefix && (
 						<div className="pr-2 dark:text-carbon-900 text-secondary-foreground/75 w-max whitespace-nowrap flex items-center justify-center border-r -my-1">

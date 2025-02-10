@@ -21,15 +21,23 @@ import {
 	createWatchlistSchema,
 } from "@serea/validators";
 import { ArrowLeftIcon, CheckIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
+import { api } from "~/trpc/react";
 import MovieList from "./movie-list";
 export default function CreateWatchlist({
 	goBack,
 }: {
 	goBack: () => void;
 }) {
+	const router = useRouter();
+	const create = api.watchlist.create.useMutation({
+		onSuccess: (watchlist) => {
+			router.push(`/watchlist/${watchlist.id}`);
+		},
+	});
 	const form = useForm<CreateWatchlistSchema>({
 		resolver: zodResolver(createWatchlistSchema),
 		defaultValues: {
@@ -75,7 +83,14 @@ export default function CreateWatchlist({
 	};
 
 	const onSubmit = (data: z.infer<typeof createWatchlistSchema>) => {
-		console.log(data);
+		create.mutate({
+			title: data.title,
+			description: data.description,
+			tags: data.tags,
+			entries: data.entries,
+			isPrivate: data.private,
+			hideStats: data.hideStats,
+		});
 	};
 
 	React.useEffect(() => {
@@ -143,10 +158,7 @@ export default function CreateWatchlist({
 											<div className="mt-2 flex flex-wrap gap-2">
 												{form.watch("tags").map((tag, index) => (
 													<Badge
-														key={`${tag}_${
-															// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-															index
-														}`}
+														key={`${tag}_${index}`}
 														className="cursor-pointer"
 														onClick={() => {
 															const currentTags = form.getValues("tags");
@@ -239,7 +251,12 @@ export default function CreateWatchlist({
 					>
 						Back
 					</Button>
-					<LoadingButton className="w-full" after={<CheckIcon />}>
+					<LoadingButton
+						onClick={form.handleSubmit(onSubmit)}
+						className="w-full"
+						loading={create.isPending}
+						after={<CheckIcon />}
+					>
 						Submit
 					</LoadingButton>
 				</div>
