@@ -13,7 +13,8 @@ export const badgeVariants = cva(
 				lg: "text-lg leading-6 px-3",
 			},
 			color: {
-				primary: "bg-carbon-200 border text-secondary-foreground",
+				primary:
+					"dark:bg-carbon-dark-200 bg-carbon-200 border text-secondary-foreground",
 				green:
 					"dark:bg-green-800 border-b-[1px] ring-1 ring-inset ring-green-300 dark:border-green-700 dark:text-green-200 bg-green-400 border-green-500 text-green-900",
 				yellow:

@@ -18,8 +18,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@serea/ui/dialog";
+import { Spinner } from "@serea/ui/spinner";
 import _ from "lodash";
 import {
+	ArrowUpRightIcon,
 	FileTextIcon,
 	ListIcon,
 	SettingsIcon,
@@ -31,17 +33,30 @@ import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useMeasure } from "react-use";
+import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
+import useDebounce from "~/lib/hooks/use-debounce";
+import { api } from "~/trpc/react";
 import CreateWatchlist from "./create-watchlist";
 
 export default function QuickActions() {
 	const [open, setOpen] = React.useState(false);
 	const [view, setView] = React.useState<"commands" | "watchlist">("commands");
+	const [search, setSearch] = React.useState("");
+
+	const debouncedSearchTerm = useDebounce(search, 500) as string;
+	const { data: searchResults, isFetching } = api.tmdb.movieSearch.useQuery(
+		{ query: debouncedSearchTerm },
+		{
+			enabled: Boolean(debouncedSearchTerm) && debouncedSearchTerm !== "",
+		},
+	);
+	console.log(searchResults);
 
 	const router = useRouter();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const commands = React.useMemo(() => {
-		return {
+		const allCommands = {
 			actions: [
 				{
 					label: "Review a movie",
@@ -82,7 +97,18 @@ export default function QuickActions() {
 				},
 			],
 		};
-	}, []);
+
+		if (!search) return allCommands;
+
+		return {
+			actions: allCommands.actions.filter((action) =>
+				action.label.toLowerCase().includes(search.toLowerCase()),
+			),
+			pages: allCommands.pages.filter((page) =>
+				page.label.toLowerCase().includes(search.toLowerCase()),
+			),
+		};
+	}, [search]);
 
 	React.useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -141,16 +167,89 @@ export default function QuickActions() {
 				>
 					<AnimatedDialogContent view={view}>
 						{view === "commands" && (
-							<Command className="border-0">
+							<Command className="border-0" shouldFilter={false}>
 								<div className="relative">
-									<CommandInput placeholder="Search for commands, movies, watchlists and users..." />
+									<CommandInput
+										value={search}
+										onValueChange={setSearch}
+										placeholder="Search for commands, movies, watchlists and users..."
+									/>
 									<kbd className="absolute top-2.5 right-4 -me-1 ms-12 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
 										ESC
 									</kbd>
 								</div>
 								<CommandList className="border-none">
-									<CommandEmpty>No results found.</CommandEmpty>
+									{(commands.actions.length === 0 ||
+										commands.pages.length === 0) &&
+										searchResults?.results.length === 0 &&
+										!isFetching && (
+											<CommandEmpty>No results found.</CommandEmpty>
+										)}
+									{searchResults && searchResults.results.length > 0 ? (
+										<CommandGroup heading="Movies">
+											{searchResults?.results
+												.slice(0, 5)
+												.map((movie, index) => {
+													return (
+														<CommandItem
+															className="group items-center w-full justify-between"
+															value={
+																movie.id ? String(movie.id) : String(index)
+															}
+															key={movie.id}
+															onSelect={() => {
+																router.push(`/movies/${movie.id}`);
+															}}
+														>
+															<div className="flex items-center gap-2">
+																{movie.poster_path ? (
+																	<img
+																		className="aspect-auto rounded-[4px]"
+																		src={`${TMDB_IMAGE_BASE_URL_SD}${movie.poster_path}`}
+																		alt={`Poster for ${movie.title}`}
+																		width={20}
+																		height={40}
+																	/>
+																) : (
+																	<div className="w-[20px] dark:bg-carbon-dark-200 bg-carbon-200 flex items-center justify-center h-[30px] rounded-[4px] border">
+																		<span>?</span>
+																	</div>
+																)}
+																<span>{movie.title}</span>
+																<span className="text-xs mt-[1px] text-white">
+																	{movie.release_date
+																		? new Date(movie.release_date).getFullYear()
+																		: "????"}
+																</span>
+															</div>
+															<ArrowUpRightIcon
+																strokeWidth={2}
+																className="opacity-0 group-hover:opacity-100 transition-all duration-200"
+																aria-hidden="true"
+															/>
+														</CommandItem>
+													);
+												})}
+											<CommandItem
+												onSelect={() => {
+													router.push(`/movies?search=${search}`);
+												}}
+											>
+												<ArrowUpRightIcon
+													strokeWidth={2}
+													className="opacity-60"
+													aria-hidden="true"
+												/>
+												<span>See all results</span>
+											</CommandItem>
+										</CommandGroup>
+									) : isFetching ? (
+										<div className="flex items-center h-24 justify-center">
+											<Spinner />
+										</div>
+									) : null}
 									{Object.entries(commands).map(([key, value], index) => {
+										if (value.length === 0) return null;
 										return (
 											<React.Fragment key={key}>
 												<CommandGroup

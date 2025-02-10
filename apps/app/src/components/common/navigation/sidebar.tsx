@@ -29,8 +29,7 @@ export default async function Sidebar() {
 				</SheetContent>
 			</Sheet>
 
-			{/* Desktop Sidebar */}
-			<aside className="hidden lg:block max-w-max min-w-[200px] bg-stone-50 border-r">
+			<aside className="hidden lg:block max-w-max min-w-[200px] border-r">
 				<nav className="p-2 w-full ml-auto flex flex-col justify-between h-full">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2">

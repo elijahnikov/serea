@@ -12,11 +12,15 @@ import {
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
 import {
+	BellIcon,
+	LockIcon,
 	LogOutIcon,
 	MenuIcon,
 	SettingsIcon,
 	UserCircleIcon,
+	UserIcon,
 } from "lucide-react";
+import ThemeToggle from "./theme-toggle";
 
 export default function UserMenu({
 	user,
@@ -33,16 +37,11 @@ export default function UserMenu({
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button
-						variant="transparent"
-						className="group hover:bg-stone-200/80 text-secondary-foreground/75 hover:text-black text-sm w-full active:bg-stone-300 text-left justify-start items-center self-start"
+						variant="outline"
+						className="group text-sm w-full text-left justify-start items-center self-start"
 						asChild
-						after={
-							<div className="w-full">
-								<MenuIcon className="ml-auto items-end justify-end group-hover:rotate-180 transition-all duration-200" />
-							</div>
-						}
 						before={
-							<Avatar className="w-7 h-7">
+							<Avatar className="w-7 h-7 mr-2">
 								<AvatarImage src={user.image} alt={user.name} />
 								<AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
 							</Avatar>
@@ -52,25 +51,34 @@ export default function UserMenu({
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="relative left-4 min-w-[240px]">
-					<DropdownMenuLabel className="flex gap-2 items-center">
-						<div className="flex px-3 flex-col gap-0">
-							<span className="text-sm font-medium">{user.name}</span>
-							<span className="text-xs font-normal text-muted-foreground">
-								{user.email}
-							</span>
-						</div>
-					</DropdownMenuLabel>
-					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
 						<DropdownMenuItem>
-							<UserCircleIcon />
-							<span>Profile</span>
+							<UserIcon size={14} />
+							<span>Account</span>
 						</DropdownMenuItem>
+
 						<DropdownMenuItem>
-							<SettingsIcon />
+							<SettingsIcon size={14} />
 							<span>Settings</span>
 						</DropdownMenuItem>
+
+						<DropdownMenuItem>
+							<LockIcon size={14} />
+							<span>Privacy</span>
+						</DropdownMenuItem>
+
+						<DropdownMenuItem>
+							<BellIcon size={14} />
+							<span>Notifications</span>
+						</DropdownMenuItem>
 					</DropdownMenuGroup>
+
+					<DropdownMenuSeparator />
+
+					<DropdownMenuGroup>
+						<ThemeToggle />
+					</DropdownMenuGroup>
+
 					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
 						<DropdownMenuItem className="text-red-500 hover:text-red-600">

@@ -35,7 +35,7 @@ export default function NavLinks() {
 				return (
 					<Button
 						variant="transparent"
-						className="group  text-sm w-full text-left justify-start items-center self-start"
+						className="group text-sm w-full text-left justify-start items-center self-start"
 						asChild
 						key={link.href}
 						before={

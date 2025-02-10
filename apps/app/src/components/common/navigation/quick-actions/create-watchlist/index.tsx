@@ -170,7 +170,7 @@ export default function CreateWatchlist({
 													>
 														<div className="flex items-center gap-1">
 															<p>{tag}</p>
-															<X size={14} className="text-carbon-900" />
+															<X size={14} />
 														</div>
 													</Badge>
 												))}

@@ -114,7 +114,7 @@ function MovieResult({ movie, handleClick }: MovieResultProps) {
 							poster: movie.poster_path,
 						})
 					}
-					className="flex active:scale-[0.95] duration-200 transition cursor-pointer bg-white w-full rounded-[4px] border focus:outline-none focus:ring-2 focus:ring-primary"
+					className="flex active:scale-[0.95] duration-200 transition cursor-pointer w-full rounded-[4px] border focus:outline-none focus:ring-2 focus:ring-primary"
 				>
 					{movie.poster_path ? (
 						<img
@@ -125,7 +125,7 @@ function MovieResult({ movie, handleClick }: MovieResultProps) {
 							height={110}
 						/>
 					) : (
-						<div className="w-full flex-col px-2 text-center h-full justify-center flex items-center">
+						<div className="w-full rounded-[4px] flex-col px-2 text-center bg-carbon-200 dark:bg-carbon-dark-200 h-full justify-center flex items-center">
 							<p className="text-wrap text-xs font-medium text-neutral-600">
 								{movie.original_title}
 							</p>
