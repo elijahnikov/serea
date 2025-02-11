@@ -60,12 +60,13 @@ model User {
   tiktok        String?
   twitter       String?
 
-  accounts    Account[]
-  sessions    Session[]
-  posts       Post[]
-  memberships WatchlistMember[]
-  watchlists  Watchlist[]
-  watched     Watched[]
+  accounts       Account[]
+  sessions       Session[]
+  posts          Post[]
+  memberships    WatchlistMember[]
+  watchlists     Watchlist[]
+  watched        Watched[]
+  watchlistLikes WatchlistLike[]
 }
 
 model VerificationToken {
@@ -112,6 +113,7 @@ model Watchlist {
   members WatchlistMember[]
   user    User              @relation(fields: [userId], references: [id])
   watched Watched[]
+  likes   WatchlistLike[]
 
   @@index([userId])
 }
@@ -179,4 +181,16 @@ model Watched {
   @@index([watchlistId])
   @@index([memberId])
   @@index([entryId])
+}
+
+model WatchlistLike {
+  userId      String
+  watchlistId String
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+
+  @@id([userId, watchlistId])
+  @@index([userId])
+  @@index([watchlistId])
 }

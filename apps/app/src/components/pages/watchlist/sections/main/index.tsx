@@ -1,5 +1,6 @@
 import type { RouterOutputs } from "@serea/api";
 import { ListIcon } from "lucide-react";
+import MainHeader from "./header";
 
 export default function MainSection({
 	watchlist,
@@ -11,13 +12,11 @@ export default function MainSection({
 					<ListIcon className="w-4 h-4" />
 					<p className="font-mono text-xs">WATCHLIST</p>
 				</div>
-
-				<h1 className="font-medium text-3xl text-balance">{watchlist.title}</h1>
-				<p className="text-sm text-carbon-900">{watchlist.description}</p>
+				<MainHeader watchlist={watchlist} />
 			</div>
-			<div className="px-8 py-6">
+			<div className="px-8 border-b py-6">
 				<p>1</p>
-				<div className="h-[2000px]">1</div>
+				<div className="h-[200px]">1</div>
 			</div>
 		</div>
 	);

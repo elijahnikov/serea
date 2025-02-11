@@ -20,18 +20,20 @@ export default function WatchlistDetails({
 	>;
 }) {
 	return (
-		<div>
-			<p className="text-xs font-mono text-carbon-900">CREATED BY</p>
+		<div className="flex flex-col gap-2">
 			<div className="flex items-center gap-2 mt-2">
-				<Avatar
-					size={"sm"}
-					src={details.user.image ?? undefined}
-					initials={details.user.name?.slice(0, 2)}
-				/>
-				<p className="text-md font-medium">{details.user.name}</p>
+				<p className="text-xs font-mono text-carbon-900">CREATED BY</p>
+				<div className="flex items-center gap-2">
+					<Avatar
+						size={"sm"}
+						src={details.user.image ?? undefined}
+						initials={details.user.name?.slice(0, 2)}
+					/>
+					<p className="text-md font-medium">{details.user.name}</p>
+				</div>
 			</div>
 			<TooltipProvider>
-				<div className="flex items-center gap-2 mt-2">
+				<div className="flex items-center gap-2">
 					<p className="text-xs font-mono text-carbon-900">CREATED</p>
 					<Tooltip>
 						<TooltipTrigger>

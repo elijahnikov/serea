@@ -1,6 +1,5 @@
 import type { RouterOutputs } from "@serea/api";
 import { Avatar } from "@serea/ui/avatar";
-import { Badge } from "@serea/ui/badge";
 import {
 	Tooltip,
 	TooltipContent,

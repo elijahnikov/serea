@@ -17,3 +17,8 @@ export const getWatchlist = z.object({
 	id: z.string(),
 });
 export type GetWatchlistInput = z.infer<typeof getWatchlist>;
+
+export const likeWatchlist = z.object({
+	id: z.string(),
+});
+export type LikeWatchlistInput = z.infer<typeof likeWatchlist>;

@@ -16,4 +16,9 @@ export const watchlistRouter = {
 		.input(inputs.createWatchlist)
 		.meta({ name: "create-watchlist" })
 		.mutation(async ({ ctx, input }) => services.createWatchlist(ctx, input)),
+
+	like: protectedProcedure
+		.input(inputs.likeWatchlist)
+		.meta({ name: "like-watchlist" })
+		.mutation(async ({ ctx, input }) => services.likeWatchlist(ctx, input)),
 } satisfies TRPCRouterRecord;

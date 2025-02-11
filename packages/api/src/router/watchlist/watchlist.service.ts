@@ -3,6 +3,7 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	CreateWatchlistInput,
 	GetWatchlistInput,
+	LikeWatchlistInput,
 } from "./watchlist.input";
 
 export const createWatchlist = async (
@@ -43,6 +44,7 @@ export const getWatchlist = async (
 	ctx: ProtectedTRPCContext,
 	input: GetWatchlistInput,
 ) => {
+	const currentUserId = ctx.session.user.id;
 	const watchlist = await ctx.db.watchlist.findFirst({
 		where: {
 			id: input.id,
@@ -55,6 +57,7 @@ export const getWatchlist = async (
 					id: true,
 				},
 			},
+			likes: !currentUserId ? false : { where: { userId: currentUserId } },
 			entries: true,
 			members: {
 				include: {
@@ -76,6 +79,7 @@ export const getWatchlist = async (
 				select: {
 					entries: true,
 					members: true,
+					likes: true,
 				},
 			},
 		},
@@ -87,5 +91,41 @@ export const getWatchlist = async (
 		});
 	}
 
-	return watchlist;
+	return {
+		...watchlist,
+		liked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
+	};
+};
+
+export const likeWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: LikeWatchlistInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const data = { watchlistId: input.id, userId: currentUserId };
+
+	const like = await ctx.db.watchlistLike.findUnique({
+		where: {
+			userId_watchlistId: data,
+		},
+	});
+
+	if (!like) {
+		await ctx.db.watchlistLike.create({
+			data,
+		});
+		return {
+			liked: true,
+		};
+	}
+
+	await ctx.db.watchlistLike.delete({
+		where: {
+			userId_watchlistId: data,
+		},
+	});
+
+	return {
+		liked: false,
+	};
 };
