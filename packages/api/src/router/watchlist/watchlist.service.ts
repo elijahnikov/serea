@@ -56,7 +56,17 @@ export const getWatchlist = async (
 				},
 			},
 			entries: true,
-			members: true,
+			members: {
+				include: {
+					user: {
+						select: {
+							name: true,
+							image: true,
+							id: true,
+						},
+					},
+				},
+			},
 			_count: {
 				select: {
 					entries: true,
