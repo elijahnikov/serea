@@ -65,6 +65,7 @@ model User {
   posts       Post[]
   memberships WatchlistMember[]
   watchlists  Watchlist[]
+  watched     Watched[]
 }
 
 model VerificationToken {
@@ -110,6 +111,7 @@ model Watchlist {
   entries WatchlistEntry[]
   members WatchlistMember[]
   user    User              @relation(fields: [userId], references: [id])
+  watched Watched[]
 
   @@index([userId])
 }
@@ -126,6 +128,7 @@ model WatchlistEntry {
 
   watchlist Watchlist @relation(fields: [watchlistId], references: [id])
   movie     Movie     @relation(fields: [contentId], references: [contentId])
+  watched   Watched[]
 
   @@index([userId])
   @@index([watchlistId])
@@ -150,7 +153,30 @@ model WatchlistMember {
 
   watchlist Watchlist @relation(fields: [watchlistId], references: [id])
   user      User      @relation(fields: [userId], references: [id])
+  watched   Watched[]
 
   @@index([userId])
   @@index([watchlistId])
+}
+
+model Watched {
+  id          String @id @default(cuid())
+  watchlistId String
+  userId      String
+  memberId    String
+  entryId     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  watchlist Watchlist       @relation(fields: [watchlistId], references: [id])
+  user      User            @relation(fields: [userId], references: [id])
+  member    WatchlistMember @relation(fields: [memberId], references: [id])
+  entry     WatchlistEntry  @relation(fields: [entryId], references: [id])
+
+  @@unique([watchlistId, userId, memberId, entryId])
+  @@index([userId])
+  @@index([watchlistId])
+  @@index([memberId])
+  @@index([entryId])
 }

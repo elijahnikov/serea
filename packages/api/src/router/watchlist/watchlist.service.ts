@@ -58,6 +58,11 @@ export const getWatchlist = async (
 			entries: true,
 			members: {
 				include: {
+					_count: {
+						select: {
+							watched: true,
+						},
+					},
 					user: {
 						select: {
 							name: true,
