@@ -38,16 +38,24 @@ export default function UserMenu({
 				<DropdownMenuTrigger asChild>
 					<Button
 						variant="outline"
-						className="group text-sm w-full text-left justify-start items-center self-start"
-						asChild
-						before={
-							<Avatar className="w-7 h-7 mr-2">
-								<AvatarImage src={user.image} alt={user.name} />
-								<AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
-							</Avatar>
-						}
+						className="group flex h-12 text-sm items-center justify-start"
 					>
-						<span className="w-full">{user.name}</span>
+						<div className="flex items-center gap-2">
+							<div className="mt-1">
+								<Avatar
+									size={"sm"}
+									src={user.image}
+									alt={"Users avatar"}
+									initials={user.name.slice(0, 2)}
+								/>
+							</div>
+							<div className="flex flex-col -gap-2 text-left">
+								<p className="font-medium">{user.name}</p>
+								<p className="text-xs leading-tight font-mono text-secondary-foreground/50">
+									{user.email}
+								</p>
+							</div>
+						</div>
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="relative">

@@ -1,6 +1,8 @@
 export const TMDB_IMAGE_BASE_URL_SD = "https://image.tmdb.org/t/p/w500";
 export const TMDB_IMAGE_BASE_URL_HD = "https://image.tmdb.org/t/p/original";
 
+export const SELECTED_VIEW_COOKIE_NAME = "selected-view";
+
 export const SOCIAL_LINKS_ICONS = {
 	INSTAGRAM: (
 		<svg

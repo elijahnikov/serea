@@ -58,7 +58,11 @@ export const getWatchlist = async (
 				},
 			},
 			likes: !currentUserId ? false : { where: { userId: currentUserId } },
-			entries: true,
+			entries: {
+				include: {
+					movie: true,
+				},
+			},
 			members: {
 				include: {
 					_count: {
@@ -94,6 +98,9 @@ export const getWatchlist = async (
 	return {
 		...watchlist,
 		liked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
+		isOwner: watchlist.members.some(
+			(member) => member.user.id === ctx.session.user.id,
+		),
 	};
 };
 
