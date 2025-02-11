@@ -22,6 +22,7 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
 
 type MovieListProps = {
@@ -91,24 +92,24 @@ export default function MovieList({ form }: MovieListProps) {
 		<div>
 			<Label className="mb-2">Movies</Label>
 			<div className="bg-white dark:bg-carbon-dark-200 border border-dashed  shadow-sm flex flex-col items-center px-4 w-full max-h-[500px] min-h-[500px] rounded-lg">
-				<Popover open={open} onOpenChange={setOpen} modal>
-					<PopoverTrigger asChild>
-						<Button className="mt-4" before={<PlusIcon />}>
-							Add Movie
-						</Button>
-					</PopoverTrigger>
-					<PopoverContent
-						showPortal={false}
-						className="z-50 min-w-[400px] pointer-events-auto"
-					>
-						<MovieSearch
-							callback={(movie) => {
-								addEntry(movie);
-								setOpen(false);
-							}}
-						/>
-					</PopoverContent>
-				</Popover>
+				<div className="flex items-center gap-2 mt-4">
+					<Popover open={open} onOpenChange={setOpen} modal>
+						<PopoverTrigger asChild>
+							<Button before={<PlusIcon />}>Add Movie</Button>
+						</PopoverTrigger>
+						<PopoverContent
+							showPortal={false}
+							className="z-50 min-w-[400px] pointer-events-auto"
+						>
+							<MovieSearch
+								callback={(movie) => {
+									addEntry(movie);
+									setOpen(false);
+								}}
+							/>
+						</PopoverContent>
+					</Popover>
+				</div>
 				<div className="space-y-2 pb-4 mt-4 min-w-[400px] max-w-[400px] min-h-[400px] max-h-[400px] overflow-y-auto w-full">
 					<DndContext
 						sensors={sensors}

@@ -29,12 +29,15 @@ import { api } from "~/trpc/react";
 import MovieList from "./movie-list";
 export default function CreateWatchlist({
 	goBack,
+	close,
 }: {
 	goBack: () => void;
+	close: () => void;
 }) {
 	const router = useRouter();
 	const create = api.watchlist.create.useMutation({
 		onSuccess: (watchlist) => {
+			close();
 			router.push(`/watchlist/${watchlist.id}`);
 		},
 	});

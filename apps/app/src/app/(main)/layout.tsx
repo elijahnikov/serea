@@ -34,7 +34,7 @@ export default async function MainLayout({
 				</Dialog>
 			)}
 			<Sidebar />
-			<main className="flex-1 overflow-auto">{children}</main>
+			<main className="flex-1 lg:ml-[240px]">{children}</main>
 		</div>
 	);
 }

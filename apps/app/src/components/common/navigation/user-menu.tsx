@@ -50,7 +50,7 @@ export default function UserMenu({
 						<span className="w-full">{user.name}</span>
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="relative left-4 min-w-[240px]">
+				<DropdownMenuContent className="relative">
 					<DropdownMenuGroup>
 						<DropdownMenuItem>
 							<UserIcon size={14} />

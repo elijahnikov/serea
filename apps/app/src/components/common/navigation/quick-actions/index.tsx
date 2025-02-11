@@ -50,7 +50,6 @@ export default function QuickActions() {
 			enabled: Boolean(debouncedSearchTerm) && debouncedSearchTerm !== "",
 		},
 	);
-	console.log(searchResults);
 
 	const router = useRouter();
 
@@ -136,20 +135,20 @@ export default function QuickActions() {
 				<DialogTrigger asChild>
 					<Button
 						onClick={() => setOpen(true)}
-						className="group shadow-md"
+						className="group flex items-center justify-between shadow-md"
 						before={
 							<ZapIcon className="group-hover:rotate-180 transition-all duration-200" />
 						}
 						after={
 							<Badge
 								color="blue"
-								className="min-w-max text-xs px-2 py-2 h-5 [&>svg]:size-2.5"
+								className="min-w-max ml-12 text-xs px-2 py-2 h-5 [&>svg]:size-2.5"
 							>
 								⌘K
 							</Badge>
 						}
 					>
-						Quick actions
+						<span>Quick actions</span>
 					</Button>
 				</DialogTrigger>
 				<DialogHeader className="hidden" aria-hidden="true">
@@ -283,7 +282,10 @@ export default function QuickActions() {
 							</Command>
 						)}
 						{view === "watchlist" && (
-							<CreateWatchlist goBack={() => setView("commands")} />
+							<CreateWatchlist
+								close={() => setOpen(false)}
+								goBack={() => setView("commands")}
+							/>
 						)}
 					</AnimatedDialogContent>
 				</DialogContent>

@@ -22,7 +22,7 @@ export const badgeVariants = cva(
 				red: "dark:bg-red-800 dark:border-red-700 dark:text-red-200 bg-red-400 border-red-500 text-red-900",
 				purple:
 					"dark:bg-purple-800 dark:border-purple-700 dark:text-purple-200 bg-purple-400 border-purple-500 text-purple-900",
-				blue: "dark:bg-blue-800 dark:border-blue-700 dark:text-blue-200 bg-blue-400 border-blue-500 text-blue-900",
+				blue: "dark:bg-blue-700 dark:border-blue-500 border ring-1 ring-inset ring-blue-300 dark:ring-blue-800 dark:text-blue-200 bg-blue-400 border-blue-500 text-blue-900",
 				indigo:
 					"dark:bg-indigo-800 dark:border-indigo-700 dark:text-indigo-200 bg-indigo-400 border-indigo-500 text-indigo-900",
 				orange:

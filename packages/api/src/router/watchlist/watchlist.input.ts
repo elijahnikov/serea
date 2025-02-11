@@ -12,3 +12,8 @@ export const createWatchlist = z.object({
 	hideStats: z.boolean().optional(),
 });
 export type CreateWatchlistInput = z.infer<typeof createWatchlist>;
+
+export const getWatchlist = z.object({
+	id: z.string(),
+});
+export type GetWatchlistInput = z.infer<typeof getWatchlist>;
