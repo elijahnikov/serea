@@ -42,7 +42,7 @@ function Comment({
 }) {
 	const [showAllReplies, setShowAllReplies] = React.useState(false);
 	const [showReplyInput, setShowReplyInput] = React.useState(false);
-
+	console.log({ comment });
 	const schema = z.object({
 		content: z.string().min(1),
 		parentId: z.string().optional(),
@@ -60,6 +60,70 @@ function Comment({
 		onSuccess: () => {
 			setShowReplyInput(false);
 			utils.watchlist.getComments.invalidate();
+		},
+	});
+	const like = api.watchlist.likeComment.useMutation({
+		onSuccess: () => {
+			utils.watchlist.getComments.invalidate();
+		},
+		onMutate: async ({ commentId }) => {
+			await utils.watchlist.getComments.cancel();
+
+			const previousComments = utils.watchlist.getComments.getData();
+
+			utils.watchlist.getComments.setData(
+				{ id: comment.watchlistId },
+				(old) => {
+					if (!old) return old;
+
+					return old.map((comment) => {
+						if (comment.id === commentId) {
+							return {
+								...comment,
+								liked: !comment.liked,
+								_count: {
+									...comment._count,
+									likes: comment.liked
+										? comment._count.likes - 1
+										: comment._count.likes + 1,
+								},
+							};
+						}
+
+						if (comment.replies) {
+							return {
+								...comment,
+								replies: comment.replies.map((reply) =>
+									reply.id === commentId
+										? {
+												...reply,
+												liked: !reply.liked,
+												_count: {
+													...reply._count,
+													likes: reply.liked
+														? reply._count.likes - 1
+														: reply._count.likes + 1,
+												},
+											}
+										: reply,
+								),
+							};
+						}
+
+						return comment;
+					});
+				},
+			);
+
+			return { previousComments };
+		},
+		onError: (_, __, context) => {
+			if (context?.previousComments) {
+				utils.watchlist.getComments.setData(
+					{ id: comment.watchlistId },
+					context.previousComments,
+				);
+			}
 		},
 	});
 
@@ -89,16 +153,25 @@ function Comment({
 					<p className="text-sm text-secondary-foreground">{comment.content}</p>
 				</div>
 				<div className="flex gap-2 mt-2">
-					<Button variant="outline" className="py-1.5 px-1">
+					<Button
+						onClick={() => {
+							like.mutate({
+								commentId: comment.id,
+							});
+						}}
+						variant="outline"
+						className="py-1.5 px-1"
+					>
 						<div className="flex">
 							<HeartIcon
+								data-liked={comment.liked}
 								className="data-[liked=true]:fill-red-500 data-[liked=true]:text-red-500 data-[liked=false]:opacity-60"
 								size={16}
 								strokeWidth={2}
 								aria-hidden="true"
 							/>
 							<span className="border-l dark:hover:border-carbon-dark-500 text-xs font-mono flex items-center justify-center ms-1 pl-2 -my-1.5">
-								{formatNumber(123)}
+								{formatNumber(comment._count.likes)}
 							</span>
 						</div>
 					</Button>
@@ -175,7 +248,15 @@ function Comment({
 				{comment.replies
 					.slice(0, showAllReplies ? undefined : 4)
 					.map((reply) => (
-						<CommentReply key={reply.id} comment={reply} />
+						<CommentReply
+							likeComment={() => {
+								like.mutate({
+									commentId: reply.id,
+								});
+							}}
+							key={reply.id}
+							comment={reply}
+						/>
 					))}
 				{comment.replies.length > 4 && (
 					<Button
@@ -202,8 +283,10 @@ function Comment({
 
 function CommentReply({
 	comment,
+	likeComment,
 }: {
 	comment: RouterOutputs["watchlist"]["getComments"][number]["replies"][number];
+	likeComment: () => void;
 }) {
 	return (
 		<div className="px-3 py-2  w-full flex flex-col gap-2 border-t">
@@ -223,16 +306,21 @@ function CommentReply({
 					<p className="text-sm text-secondary-foreground">{comment.content}</p>
 				</div>
 				<div className="flex gap-2 mt-2">
-					<Button variant="outline" className="py-1.5 px-1">
+					<Button
+						onClick={likeComment}
+						variant="outline"
+						className="py-1.5 px-1"
+					>
 						<div className="flex">
 							<HeartIcon
+								data-liked={comment.liked}
 								className="data-[liked=true]:fill-red-500 data-[liked=true]:text-red-500 data-[liked=false]:opacity-60"
 								size={16}
 								strokeWidth={2}
 								aria-hidden="true"
 							/>
 							<span className="border-l dark:hover:border-carbon-dark-500 text-xs font-mono flex items-center justify-center ms-1 pl-2 -my-1.5">
-								{formatNumber(123)}
+								{formatNumber(comment._count.likes)}
 							</span>
 						</div>
 					</Button>

@@ -46,4 +46,9 @@ export const watchlistRouter = {
 		.input(inputs.createComment)
 		.meta({ name: "create-comment" })
 		.mutation(async ({ ctx, input }) => services.createComment(ctx, input)),
+
+	likeComment: protectedProcedure
+		.input(inputs.likeComment)
+		.meta({ name: "like-comment" })
+		.mutation(async ({ ctx, input }) => services.likeComment(ctx, input)),
 } satisfies TRPCRouterRecord;

@@ -4,6 +4,7 @@ import type {
 	CreateCommentInput,
 	CreateWatchlistInput,
 	GetWatchlistInput,
+	LikeCommentInput,
 	LikeWatchlistInput,
 	UpdateEntryOrderInput,
 } from "./watchlist.input";
@@ -251,6 +252,7 @@ export const getComments = async (
 	ctx: ProtectedTRPCContext,
 	input: GetWatchlistInput,
 ) => {
+	const currentUserId = ctx.session.user.id;
 	const comments = await ctx.db.watchlistComment.findMany({
 		where: {
 			watchlistId: input.id,
@@ -259,6 +261,7 @@ export const getComments = async (
 			createdAt: "desc",
 		},
 		include: {
+			likes: !currentUserId ? false : { where: { userId: currentUserId } },
 			user: {
 				select: {
 					name: true,
@@ -271,6 +274,12 @@ export const getComments = async (
 					createdAt: "desc",
 				},
 				include: {
+					_count: {
+						select: {
+							likes: true,
+						},
+					},
+					likes: !currentUserId ? false : { where: { userId: currentUserId } },
 					user: {
 						select: {
 							name: true,
@@ -288,6 +297,7 @@ export const getComments = async (
 			_count: {
 				select: {
 					replies: true,
+					likes: true,
 				},
 			},
 		},
@@ -295,6 +305,44 @@ export const getComments = async (
 
 	return comments.map((comment) => ({
 		...comment,
+		liked: Boolean(comment.likes.length > 0 && ctx.session.user.id),
 		isOwner: comment.userId === ctx.session.user.id,
+		replies: comment.replies.map((reply) => ({
+			...reply,
+			liked: Boolean(reply.likes.length > 0 && ctx.session.user.id),
+		})),
 	}));
+};
+
+export const likeComment = async (
+	ctx: ProtectedTRPCContext,
+	input: LikeCommentInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+	const data = { commentId: input.commentId, userId: currentUserId };
+
+	const like = await ctx.db.watchlistCommentLike.findUnique({
+		where: {
+			userId_commentId: data,
+		},
+	});
+
+	if (!like) {
+		await ctx.db.watchlistCommentLike.create({
+			data,
+		});
+		return {
+			liked: true,
+		};
+	}
+
+	await ctx.db.watchlistCommentLike.delete({
+		where: {
+			userId_commentId: data,
+		},
+	});
+
+	return {
+		liked: false,
+	};
 };

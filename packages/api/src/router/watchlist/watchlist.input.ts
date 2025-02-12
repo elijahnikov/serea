@@ -36,3 +36,8 @@ export const createComment = z.object({
 	parentId: z.string().optional(),
 });
 export type CreateCommentInput = z.infer<typeof createComment>;
+
+export const likeComment = z.object({
+	commentId: z.string(),
+});
+export type LikeCommentInput = z.infer<typeof likeComment>;
