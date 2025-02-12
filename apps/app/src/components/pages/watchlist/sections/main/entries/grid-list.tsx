@@ -22,13 +22,16 @@ import Image from "next/image";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { api } from "~/trpc/react";
+import AddEntry from "./add-entry";
 
 export default function GridList({
 	entries,
 	watchlistId,
+	isOwner,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"];
 	watchlistId: string;
+	isOwner: boolean;
 }) {
 	const id = React.useId();
 
@@ -89,6 +92,7 @@ export default function GridList({
 							.map((entry) => (
 								<SortableEntry key={entry.id} entry={entry} />
 							))}
+						{isOwner && <AddEntry />}
 					</div>
 				</SortableContext>
 			</TooltipProvider>

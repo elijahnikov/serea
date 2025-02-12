@@ -11,7 +11,10 @@ export default function MainSection({
 		<div className="flex lg:mt-0 mt-8 max-w-[calc(100%-240px)] flex-col ">
 			<MainHeader watchlist={watchlist} />
 			<Suspense fallback={<div>Loading entries...</div>}>
-				<EntriesSection watchlistId={watchlist.id} />
+				<EntriesSection
+					isOwner={watchlist.isOwner}
+					watchlistId={watchlist.id}
+				/>
 			</Suspense>
 			<Suspense fallback={<div>Loading comments...</div>}>
 				<CommentsSection watchlistId={watchlist.id} />

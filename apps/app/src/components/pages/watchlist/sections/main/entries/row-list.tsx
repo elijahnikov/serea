@@ -20,9 +20,11 @@ import { api } from "~/trpc/react";
 export default function RowList({
 	entries,
 	watchlistId,
+	isOwner,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"];
 	watchlistId: string;
+	isOwner: boolean;
 }) {
 	const id = React.useId();
 

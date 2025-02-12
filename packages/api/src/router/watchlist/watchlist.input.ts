@@ -46,3 +46,10 @@ export const deleteComment = z.object({
 	commentId: z.string(),
 });
 export type DeleteCommentInput = z.infer<typeof deleteComment>;
+
+export const addWatchlistEntry = z.object({
+	watchlistId: z.string(),
+	contentId: z.number(),
+	content: movieTableData.omit({ order: true }),
+});
+export type AddWatchlistEntryInput = z.infer<typeof addWatchlistEntry>;

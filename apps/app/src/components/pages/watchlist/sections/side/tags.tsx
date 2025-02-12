@@ -11,10 +11,7 @@ export default function WatchlistTags({
 			<p className="text-xs font-mono text-carbon-900">TAGS</p>
 			<div className="flex mt-2 flex-wrap max-w-[200px] gap-2">
 				{tags.tags.map((tag) => (
-					<Badge
-						key={tag}
-						className="bg-carbon-200 text-carbon-900 px-2 py-1 rounded-md"
-					>
+					<Badge key={tag} color="secondary" className="px-2 py-1 rounded-md">
 						{tag}
 					</Badge>
 				))}

@@ -15,6 +15,7 @@ export const badgeVariants = cva(
 			color: {
 				primary:
 					"dark:bg-carbon-dark-200 bg-carbon-200 border text-secondary-foreground",
+				secondary: "bg-secondary text-secondary-foreground",
 				green:
 					"dark:bg-green-800 border-b-[1px] ring-1 ring-inset ring-green-300 dark:border-green-700 dark:text-green-200 bg-green-400 border-green-500 text-green-900",
 				yellow:
@@ -48,6 +49,7 @@ export const iconVariants = cva("size-4", {
 	variants: {
 		color: {
 			primary: "text-neutral-400",
+			secondary: "text-secondary-foreground",
 			green: "text-green-700",
 			purple: "text-purple-700",
 			indigo: "text-indigo-700",
@@ -67,6 +69,7 @@ export const iconVariants = cva("size-4", {
 				"purple",
 				"orange",
 				"primary",
+				"secondary",
 				"red",
 				"pink",
 				"indigo",

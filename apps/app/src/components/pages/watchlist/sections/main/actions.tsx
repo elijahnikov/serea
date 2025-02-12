@@ -5,7 +5,13 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
-import { CopyIcon, ForwardIcon, HeartIcon, Repeat2Icon } from "lucide-react";
+import {
+	CopyIcon,
+	ForwardIcon,
+	HeartIcon,
+	MessageCircleIcon,
+	Repeat2Icon,
+} from "lucide-react";
 import { SOCIAL_LINKS_ICONS } from "~/lib/constants";
 import { formatNumber } from "~/lib/utils/general";
 import { api } from "~/trpc/react";
@@ -19,6 +25,13 @@ export default function WatchlistActions({
 	likes: number;
 	isLiked: boolean;
 }) {
+	const scrollToComments = () => {
+		const commentsSection = document.getElementById("comments-section");
+		if (commentsSection) {
+			commentsSection.scrollIntoView({ behavior: "smooth" });
+		}
+	};
+
 	const utils = api.useUtils();
 	const like = api.watchlist.like.useMutation({
 		onMutate: async ({ id }) => {
@@ -88,6 +101,11 @@ export default function WatchlistActions({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
+			<Button variant={"outline"} onClick={scrollToComments}>
+				<div className="flex items-center gap-1">
+					<MessageCircleIcon size={16} strokeWidth={2} />
+				</div>
+			</Button>
 		</div>
 	);
 }

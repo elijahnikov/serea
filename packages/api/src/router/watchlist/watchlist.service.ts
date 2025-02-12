@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	AddWatchlistEntryInput,
 	CreateCommentInput,
 	CreateWatchlistInput,
 	DeleteCommentInput,
@@ -130,6 +131,13 @@ export const getWatchlistMembers = async (
 	});
 
 	return members;
+};
+
+export const addEntry = async (
+	ctx: ProtectedTRPCContext,
+	input: AddWatchlistEntryInput,
+) => {
+	const currentUserId = ctx.session.user.id;
 };
 
 export const updateEntryOrder = async (
