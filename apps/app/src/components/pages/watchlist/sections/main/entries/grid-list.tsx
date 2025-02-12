@@ -78,7 +78,11 @@ export default function GridList({
 			onDragEnd={handleDragEnd}
 		>
 			<TooltipProvider>
-				<SortableContext items={localEntries.map((entry) => entry.id)}>
+				<SortableContext
+					items={localEntries
+						.sort((a, b) => a.order - b.order)
+						.map((entry) => entry.id)}
+				>
 					<div className="grid mt-4 grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-2">
 						{localEntries
 							.sort((a, b) => a.order - b.order)
@@ -95,16 +99,10 @@ export default function GridList({
 function SortableEntry({
 	entry,
 }: { entry: RouterOutputs["watchlist"]["getEntries"][number] }) {
-	const {
-		attributes,
-		listeners,
-		setNodeRef,
-		transform,
-		transition,
-		isDragging,
-	} = useSortable({
-		id: entry.id,
-	});
+	const { attributes, listeners, setNodeRef, transform, transition } =
+		useSortable({
+			id: entry.id,
+		});
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
