@@ -11,6 +11,16 @@ export const watchlistRouter = {
 		.meta({ name: "get-watchlist" })
 		.query(async ({ ctx, input }) => services.getWatchlist(ctx, input)),
 
+	getEntries: protectedProcedure
+		.input(inputs.getWatchlist)
+		.meta({ name: "get-watchlist-entries" })
+		.query(async ({ ctx, input }) => services.getWatchlistEntries(ctx, input)),
+
+	getMembers: protectedProcedure
+		.input(inputs.getWatchlist)
+		.meta({ name: "get-watchlist-members" })
+		.query(async ({ ctx, input }) => services.getWatchlistMembers(ctx, input)),
+
 	// MUTATIONS
 	create: protectedProcedure
 		.input(inputs.createWatchlist)

@@ -4,15 +4,19 @@ import type { RouterOutputs } from "@serea/api";
 import { ListOrderedIcon } from "lucide-react";
 import { useState } from "react";
 import { SELECTED_VIEW_COOKIE_NAME } from "~/lib/constants";
+import { api } from "~/trpc/react";
 import GridList from "./grid-list";
 import RowList from "./row-list";
 import ViewToggle from "./view-toggle";
 
 export default function EntriesSection({
-	watchlist,
+	watchlistId,
 }: {
-	watchlist: RouterOutputs["watchlist"]["get"];
+	watchlistId: string;
 }) {
+	const [entries] = api.watchlist.getEntries.useSuspenseQuery({
+		id: watchlistId,
+	});
 	const [selectedView, setSelectedView] = useState<"grid" | "list">(() => {
 		if (typeof window !== "undefined") {
 			const storedView = localStorage.getItem(SELECTED_VIEW_COOKIE_NAME);
@@ -34,9 +38,9 @@ export default function EntriesSection({
 				/>
 			</div>
 			{selectedView === "grid" ? (
-				<GridList entries={watchlist.entries} watchlist={watchlist} />
+				<GridList entries={entries} watchlistId={watchlistId} />
 			) : (
-				<RowList entries={watchlist.entries} watchlist={watchlist} />
+				<RowList entries={entries} watchlistId={watchlistId} />
 			)}
 		</div>
 	);

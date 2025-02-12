@@ -9,22 +9,30 @@ import {
 import _ from "lodash";
 import { CrownIcon } from "lucide-react";
 import * as React from "react";
+import { api } from "~/trpc/react";
 import ProgressCircle from "./progress-circle";
 
 export default function WatchlistMembers({
-	members,
+	watchlistId,
+	totalEntries,
 }: {
-	members: Pick<RouterOutputs["watchlist"]["get"], "members" | "_count">;
+	watchlistId: string;
+	totalEntries: number;
 }) {
+	const [members] = api.watchlist.getMembers.useSuspenseQuery({
+		id: watchlistId,
+	});
+
 	const sortedMembers = React.useMemo(() => {
-		return [...members.members].sort((a, b) => {
+		return [...members].sort((a, b) => {
 			const roleOrder = { owner: 0, editor: 1, viewer: 2 };
 			return (
 				roleOrder[a.role as keyof typeof roleOrder] -
 				roleOrder[b.role as keyof typeof roleOrder]
 			);
 		});
-	}, [members.members]);
+	}, [members]);
+
 	return (
 		<div>
 			<p className="text-xs font-mono text-carbon-900">MEMBERS</p>
@@ -38,7 +46,7 @@ export default function WatchlistMembers({
 										<div className="relative">
 											<ProgressCircle
 												progress={member._count.watched}
-												total={members._count.entries}
+												total={totalEntries}
 											/>
 											<div className="absolute inset-0 flex items-center justify-center">
 												<Avatar
@@ -52,7 +60,7 @@ export default function WatchlistMembers({
 									</TooltipTrigger>
 									<TooltipContent>
 										<p className="text-xs font-mono">
-											{member._count.watched} / {members._count.entries}
+											{member._count.watched} / {totalEntries}
 										</p>
 									</TooltipContent>
 								</Tooltip>

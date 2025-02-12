@@ -57,28 +57,10 @@ export const getWatchlist = async (
 					id: true,
 				},
 			},
+			members: !currentUserId
+				? false
+				: { where: { userId: currentUserId, role: "OWNER" } },
 			likes: !currentUserId ? false : { where: { userId: currentUserId } },
-			entries: {
-				include: {
-					movie: true,
-				},
-			},
-			members: {
-				include: {
-					_count: {
-						select: {
-							watched: true,
-						},
-					},
-					user: {
-						select: {
-							name: true,
-							image: true,
-							id: true,
-						},
-					},
-				},
-			},
 			_count: {
 				select: {
 					entries: true,
@@ -98,10 +80,52 @@ export const getWatchlist = async (
 	return {
 		...watchlist,
 		liked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
-		isOwner: watchlist.members.some(
-			(member) => member.user.id === ctx.session.user.id,
-		),
+		isOwner: Boolean(watchlist.members.length > 0 && ctx.session.user.id),
 	};
+};
+
+export const getWatchlistEntries = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistInput,
+) => {
+	const entries = await ctx.db.watchlistEntry.findMany({
+		where: {
+			watchlistId: input.id,
+		},
+		include: {
+			movie: true,
+			watched: true,
+		},
+	});
+
+	return entries;
+};
+
+export const getWatchlistMembers = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistInput,
+) => {
+	const members = await ctx.db.watchlistMember.findMany({
+		where: {
+			watchlistId: input.id,
+		},
+		include: {
+			_count: {
+				select: {
+					watched: true,
+				},
+			},
+			user: {
+				select: {
+					name: true,
+					image: true,
+					id: true,
+				},
+			},
+		},
+	});
+
+	return members;
 };
 
 export const likeWatchlist = async (

@@ -10,10 +10,10 @@ import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 
 export default function GridList({
 	entries,
-	watchlist,
+	watchlistId,
 }: {
-	entries: RouterOutputs["watchlist"]["get"]["entries"];
-	watchlist: Pick<RouterOutputs["watchlist"]["get"], "id" | "isOwner">;
+	entries: RouterOutputs["watchlist"]["getEntries"];
+	watchlistId: string;
 }) {
 	return (
 		<div className="grid mt-4 grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-2">

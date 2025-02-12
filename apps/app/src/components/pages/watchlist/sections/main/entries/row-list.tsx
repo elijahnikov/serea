@@ -4,10 +4,10 @@ import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 
 export default function RowList({
 	entries,
-	watchlist,
+	watchlistId,
 }: {
-	entries: RouterOutputs["watchlist"]["get"]["entries"];
-	watchlist: Pick<RouterOutputs["watchlist"]["get"], "id" | "isOwner">;
+	entries: RouterOutputs["watchlist"]["getEntries"];
+	watchlistId: string;
 }) {
 	return (
 		<div className="flex flex-col gap-4 mt-4">
@@ -18,7 +18,7 @@ export default function RowList({
 				>
 					<div>
 						<p className="font-mono text-sm font-medium dark:text-carbon-900/75 text-carbon-dark-500/50">
-							#{entry.order + 1}
+							{entry.order + 1}
 						</p>
 					</div>
 					<div className="flex gap-4">
