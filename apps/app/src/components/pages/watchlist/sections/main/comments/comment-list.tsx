@@ -18,6 +18,7 @@ import * as React from "react";
 import { z } from "zod";
 import { formatNumber } from "~/lib/utils/general";
 import { api } from "~/trpc/react";
+import CommentDropdown from "./comment-dropdown";
 
 dayjs.extend(relativeTime);
 
@@ -42,7 +43,7 @@ function Comment({
 }) {
 	const [showAllReplies, setShowAllReplies] = React.useState(false);
 	const [showReplyInput, setShowReplyInput] = React.useState(false);
-	console.log({ comment });
+
 	const schema = z.object({
 		content: z.string().min(1),
 		parentId: z.string().optional(),
@@ -59,6 +60,11 @@ function Comment({
 	const reply = api.watchlist.createComment.useMutation({
 		onSuccess: () => {
 			setShowReplyInput(false);
+			utils.watchlist.getComments.invalidate();
+		},
+	});
+	const deleteComment = api.watchlist.deleteComment.useMutation({
+		onSuccess: () => {
 			utils.watchlist.getComments.invalidate();
 		},
 	});
@@ -136,7 +142,7 @@ function Comment({
 	};
 
 	return (
-		<div className="px-3 py-2  w-full flex flex-col gap-2 border-t">
+		<div className="group px-3 py-2  w-full flex flex-col gap-2 border-t">
 			<div className="flex items-center gap-2">
 				<Avatar
 					src={comment.user.image ?? undefined}
@@ -147,6 +153,14 @@ function Comment({
 				<p className="text-carbon-900 text-xs mt-[2px]">
 					{dayjs(comment.createdAt).fromNow()}
 				</p>
+				<div className="ml-auto z-50">
+					<CommentDropdown
+						commentId={comment.id}
+						deleteComment={() => {
+							deleteComment.mutate({ commentId: comment.id });
+						}}
+					/>
+				</div>
 			</div>
 			<div className="flex flex-col gap-2 ml-10">
 				<div className="flex items-center gap-2">
@@ -267,12 +281,12 @@ function Comment({
 								className="data-[open=true]:rotate-90 transition-transform duration-100"
 							/>
 						}
-						variant="transparent"
+						variant="secondary"
 						data-open={showAllReplies}
 						className="py-1.5 px-1 mr-auto transition-all duration-200"
 					>
 						<p className="text-xs font-mono">
-							{showAllReplies ? "Hide replies" : "Show replies"}
+							{showAllReplies ? "Hide all replies" : "Show all replies"}
 						</p>
 					</Button>
 				)}

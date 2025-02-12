@@ -3,6 +3,7 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	CreateCommentInput,
 	CreateWatchlistInput,
+	DeleteCommentInput,
 	GetWatchlistInput,
 	LikeCommentInput,
 	LikeWatchlistInput,
@@ -246,6 +247,24 @@ export const createComment = async (
 	});
 
 	return comment;
+};
+
+export const deleteComment = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteCommentInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	await ctx.db.watchlistComment.delete({
+		where: {
+			id: input.commentId,
+			userId: currentUserId,
+		},
+	});
+
+	return {
+		success: true,
+	};
 };
 
 export const getComments = async (

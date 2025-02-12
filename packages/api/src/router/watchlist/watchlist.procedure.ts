@@ -47,6 +47,11 @@ export const watchlistRouter = {
 		.meta({ name: "create-comment" })
 		.mutation(async ({ ctx, input }) => services.createComment(ctx, input)),
 
+	deleteComment: protectedProcedure
+		.input(inputs.deleteComment)
+		.meta({ name: "delete-comment" })
+		.mutation(async ({ ctx, input }) => services.deleteComment(ctx, input)),
+
 	likeComment: protectedProcedure
 		.input(inputs.likeComment)
 		.meta({ name: "like-comment" })

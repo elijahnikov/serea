@@ -41,3 +41,8 @@ export const likeComment = z.object({
 	commentId: z.string(),
 });
 export type LikeCommentInput = z.infer<typeof likeComment>;
+
+export const deleteComment = z.object({
+	commentId: z.string(),
+});
+export type DeleteCommentInput = z.infer<typeof deleteComment>;
