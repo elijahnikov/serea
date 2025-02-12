@@ -29,3 +29,10 @@ export const updateEntryOrder = z.object({
 	newOrder: z.number(),
 });
 export type UpdateEntryOrderInput = z.infer<typeof updateEntryOrder>;
+
+export const createComment = z.object({
+	watchlistId: z.string(),
+	content: z.string(),
+	parentId: z.string().optional(),
+});
+export type CreateCommentInput = z.infer<typeof createComment>;

@@ -60,13 +60,14 @@ model User {
   tiktok        String?
   twitter       String?
 
-  accounts       Account[]
-  sessions       Session[]
-  posts          Post[]
-  memberships    WatchlistMember[]
-  watchlists     Watchlist[]
-  watched        Watched[]
-  watchlistLikes WatchlistLike[]
+  accounts          Account[]
+  sessions          Session[]
+  posts             Post[]
+  memberships       WatchlistMember[]
+  watchlists        Watchlist[]
+  watched           Watched[]
+  watchlistLikes    WatchlistLike[]
+  watchlistComments WatchlistComment[]
 }
 
 model VerificationToken {
@@ -109,11 +110,12 @@ model Watchlist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  entries WatchlistEntry[]
-  members WatchlistMember[]
-  user    User              @relation(fields: [userId], references: [id])
-  watched Watched[]
-  likes   WatchlistLike[]
+  entries  WatchlistEntry[]
+  members  WatchlistMember[]
+  user     User               @relation(fields: [userId], references: [id])
+  watched  Watched[]
+  likes    WatchlistLike[]
+  comments WatchlistComment[]
 
   @@index([userId])
 }
@@ -193,4 +195,25 @@ model WatchlistLike {
   @@id([userId, watchlistId])
   @@index([userId])
   @@index([watchlistId])
+}
+
+model WatchlistComment {
+  id          String  @id @default(cuid())
+  watchlistId String
+  userId      String
+  parentId    String?
+  content     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  parent  WatchlistComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies WatchlistComment[] @relation("CommentReplies")
+
+  @@index([watchlistId])
+  @@index([userId])
+  @@index([parentId])
 }

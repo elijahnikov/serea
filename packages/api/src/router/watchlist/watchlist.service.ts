@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
 import type {
+	CreateCommentInput,
 	CreateWatchlistInput,
 	GetWatchlistInput,
 	LikeWatchlistInput,
@@ -226,4 +227,74 @@ export const likeWatchlist = async (
 	return {
 		liked: false,
 	};
+};
+
+export const createComment = async (
+	ctx: ProtectedTRPCContext,
+	input: CreateCommentInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const comment = await ctx.db.watchlistComment.create({
+		data: {
+			watchlistId: input.watchlistId,
+			userId: currentUserId,
+			parentId: input.parentId ?? null,
+			content: input.content,
+		},
+	});
+
+	return comment;
+};
+
+export const getComments = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchlistInput,
+) => {
+	const comments = await ctx.db.watchlistComment.findMany({
+		where: {
+			watchlistId: input.id,
+		},
+		orderBy: {
+			createdAt: "desc",
+		},
+		include: {
+			user: {
+				select: {
+					name: true,
+					image: true,
+					id: true,
+				},
+			},
+			replies: {
+				orderBy: {
+					createdAt: "desc",
+				},
+				include: {
+					user: {
+						select: {
+							name: true,
+							image: true,
+							id: true,
+						},
+					},
+				},
+			},
+			parent: {
+				select: {
+					id: true,
+				},
+			},
+			_count: {
+				select: {
+					replies: true,
+				},
+			},
+		},
+	});
+
+	return comments.map((comment) => ({
+		...comment,
+		isOwner: comment.userId === ctx.session.user.id,
+	}));
 };

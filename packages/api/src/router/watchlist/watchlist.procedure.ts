@@ -21,6 +21,11 @@ export const watchlistRouter = {
 		.meta({ name: "get-watchlist-members" })
 		.query(async ({ ctx, input }) => services.getWatchlistMembers(ctx, input)),
 
+	getComments: protectedProcedure
+		.input(inputs.getWatchlist)
+		.meta({ name: "get-watchlist-comments" })
+		.query(async ({ ctx, input }) => services.getComments(ctx, input)),
+
 	// MUTATIONS
 	create: protectedProcedure
 		.input(inputs.createWatchlist)
@@ -36,4 +41,9 @@ export const watchlistRouter = {
 		.input(inputs.updateEntryOrder)
 		.meta({ name: "update-entry-order" })
 		.mutation(async ({ ctx, input }) => services.updateEntryOrder(ctx, input)),
+
+	createComment: protectedProcedure
+		.input(inputs.createComment)
+		.meta({ name: "create-comment" })
+		.mutation(async ({ ctx, input }) => services.createComment(ctx, input)),
 } satisfies TRPCRouterRecord;
