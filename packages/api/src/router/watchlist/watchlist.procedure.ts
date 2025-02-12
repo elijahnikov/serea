@@ -31,4 +31,9 @@ export const watchlistRouter = {
 		.input(inputs.likeWatchlist)
 		.meta({ name: "like-watchlist" })
 		.mutation(async ({ ctx, input }) => services.likeWatchlist(ctx, input)),
+
+	updateEntryOrder: protectedProcedure
+		.input(inputs.updateEntryOrder)
+		.meta({ name: "update-entry-order" })
+		.mutation(async ({ ctx, input }) => services.updateEntryOrder(ctx, input)),
 } satisfies TRPCRouterRecord;

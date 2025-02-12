@@ -1,6 +1,5 @@
 "use client";
 
-import type { RouterOutputs } from "@serea/api";
 import { ListOrderedIcon } from "lucide-react";
 import { useState } from "react";
 import { SELECTED_VIEW_COOKIE_NAME } from "~/lib/constants";

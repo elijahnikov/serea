@@ -4,6 +4,7 @@ import type {
 	CreateWatchlistInput,
 	GetWatchlistInput,
 	LikeWatchlistInput,
+	UpdateEntryOrderInput,
 } from "./watchlist.input";
 
 export const createWatchlist = async (
@@ -126,6 +127,72 @@ export const getWatchlistMembers = async (
 	});
 
 	return members;
+};
+
+export const updateEntryOrder = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateEntryOrderInput,
+) => {
+	const currentEntryData = await ctx.db.watchlistEntry.findUnique({
+		where: {
+			id: input.entryId,
+			watchlistId: input.watchlistId,
+		},
+	});
+	if (!currentEntryData) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Entry not found",
+		});
+	}
+
+	const oldOrder = currentEntryData.order;
+	if (oldOrder === input.newOrder) {
+		return currentEntryData;
+	}
+
+	return await ctx.db.$transaction(async (tx) => {
+		if (oldOrder < input.newOrder) {
+			await tx.watchlistEntry.updateMany({
+				where: {
+					watchlistId: input.watchlistId,
+					order: {
+						gt: oldOrder,
+						lte: input.newOrder,
+					},
+				},
+				data: {
+					order: {
+						decrement: 1,
+					},
+				},
+			});
+		} else {
+			await tx.watchlistEntry.updateMany({
+				where: {
+					watchlistId: input.watchlistId,
+					order: {
+						gte: input.newOrder,
+						lt: oldOrder,
+					},
+				},
+				data: {
+					order: {
+						increment: 1,
+					},
+				},
+			});
+		}
+
+		return await tx.watchlistEntry.update({
+			where: {
+				id: input.entryId,
+			},
+			data: {
+				order: input.newOrder,
+			},
+		});
+	});
 };
 
 export const likeWatchlist = async (

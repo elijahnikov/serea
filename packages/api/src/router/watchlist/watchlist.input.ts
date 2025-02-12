@@ -22,3 +22,10 @@ export const likeWatchlist = z.object({
 	id: z.string(),
 });
 export type LikeWatchlistInput = z.infer<typeof likeWatchlist>;
+
+export const updateEntryOrder = z.object({
+	watchlistId: z.string(),
+	entryId: z.string(),
+	newOrder: z.number(),
+});
+export type UpdateEntryOrderInput = z.infer<typeof updateEntryOrder>;
