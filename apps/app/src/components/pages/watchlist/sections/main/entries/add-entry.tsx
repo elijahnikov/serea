@@ -1,26 +1,35 @@
+import type { RouterInputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "lucide-react";
+import * as React from "react";
 import MovieSearch from "~/components/common/movie-search";
 
-export default function AddEntry() {
+export default function AddEntry({
+	addEntry,
+	watchlistId,
+}: {
+	addEntry: (entry: RouterInputs["watchlist"]["addEntry"]) => void;
+	watchlistId: string;
+}) {
+	const [open, setOpen] = React.useState(false);
 	return (
 		<div>
-			<Popover>
+			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
-					<Button variant={"outline"} className="w-full h-[calc(100%-20px)]">
-						<div className="flex items-center gap-2 flex-col">
-							<Plus className="text-secondary-foreground size-8 stroke-[1.5px]" />
-						</div>
-						<p className="font-medium text-secondary-foreground text-sm">
-							Add entry
-						</p>
+					<Button variant={"outline"} after={<PlusIcon />}>
+						Add entry
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="min-w-[400px]">
 					<MovieSearch
 						callback={async (movie) => {
-							console.log(movie);
+							addEntry({
+								contentId: movie.contentId,
+								watchlistId: watchlistId,
+								content: movie,
+							});
+							setOpen(false);
 						}}
 					/>
 				</PopoverContent>

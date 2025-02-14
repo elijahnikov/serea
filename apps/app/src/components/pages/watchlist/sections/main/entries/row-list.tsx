@@ -22,7 +22,7 @@ export default function RowList({
 	watchlistId,
 	isOwner,
 }: {
-	entries: RouterOutputs["watchlist"]["getEntries"];
+	entries: RouterOutputs["watchlist"]["getEntries"]["entries"];
 	watchlistId: string;
 	isOwner: boolean;
 }) {
@@ -30,7 +30,10 @@ export default function RowList({
 
 	const updateEntryOrder = api.watchlist.updateEntryOrder.useMutation();
 
-	const [localEntries, setLocalEntries] = React.useState(entries);
+	const [localEntries, setLocalEntries] =
+		React.useState<RouterOutputs["watchlist"]["getEntries"]["entries"]>(
+			entries,
+		);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -92,7 +95,7 @@ export default function RowList({
 
 function SortableEntry({
 	entry,
-}: { entry: RouterOutputs["watchlist"]["getEntries"][number] }) {
+}: { entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] }) {
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({
 			id: entry.id,

@@ -8,7 +8,7 @@ export default async function WatchlistPage({
 	params: { id: string };
 }) {
 	void api.watchlist.get.prefetch({ id: params.id });
-	void api.watchlist.getEntries.prefetch({ id: params.id });
+	void api.watchlist.getEntries.prefetch({ watchlistId: params.id });
 	void api.watchlist.getMembers.prefetch({ id: params.id });
 	void api.watchlist.getComments.prefetch({ id: params.id });
 

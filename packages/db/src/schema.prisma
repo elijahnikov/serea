@@ -101,12 +101,11 @@ model Watchlist {
   id     String @id @default(cuid())
   userId String
 
-  title           String
-  description     String?
-  tags            String[]
-  isPrivate       Boolean  @default(false)
-  hideStats       Boolean  @default(false)
-  numberOfEntries Int      @default(0)
+  title       String
+  description String?
+  tags        String[]
+  isPrivate   Boolean  @default(false)
+  hideStats   Boolean  @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -135,6 +134,7 @@ model WatchlistEntry {
   movie     Movie     @relation(fields: [contentId], references: [contentId])
   watched   Watched[]
 
+  @@unique([order, id])
   @@index([userId])
   @@index([watchlistId])
   @@index([contentId])

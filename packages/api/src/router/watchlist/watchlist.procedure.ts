@@ -12,7 +12,7 @@ export const watchlistRouter = {
 		.query(async ({ ctx, input }) => services.getWatchlist(ctx, input)),
 
 	getEntries: protectedProcedure
-		.input(inputs.getWatchlist)
+		.input(inputs.getWatchlistEntries)
 		.meta({ name: "get-watchlist-entries" })
 		.query(async ({ ctx, input }) => services.getWatchlistEntries(ctx, input)),
 
@@ -36,6 +36,11 @@ export const watchlistRouter = {
 		.input(inputs.likeWatchlist)
 		.meta({ name: "like-watchlist" })
 		.mutation(async ({ ctx, input }) => services.likeWatchlist(ctx, input)),
+
+	addEntry: protectedProcedure
+		.input(inputs.addWatchlistEntry)
+		.meta({ name: "add-watchlist-entry" })
+		.mutation(async ({ ctx, input }) => services.addEntry(ctx, input)),
 
 	updateEntryOrder: protectedProcedure
 		.input(inputs.updateEntryOrder)

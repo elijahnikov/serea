@@ -5,6 +5,7 @@ import type {
 	CreateCommentInput,
 	CreateWatchlistInput,
 	DeleteCommentInput,
+	GetWatchlistEntriesInput,
 	GetWatchlistInput,
 	LikeCommentInput,
 	LikeWatchlistInput,
@@ -22,7 +23,6 @@ export const createWatchlist = async (
 			...input,
 			hideStats: input.hideStats,
 			userId: currentUserId,
-			numberOfEntries: input.entries.length ?? 0,
 			entries: {
 				create: input.entries.map((entry) => ({
 					contentId: entry.contentId,
@@ -64,7 +64,7 @@ export const getWatchlist = async (
 			},
 			members: !currentUserId
 				? false
-				: { where: { userId: currentUserId, role: "OWNER" } },
+				: { where: { userId: currentUserId, role: "EDITOR" } },
 			likes: !currentUserId ? false : { where: { userId: currentUserId } },
 			_count: {
 				select: {
@@ -85,25 +85,44 @@ export const getWatchlist = async (
 	return {
 		...watchlist,
 		liked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
-		isOwner: Boolean(watchlist.members.length > 0 && ctx.session.user.id),
+		isEditor: Boolean(watchlist.members.length > 0 && ctx.session.user.id),
+		isOwner: Boolean(currentUserId === watchlist.userId),
 	};
 };
 
 export const getWatchlistEntries = async (
 	ctx: ProtectedTRPCContext,
-	input: GetWatchlistInput,
+	input: GetWatchlistEntriesInput,
 ) => {
+	const { limit = 60, cursor } = input;
 	const entries = await ctx.db.watchlistEntry.findMany({
+		take: limit + 1,
+		cursor: cursor ? { order_id: cursor } : undefined,
 		where: {
-			watchlistId: input.id,
+			watchlistId: input.watchlistId,
 		},
+		orderBy: [{ order: "asc" }, { id: "asc" }],
 		include: {
 			movie: true,
 			watched: true,
 		},
 	});
 
-	return entries;
+	let nextCursor: typeof cursor | undefined;
+	if (entries.length > limit) {
+		const nextItem = entries.pop();
+		if (nextItem != null) {
+			nextCursor = {
+				id: nextItem.id,
+				order: nextItem.order,
+			};
+		}
+	}
+
+	return {
+		entries,
+		nextCursor,
+	};
 };
 
 export const getWatchlistMembers = async (
@@ -138,6 +157,40 @@ export const addEntry = async (
 	input: AddWatchlistEntryInput,
 ) => {
 	const currentUserId = ctx.session.user.id;
+
+	const entry = await ctx.db.watchlistEntry.findFirst({
+		where: {
+			contentId: input.contentId,
+			watchlistId: input.watchlistId,
+		},
+	});
+
+	if (entry) {
+		throw new TRPCError({
+			code: "BAD_REQUEST",
+			message: "Entry already exists",
+		});
+	}
+
+	const maxOrder = await ctx.db.watchlistEntry.aggregate({
+		_max: {
+			order: true,
+		},
+		where: {
+			watchlistId: input.watchlistId,
+		},
+	});
+
+	const newEntry = await ctx.db.watchlistEntry.create({
+		data: {
+			contentId: input.contentId,
+			watchlistId: input.watchlistId,
+			userId: currentUserId,
+			order: (maxOrder._max.order ?? -1) + 1,
+		},
+	});
+
+	return newEntry;
 };
 
 export const updateEntryOrder = async (

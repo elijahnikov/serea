@@ -20,6 +20,7 @@ import {
 } from "@serea/ui/tooltip";
 import Image from "next/image";
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { api } from "~/trpc/react";
 import AddEntry from "./add-entry";
@@ -29,15 +30,54 @@ export default function GridList({
 	watchlistId,
 	isOwner,
 }: {
-	entries: RouterOutputs["watchlist"]["getEntries"];
+	entries: RouterOutputs["watchlist"]["getEntries"]["entries"];
 	watchlistId: string;
 	isOwner: boolean;
 }) {
 	const id = React.useId();
 
+	const utils = api.useUtils();
 	const updateEntryOrder = api.watchlist.updateEntryOrder.useMutation();
+	const addEntry = api.watchlist.addEntry.useMutation({
+		onMutate: async (newEntry) => {
+			if (localEntries.length >= 60) return;
+			const optimisticEntry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] =
+				{
+					id: `temp-${Date.now()}`,
+					order: localEntries.length,
+					watchlistId,
+					contentId: newEntry.contentId,
+					userId: "",
+					createdAt: new Date(),
+					updatedAt: new Date(),
+					movie: {
+						id: `temp-movie-${Date.now()}`,
+						contentId: newEntry.contentId,
+						title: newEntry.content.title,
+						overview: newEntry.content.overview ?? null,
+						poster: newEntry.content.poster,
+						backdrop: newEntry.content.backdrop,
+						releaseDate: newEntry.content.releaseDate,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					},
+					watched: [],
+				};
 
-	const [localEntries, setLocalEntries] = React.useState(entries);
+			setLocalEntries((prev) => [...prev, optimisticEntry]);
+		},
+		onError: () => {
+			setLocalEntries(entries);
+		},
+		onSuccess: () => {
+			utils.watchlist.getEntries.invalidate({ watchlistId });
+		},
+	});
+
+	const [localEntries, setLocalEntries] =
+		React.useState<RouterOutputs["watchlist"]["getEntries"]["entries"]>(
+			entries,
+		);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -73,6 +113,11 @@ export default function GridList({
 		setLocalEntries(entries);
 	}, [entries]);
 
+	const [mounted, setMounted] = React.useState(false);
+	React.useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	return (
 		<DndContext
 			id={id}
@@ -86,13 +131,21 @@ export default function GridList({
 						.sort((a, b) => a.order - b.order)
 						.map((entry) => entry.id)}
 				>
-					<div className="grid mt-4 grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-2">
+					<div className="grid mt-4 grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-2">
 						{localEntries
 							.sort((a, b) => a.order - b.order)
 							.map((entry) => (
 								<SortableEntry key={entry.id} entry={entry} />
 							))}
-						{isOwner && <AddEntry />}
+						{isOwner &&
+							mounted &&
+							createPortal(
+								<AddEntry
+									addEntry={addEntry.mutate}
+									watchlistId={watchlistId}
+								/>,
+								document.getElementById("add-entry-portal") ?? document.body,
+							)}
 					</div>
 				</SortableContext>
 			</TooltipProvider>
@@ -102,7 +155,7 @@ export default function GridList({
 
 function SortableEntry({
 	entry,
-}: { entry: RouterOutputs["watchlist"]["getEntries"][number] }) {
+}: { entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] }) {
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({
 			id: entry.id,
@@ -117,18 +170,15 @@ function SortableEntry({
 				<Tooltip>
 					<TooltipTrigger asChild>
 						<div className="flex flex-col items-center">
-							<div className="relative group">
-								<div>
-									<Image
-										className="rounded-md border-[0.5px] border-surface-200"
-										width={0}
-										height={0}
-										sizes="100vw"
-										style={{ width: "100%", height: "auto" }}
-										alt={`Poster for ${entry.movie.title}`}
-										src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-									/>
-								</div>
+							<div className="relative w-full aspect-[2/3]">
+								<Image
+									className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark absolute inset-0 h-full w-full object-cover"
+									width={0}
+									height={0}
+									sizes="100vw"
+									alt={`Poster for ${entry.movie.title}`}
+									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+								/>
 							</div>
 							<p className="font-medium text-neutral-500 text-sm">
 								{entry.order + 1}
