@@ -7,6 +7,7 @@ import type {
 	Session as NextAuthSession,
 } from "next-auth";
 import Discord from "next-auth/providers/discord";
+import Google from "next-auth/providers/google";
 
 import { db } from "@serea/db";
 
@@ -35,7 +36,7 @@ export const authConfig = {
 			}
 		: {}),
 	secret: env.AUTH_SECRET,
-	providers: [Discord],
+	providers: [Discord, Google],
 	callbacks: {
 		session: async (opts) => {
 			if (!("user" in opts))

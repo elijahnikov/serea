@@ -36,6 +36,11 @@ export default function GridList({
 }) {
 	const id = React.useId();
 
+	const [localEntries, setLocalEntries] =
+		React.useState<RouterOutputs["watchlist"]["getEntries"]["entries"]>(
+			entries,
+		);
+
 	const utils = api.useUtils();
 	const updateEntryOrder = api.watchlist.updateEntryOrder.useMutation();
 	const addEntry = api.watchlist.addEntry.useMutation({
@@ -73,11 +78,6 @@ export default function GridList({
 			utils.watchlist.getEntries.invalidate({ watchlistId });
 		},
 	});
-
-	const [localEntries, setLocalEntries] =
-		React.useState<RouterOutputs["watchlist"]["getEntries"]["entries"]>(
-			entries,
-		);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -180,7 +180,7 @@ function SortableEntry({
 									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
 								/>
 							</div>
-							<p className="font-medium text-neutral-500 text-sm">
+							<p className="font-medium font-mono text-neutral-500 text-sm">
 								{entry.order + 1}
 							</p>
 						</div>

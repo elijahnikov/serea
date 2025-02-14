@@ -7,6 +7,7 @@ import { SELECTED_VIEW_COOKIE_NAME } from "~/lib/constants";
 import { api } from "~/trpc/react";
 import AddEntry from "./add-entry";
 import GridList from "./grid-list";
+import LoadingEntries from "./loading";
 import RowList from "./row-list";
 import ViewToggle from "./view-toggle";
 
@@ -38,7 +39,7 @@ export default function EntriesSection({
 	});
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <LoadingEntries />;
 	}
 
 	return (

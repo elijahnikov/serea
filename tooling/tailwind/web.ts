@@ -73,6 +73,11 @@ export default {
 					from: { transform: "translateY(0)" },
 					to: { transform: "translateY(calc(-100% - var(--gap)))" },
 				},
+				shimmer: {
+					"100%": {
+						transform: "translateX(100%)",
+					},
+				},
 			},
 			animation: {
 				"bounce-in": "bounce-in 0.5s ease-out",
@@ -81,6 +86,7 @@ export default {
 				marquee: "marquee var(--duration) linear infinite",
 				"marquee-vertical": "marquee-vertical var(--duration) linear infinite",
 				"caret-blink": "caret-blink 1.25s ease-out infinite",
+				shimmer: "shimmer 1.5s infinite",
 			},
 		},
 	},

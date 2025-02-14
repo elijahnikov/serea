@@ -60,15 +60,17 @@ model User {
   tiktok        String?
   twitter       String?
 
-  accounts              Account[]
-  sessions              Session[]
-  posts                 Post[]
-  memberships           WatchlistMember[]
-  watchlists            Watchlist[]
-  watched               Watched[]
-  watchlistLikes        WatchlistLike[]
-  watchlistComments     WatchlistComment[]
-  watchlistCommentLikes WatchlistCommentLike[]
+  accounts                Account[]
+  sessions                Session[]
+  posts                   Post[]
+  memberships             WatchlistMember[]
+  watchlists              Watchlist[]
+  watched                 Watched[]
+  watchlistLikes          WatchlistLike[]
+  watchlistComments       WatchlistComment[]
+  watchlistCommentLikes   WatchlistCommentLike[]
+  watchlistInvitesInvitee WatchlistInvite[]      @relation("Invitee")
+  watchlistInvitesInviter WatchlistInvite[]      @relation("Inviter")
 }
 
 model VerificationToken {
@@ -116,6 +118,7 @@ model Watchlist {
   watched  Watched[]
   likes    WatchlistLike[]
   comments WatchlistComment[]
+  invites  WatchlistInvite[]
 
   @@index([userId])
 }
@@ -230,4 +233,25 @@ model WatchlistCommentLike {
   @@id([userId, commentId])
   @@index([userId])
   @@index([commentId])
+}
+
+model WatchlistInvite {
+  id String @id @default(cuid())
+
+  inviteeId    String
+  inviteeEmail String
+  inviterId    String
+  watchlistId  String
+  role         Role
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invitee   User      @relation("Invitee", fields: [inviteeId], references: [id])
+  inviter   User      @relation("Inviter", fields: [inviterId], references: [id])
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+
+  @@index([inviteeId])
+  @@index([inviterId])
+  @@index([watchlistId])
 }

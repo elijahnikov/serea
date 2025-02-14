@@ -14,8 +14,10 @@ import { CSS } from "@dnd-kit/utilities";
 import type { RouterOutputs } from "@serea/api";
 import Image from "next/image";
 import * as React from "react";
+import { createPortal } from "react-dom";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { api } from "~/trpc/react";
+import AddEntry from "./add-entry";
 
 export default function RowList({
 	entries,
@@ -28,12 +30,48 @@ export default function RowList({
 }) {
 	const id = React.useId();
 
-	const updateEntryOrder = api.watchlist.updateEntryOrder.useMutation();
-
 	const [localEntries, setLocalEntries] =
 		React.useState<RouterOutputs["watchlist"]["getEntries"]["entries"]>(
 			entries,
 		);
+
+	const utils = api.useUtils();
+	const updateEntryOrder = api.watchlist.updateEntryOrder.useMutation();
+	const addEntry = api.watchlist.addEntry.useMutation({
+		onMutate: async (newEntry) => {
+			if (localEntries.length >= 60) return;
+			const optimisticEntry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] =
+				{
+					id: `temp-${Date.now()}`,
+					order: localEntries.length,
+					watchlistId,
+					contentId: newEntry.contentId,
+					userId: "",
+					createdAt: new Date(),
+					updatedAt: new Date(),
+					movie: {
+						id: `temp-movie-${Date.now()}`,
+						contentId: newEntry.contentId,
+						title: newEntry.content.title,
+						overview: newEntry.content.overview ?? null,
+						poster: newEntry.content.poster,
+						backdrop: newEntry.content.backdrop,
+						releaseDate: newEntry.content.releaseDate,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					},
+					watched: [],
+				};
+
+			setLocalEntries((prev) => [...prev, optimisticEntry]);
+		},
+		onError: () => {
+			setLocalEntries(entries);
+		},
+		onSuccess: () => {
+			utils.watchlist.getEntries.invalidate({ watchlistId });
+		},
+	});
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -69,6 +107,11 @@ export default function RowList({
 		setLocalEntries(entries);
 	}, [entries]);
 
+	const [mounted, setMounted] = React.useState(false);
+	React.useEffect(() => {
+		setMounted(true);
+	}, []);
+
 	return (
 		<DndContext
 			id={id}
@@ -88,6 +131,12 @@ export default function RowList({
 							<SortableEntry key={entry.id} entry={entry} />
 						))}
 				</div>
+				{isOwner &&
+					mounted &&
+					createPortal(
+						<AddEntry addEntry={addEntry.mutate} watchlistId={watchlistId} />,
+						document.getElementById("add-entry-portal") ?? document.body,
+					)}
 			</SortableContext>
 		</DndContext>
 	);

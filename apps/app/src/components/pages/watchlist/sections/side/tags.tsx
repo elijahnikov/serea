@@ -6,6 +6,7 @@ export default function WatchlistTags({
 }: {
 	tags: Pick<RouterOutputs["watchlist"]["get"], "tags">;
 }) {
+	if (tags.tags.length === 0) return null;
 	return (
 		<div>
 			<p className="text-xs font-mono text-carbon-900">TAGS</p>

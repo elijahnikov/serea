@@ -1,16 +1,45 @@
+import type { RouterOutputs } from "@serea/api";
 import { Button } from "@serea/ui/button";
-import { PlusIcon, SettingsIcon } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@serea/ui/dropdown-menu";
+import { PencilIcon, SettingsIcon, TrashIcon } from "lucide-react";
+import InviteDialog from "./invite-dialog";
 
-export default function OwnerActions() {
+export default function OwnerActions({
+	members,
+	watchlistId,
+}: {
+	members: RouterOutputs["watchlist"]["getMembers"];
+	watchlistId: string;
+}) {
 	return (
-		<div className="mt-auto border-b px-8 pb-6 -mx-8 justify-end items-end self-end">
+		<div className="mt-auto sticky z-50 pt-6 top-0 bg-background border-b px-8 pb-6 -ml-8 -mr-10 justify-end items-end self-end">
 			<div className="flex items-center gap-2">
-				<Button before={<PlusIcon />} className="w-full">
-					Invite members
-				</Button>
-				<Button isIconOnly variant="outline">
-					<SettingsIcon />
-				</Button>
+				<InviteDialog members={members} watchlistId={watchlistId} />
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button isIconOnly variant="outline">
+							<SettingsIcon />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuGroup>
+							<DropdownMenuItem>
+								<PencilIcon />
+								<span>Edit watchlist</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem destructive>
+								<TrashIcon />
+								<span>Delete watchlist</span>
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</div>
 	);

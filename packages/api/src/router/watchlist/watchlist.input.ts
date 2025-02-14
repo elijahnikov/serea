@@ -60,3 +60,15 @@ export const addWatchlistEntry = z.object({
 	content: movieTableData.omit({ order: true }),
 });
 export type AddWatchlistEntryInput = z.infer<typeof addWatchlistEntry>;
+
+export const inviteMembers = z.object({
+	watchlistId: z.string(),
+	email: z.string().email(),
+	role: z.enum(["VIEWER", "EDITOR"]),
+});
+export type InviteMembersInput = z.infer<typeof inviteMembers>;
+
+export const deleteInvite = z.object({
+	inviteId: z.string(),
+});
+export type DeleteInviteInput = z.infer<typeof deleteInvite>;

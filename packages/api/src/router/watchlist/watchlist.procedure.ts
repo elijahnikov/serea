@@ -26,6 +26,11 @@ export const watchlistRouter = {
 		.meta({ name: "get-watchlist-comments" })
 		.query(async ({ ctx, input }) => services.getComments(ctx, input)),
 
+	getInvites: protectedProcedure
+		.input(inputs.getWatchlist)
+		.meta({ name: "get-watchlist-invites" })
+		.query(async ({ ctx, input }) => services.getInvites(ctx, input)),
+
 	// MUTATIONS
 	create: protectedProcedure
 		.input(inputs.createWatchlist)
@@ -61,4 +66,14 @@ export const watchlistRouter = {
 		.input(inputs.likeComment)
 		.meta({ name: "like-comment" })
 		.mutation(async ({ ctx, input }) => services.likeComment(ctx, input)),
+
+	inviteMembers: protectedProcedure
+		.input(inputs.inviteMembers)
+		.meta({ name: "invite-members" })
+		.mutation(async ({ ctx, input }) => services.inviteMembers(ctx, input)),
+
+	deleteInvite: protectedProcedure
+		.input(inputs.deleteInvite)
+		.meta({ name: "delete-invite" })
+		.mutation(async ({ ctx, input }) => services.deleteInvite(ctx, input)),
 } satisfies TRPCRouterRecord;
