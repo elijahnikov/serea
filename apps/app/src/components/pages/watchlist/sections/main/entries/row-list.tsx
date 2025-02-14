@@ -120,6 +120,7 @@ export default function RowList({
 			onDragEnd={handleDragEnd}
 		>
 			<SortableContext
+				disabled={!isOwner}
 				items={localEntries
 					.sort((a, b) => a.order - b.order)
 					.map((entry) => entry.id)}

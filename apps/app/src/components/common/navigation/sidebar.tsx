@@ -3,7 +3,7 @@
 import { auth } from "@serea/auth";
 import { Button } from "@serea/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@serea/ui/sheet";
-import { MenuIcon } from "lucide-react";
+import { BellIcon, MenuIcon } from "lucide-react";
 
 import NavLinks from "./nav-links";
 import UserMenu from "./user-menu";

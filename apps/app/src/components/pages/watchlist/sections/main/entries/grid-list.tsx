@@ -127,6 +127,7 @@ export default function GridList({
 		>
 			<TooltipProvider>
 				<SortableContext
+					disabled={!isOwner}
 					items={localEntries
 						.sort((a, b) => a.order - b.order)
 						.map((entry) => entry.id)}

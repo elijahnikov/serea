@@ -20,10 +20,12 @@ export default function WatchlistActions({
 	watchlistId,
 	likes,
 	isLiked,
+	comments,
 }: {
 	watchlistId: string;
 	likes: number;
 	isLiked: boolean;
+	comments: number;
 }) {
 	const scrollToComments = () => {
 		const commentsSection = document.getElementById("comments-section");
@@ -80,6 +82,14 @@ export default function WatchlistActions({
 					</span>
 				</div>
 			</Button>
+			<Button variant="outline" onClick={scrollToComments}>
+				<div className="flex">
+					<MessageCircleIcon className="opacity-60" size={16} strokeWidth={2} />
+					<span className="border-l dark:hover:border-carbon-dark-500 text-xs font-mono flex items-center justify-center ms-2.5 pl-3 -my-2">
+						{formatNumber(comments)}
+					</span>
+				</div>
+			</Button>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button before={<ForwardIcon />} variant="outline">
@@ -101,11 +111,6 @@ export default function WatchlistActions({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			<Button variant={"outline"} onClick={scrollToComments}>
-				<div className="flex items-center gap-1">
-					<MessageCircleIcon size={16} strokeWidth={2} />
-				</div>
-			</Button>
 		</div>
 	);
 }

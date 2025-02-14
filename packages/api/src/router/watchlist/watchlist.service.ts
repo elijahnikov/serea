@@ -72,6 +72,7 @@ export const getWatchlist = async (
 			_count: {
 				select: {
 					entries: true,
+					comments: true,
 					members: true,
 					likes: true,
 				},
@@ -201,6 +202,16 @@ export const addEntry = async (
 			order: (maxOrder._max.order ?? -1) + 1,
 		},
 	});
+	if (newEntry) {
+		await ctx.db.watchlist.update({
+			where: {
+				id: input.watchlistId,
+			},
+			data: {
+				updatedAt: new Date(),
+			},
+		});
+	}
 
 	return newEntry;
 };
@@ -260,6 +271,14 @@ export const updateEntryOrder = async (
 			});
 		}
 
+		await tx.watchlist.update({
+			where: {
+				id: input.watchlistId,
+			},
+			data: {
+				updatedAt: new Date(),
+			},
+		});
 		return await tx.watchlistEntry.update({
 			where: {
 				id: input.entryId,
