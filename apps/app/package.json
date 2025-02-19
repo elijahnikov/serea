@@ -41,6 +41,7 @@
     "react-use": "^17.6.0",
     "superjson": "2.2.1",
     "uploadthing": "^7.4.4",
+    "ws": "^8.18.0",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -52,6 +53,7 @@
     "@types/node": "^22.10.1",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
+    "@types/ws": "^8.5.14",
     "dotenv-cli": "^7.4.4",
     "jiti": "^1.21.6",
     "tailwindcss": "catalog:",

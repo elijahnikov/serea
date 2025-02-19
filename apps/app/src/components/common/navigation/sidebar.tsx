@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@serea/ui/sheet";
 import { BellIcon, MenuIcon } from "lucide-react";
 
 import NavLinks from "./nav-links";
+import Notifications from "./notifications";
 import UserMenu from "./user-menu";
 
 export default async function Sidebar() {
@@ -29,7 +30,7 @@ export default async function Sidebar() {
 				</SheetContent>
 			</Sheet>
 
-			<aside className="hidden lg:block max-w-max min-w-[240px] fixed border-r">
+			<aside className="hidden lg:block w-max max-w-[240px] min-w-[240px] fixed border-r">
 				<nav className="p-2 w-full min-h-screen ml-auto flex flex-col justify-between h-full">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2">
@@ -38,13 +39,17 @@ export default async function Sidebar() {
 						<NavLinks />
 					</div>
 					<div className="flex flex-col gap-2">
-						<UserMenu
-							user={{
-								name: String(user?.user.name),
-								image: user?.user.image ?? "",
-								email: String(user?.user.email),
-							}}
-						/>
+						<hr className="-mx-2" />
+						<div className="flex items-center gap-2">
+							<UserMenu
+								user={{
+									name: String(user?.user.name),
+									image: user?.user.image ?? "",
+									email: String(user?.user.email),
+								}}
+							/>
+							<Notifications />
+						</div>
 					</div>
 				</nav>
 			</aside>

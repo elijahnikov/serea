@@ -1,6 +1,7 @@
 import type { Role } from "@serea/db";
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
+import { createNotification } from "../notification/notification.service";
 import type {
 	AddWatchlistEntryInput,
 	CreateCommentInput,
@@ -464,6 +465,18 @@ export const inviteMembers = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
+	const watchlist = await ctx.db.watchlist.findUnique({
+		where: { id: input.watchlistId },
+		select: { title: true, id: true },
+	});
+
+	if (!watchlist) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Watchlist not found",
+		});
+	}
+
 	const userToInvite = await ctx.db.user.findUnique({
 		where: {
 			email: input.email,
@@ -494,6 +507,19 @@ export const inviteMembers = async (
 			inviteeEmail: input.email,
 		},
 	});
+	if (invite) {
+		await createNotification(ctx, {
+			userId: userToInvite.id,
+			actorId: currentUserId,
+			type: "WATCHLIST_INVITE",
+			data: {
+				watchlistId: watchlist.id,
+				watchlistTitle: watchlist.title,
+				inviteId: invite.id,
+				role: input.role,
+			},
+		});
+	}
 
 	return invite;
 };
