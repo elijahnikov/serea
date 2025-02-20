@@ -1,7 +1,8 @@
 import { Button } from "@serea/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@serea/ui/popover";
-import { BellIcon } from "lucide-react";
+import { Badge, BellIcon } from "lucide-react";
 import { api } from "~/trpc/server";
+import NotificationRow from "./notification-row";
 
 export default async function Notifications() {
 	const notifications = await api.notification.getNotifications();
@@ -9,15 +10,19 @@ export default async function Notifications() {
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
-				<Button isIconOnly variant="outline" size="sm">
-					<BellIcon className="h-4 w-4" />
+				<Button variant="outline" size="sm" className="h-10">
+					<div className="relative">
+						{hasUnread && (
+							<div className="absolute left-2 animate-pulse -top-1 flex h-2 w-2 items-center justify-center rounded-full bg-red-500" />
+						)}
+						<BellIcon className="h-4 w-4" />
+					</div>
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent>
-				<div>
-					<h3>Notifications</h3>
-					<p>{JSON.stringify(notifications)}</p>
-				</div>
+				{notifications.map((notification) => (
+					<NotificationRow key={notification.id} notification={notification} />
+				))}
 			</PopoverContent>
 		</Popover>
 	);

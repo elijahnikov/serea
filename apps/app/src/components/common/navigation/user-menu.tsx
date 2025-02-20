@@ -36,12 +36,12 @@ export default function UserMenu({
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="outline"
-					className="group flex w-full h-12 text-sm items-center justify-start"
+					className="group flex w-full h-10 text-sm items-center justify-start"
 				>
 					<div className="flex items-center gap-2">
 						<div className="mt-1">
 							<Avatar
-								size={"sm"}
+								size={"xs"}
 								src={user.image}
 								alt={"Users avatar"}
 								initials={user.name.slice(0, 2)}
@@ -49,9 +49,6 @@ export default function UserMenu({
 						</div>
 						<div className="flex flex-col -gap-2 text-left">
 							<p className="font-medium">{user.name}</p>
-							<p className="text-xs max-w-[105px] truncate leading-tight font-mono text-secondary-foreground/50">
-								{user.email}
-							</p>
 						</div>
 					</div>
 				</Button>
