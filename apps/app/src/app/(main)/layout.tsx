@@ -7,7 +7,7 @@ import {
 } from "@serea/ui/dialog";
 
 import { redirect } from "next/navigation";
-import Sidebar from "~/components/common/navigation/sidebar";
+import Sidebar from "~/components/common/navigation";
 import OnboardingComponent from "~/components/pages/onboarding";
 
 export default async function MainLayout({

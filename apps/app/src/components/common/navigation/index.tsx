@@ -5,11 +5,14 @@ import { Button } from "@serea/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@serea/ui/sheet";
 import { BellIcon, MenuIcon } from "lucide-react";
 
+import { Suspense } from "react";
+import { HydrateClient, api } from "~/trpc/server";
 import NavLinks from "./nav-links";
 import Notifications from "./notifications";
 import UserMenu from "./user-menu";
 
 export default async function Sidebar() {
+	void api.notification.getNotifications.prefetch();
 	const user = await auth();
 	user?.user.name;
 	return (
@@ -48,7 +51,11 @@ export default async function Sidebar() {
 									email: String(user?.user.email),
 								}}
 							/>
-							<Notifications />
+							<HydrateClient>
+								<Suspense fallback={<div>Loading...</div>}>
+									<Notifications />
+								</Suspense>
+							</HydrateClient>
 						</div>
 					</div>
 				</nav>

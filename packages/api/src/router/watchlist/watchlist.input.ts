@@ -72,3 +72,9 @@ export const deleteInvite = z.object({
 	inviteId: z.string(),
 });
 export type DeleteInviteInput = z.infer<typeof deleteInvite>;
+
+export const respondInvite = z.object({
+	inviteId: z.string(),
+	response: z.enum(["ACCEPT", "REJECT"]),
+});
+export type RespondInviteInput = z.infer<typeof respondInvite>;

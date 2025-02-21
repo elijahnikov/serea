@@ -28,9 +28,9 @@ function organizeComments(comments: Comment[]) {
 			}
 		}
 	}
-
 	return topLevelComments;
 }
+
 export default function CommentsSection({
 	watchlistId,
 }: {
@@ -43,8 +43,6 @@ export default function CommentsSection({
 		() => organizeComments(comments),
 		[comments],
 	);
-
-	console.log({ comments, organizedComments });
 
 	return (
 		<div className="pl-8 pr-14 py-6">

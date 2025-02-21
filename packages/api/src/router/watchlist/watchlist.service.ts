@@ -13,6 +13,7 @@ import type {
 	InviteMembersInput,
 	LikeCommentInput,
 	LikeWatchlistInput,
+	RespondInviteInput,
 	UpdateEntryOrderInput,
 } from "./watchlist.input";
 
@@ -579,4 +580,51 @@ export const deleteInvite = async (
 	return {
 		success: true,
 	};
+};
+
+export const respondInvite = async (
+	ctx: ProtectedTRPCContext,
+	input: RespondInviteInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const invite = await ctx.db.watchlistInvite.findUnique({
+		where: {
+			id: input.inviteId,
+			inviteeId: currentUserId,
+		},
+	});
+
+	if (!invite) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Invite not found",
+		});
+	}
+
+	if (input.response === "ACCEPT") {
+		await ctx.db.watchlistMember.create({
+			data: {
+				userId: invite.inviteeId,
+				watchlistId: invite.watchlistId,
+				role: invite.role,
+			},
+		});
+	}
+
+	await ctx.db.watchlistInvite.delete({
+		where: {
+			id: input.inviteId,
+		},
+	});
+	await ctx.db.notification.deleteMany({
+		where: {
+			userId: invite.inviteeId,
+			type: "WATCHLIST_INVITE",
+			data: {
+				path: ["inviteId"],
+				equals: input.inviteId,
+			},
+		},
+	});
 };

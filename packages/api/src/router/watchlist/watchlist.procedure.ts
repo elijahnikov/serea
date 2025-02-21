@@ -72,6 +72,11 @@ export const watchlistRouter = {
 		.meta({ name: "invite-members" })
 		.mutation(async ({ ctx, input }) => services.inviteMembers(ctx, input)),
 
+	respondInvite: protectedProcedure
+		.input(inputs.respondInvite)
+		.meta({ name: "respond-invite" })
+		.mutation(async ({ ctx, input }) => services.respondInvite(ctx, input)),
+
 	deleteInvite: protectedProcedure
 		.input(inputs.deleteInvite)
 		.meta({ name: "delete-invite" })
