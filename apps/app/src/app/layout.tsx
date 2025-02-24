@@ -15,6 +15,8 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { utFileRouter } from "~/app/api/uploadthing/core";
 
+import { Toaster } from "@serea/ui/sonner";
+
 export const metadata: Metadata = {
 	metadataBase: new URL(
 		env.VERCEL_ENV === "production"
@@ -77,6 +79,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 					<TRPCReactProvider>
 						<NextSSRPlugin routerConfig={extractRouterConfig(utFileRouter)} />
 						{props.children}
+						<Toaster position="bottom-center" />
 					</TRPCReactProvider>
 				</ThemeProvider>
 			</body>

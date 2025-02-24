@@ -1,9 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
 import { api } from "~/trpc/react";
 import MainSection from "./sections/main";
-import EntriesSection from "./sections/main/entries";
 import SideSection from "./sections/side";
 
 export default function Watchlist({ id }: { id: string }) {

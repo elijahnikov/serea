@@ -6,17 +6,17 @@ import { api } from "~/trpc/react";
 
 export default function InviteList({ watchlistId }: { watchlistId: string }) {
 	const utils = api.useUtils();
-	const { data, isLoading } = api.watchlist.getInvites.useQuery({
+	const { data } = api.watchlist.getInvites.useQuery({
 		id: watchlistId,
 	});
-	const deleteInvite = api.watchlist.deleteInvite.useMutation();
-
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
+	const deleteInvite = api.watchlist.deleteInvite.useMutation({
+		onSuccess: () => {
+			utils.watchlist.getInvites.invalidate();
+		},
+	});
 
 	if (data?.length === 0) {
-		return <div>No invites</div>;
+		return null;
 	}
 
 	return (
@@ -60,7 +60,12 @@ function InviteRow({
 					</p>
 				</div>
 			</div>
-			<Button className="rounded-full" variant={"destructive"} isIconOnly>
+			<Button
+				onClick={() => deleteInvite(invite.id)}
+				className="rounded-full"
+				variant={"destructive"}
+				isIconOnly
+			>
 				<TrashIcon />
 			</Button>
 		</div>

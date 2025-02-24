@@ -18,6 +18,7 @@ import {
 	SelectValue,
 } from "@serea/ui/select";
 import { SearchIcon, SendIcon } from "lucide-react";
+import { toast } from "sonner";
 import { z } from "zod";
 import { api } from "~/trpc/react";
 
@@ -27,7 +28,13 @@ const inviteSchema = z.object({
 });
 
 export default function InviteForm({ watchlistId }: { watchlistId: string }) {
-	const invite = api.watchlist.inviteMembers.useMutation();
+	const utils = api.useUtils();
+	const invite = api.watchlist.inviteMembers.useMutation({
+		onSuccess: () => {
+			toast.success("Invite sent successfully");
+			utils.watchlist.getInvites.invalidate();
+		},
+	});
 
 	const form = useForm({
 		schema: inviteSchema,

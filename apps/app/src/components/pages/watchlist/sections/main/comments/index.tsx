@@ -1,6 +1,8 @@
 import type { RouterOutputs } from "@serea/api";
+import { Button } from "@serea/ui/button";
 import { MessageCircleIcon, SendIcon } from "lucide-react";
 import * as React from "react";
+import { toast } from "sonner";
 import { api } from "~/trpc/react";
 import AddCommentForm from "./add-comment-form";
 import CommentList from "./comment-list";
@@ -46,6 +48,7 @@ export default function CommentsSection({
 
 	return (
 		<div className="pl-8 pr-14 py-6">
+			<Button onClick={() => toast.success("test")}>test</Button>
 			<div
 				className="flex items-center gap-2 text-carbon-900"
 				id="comments-section"

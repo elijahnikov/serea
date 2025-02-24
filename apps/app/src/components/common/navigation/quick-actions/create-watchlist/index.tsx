@@ -24,9 +24,11 @@ import { ArrowLeftIcon, CheckIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { api } from "~/trpc/react";
 import MovieList from "./movie-list";
+
 export default function CreateWatchlist({
 	goBack,
 	close,
@@ -38,6 +40,7 @@ export default function CreateWatchlist({
 	const create = api.watchlist.create.useMutation({
 		onSuccess: (watchlist) => {
 			close();
+			toast.success("Your watchlist has been created, redirecting...");
 			router.push(`/watchlist/${watchlist.id}`);
 		},
 	});

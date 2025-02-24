@@ -617,7 +617,7 @@ export const respondInvite = async (
 			id: input.inviteId,
 		},
 	});
-	await ctx.db.notification.deleteMany({
+	await ctx.db.notification.updateMany({
 		where: {
 			userId: invite.inviteeId,
 			type: "WATCHLIST_INVITE",
@@ -625,6 +625,9 @@ export const respondInvite = async (
 				path: ["inviteId"],
 				equals: input.inviteId,
 			},
+		},
+		data: {
+			read: true,
 		},
 	});
 };
