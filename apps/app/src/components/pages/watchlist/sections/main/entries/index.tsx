@@ -17,9 +17,11 @@ import ViewToggle from "./view-toggle";
 export default function EntriesSection({
 	watchlistId,
 	isOwner,
+	isEditor,
 }: {
 	watchlistId: string;
 	isOwner: boolean;
+	isEditor: boolean;
 }) {
 	const { data, hasNextPage, fetchNextPage, isLoading } =
 		api.watchlist.getEntries.useInfiniteQuery(
@@ -88,12 +90,14 @@ export default function EntriesSection({
 				(selectedView === "grid" ? (
 					<GridList
 						isOwner={isOwner}
+						isEditor={isEditor}
 						entries={entries}
 						watchlistId={watchlistId}
 					/>
 				) : (
 					<RowList
 						isOwner={isOwner}
+						isEditor={isEditor}
 						entries={entries}
 						watchlistId={watchlistId}
 					/>

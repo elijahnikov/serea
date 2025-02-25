@@ -23,10 +23,12 @@ export default function RowList({
 	entries,
 	watchlistId,
 	isOwner,
+	isEditor,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"]["entries"];
 	watchlistId: string;
 	isOwner: boolean;
+	isEditor: boolean;
 }) {
 	const id = React.useId();
 

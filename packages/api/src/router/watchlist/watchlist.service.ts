@@ -577,6 +577,16 @@ export const deleteInvite = async (
 		},
 	});
 
+	await ctx.db.notification.deleteMany({
+		where: {
+			type: "WATCHLIST_INVITE",
+			data: {
+				path: ["inviteId"],
+				equals: input.inviteId,
+			},
+		},
+	});
+
 	return {
 		success: true,
 	};

@@ -71,21 +71,25 @@ export default function InviteForm({ watchlistId }: { watchlistId: string }) {
 											<Input
 												{...field}
 												suffix={
-													<Select
-														value={form.getValues("role")}
-														onValueChange={(value) =>
-															form.setValue("role", value)
-														}
-														defaultValue={form.getValues("role")}
-													>
-														<SelectTrigger className="ring-0 outline-none dark:shadow-none rounded-l-none w-[100px] -mx-3 h-8 dark:border-0 border-0 shadow-none focus:ring-0 focus:ring-offset-0 focus-within:ring-0">
-															<SelectValue placeholder="Select framework" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="VIEWER">Viewer</SelectItem>
-															<SelectItem value="EDITOR">Editor</SelectItem>
-														</SelectContent>
-													</Select>
+													<FormField
+														control={form.control}
+														name="role"
+														render={({ field: roleField }) => (
+															<Select
+																value={roleField.value}
+																onValueChange={roleField.onChange}
+																defaultValue={roleField.value}
+															>
+																<SelectTrigger className="ring-0 outline-none dark:shadow-none rounded-l-none w-[100px] -mx-3 h-8 dark:border-0 border-0 shadow-none focus:ring-0 focus:ring-offset-0 focus-within:ring-0">
+																	<SelectValue placeholder="Select framework" />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="VIEWER">Viewer</SelectItem>
+																	<SelectItem value="EDITOR">Editor</SelectItem>
+																</SelectContent>
+															</Select>
+														)}
+													/>
 												}
 												className="peer w-full ps-6"
 												placeholder="Email"

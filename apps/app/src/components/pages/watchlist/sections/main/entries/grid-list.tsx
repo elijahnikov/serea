@@ -29,10 +29,12 @@ export default function GridList({
 	entries,
 	watchlistId,
 	isOwner,
+	isEditor,
 }: {
 	entries: RouterOutputs["watchlist"]["getEntries"]["entries"];
 	watchlistId: string;
 	isOwner: boolean;
+	isEditor: boolean;
 }) {
 	const id = React.useId();
 
@@ -138,7 +140,7 @@ export default function GridList({
 							.map((entry) => (
 								<SortableEntry key={entry.id} entry={entry} />
 							))}
-						{isOwner &&
+						{(isOwner || isEditor) &&
 							mounted &&
 							createPortal(
 								<AddEntry

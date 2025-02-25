@@ -13,6 +13,7 @@ export default function MainSection({
 			<MainHeader watchlist={watchlist} />
 			<Suspense fallback={<div>Loading entries...</div>}>
 				<EntriesSection
+					isEditor={watchlist.isEditor}
 					isOwner={watchlist.isOwner}
 					watchlistId={watchlist.id}
 				/>
