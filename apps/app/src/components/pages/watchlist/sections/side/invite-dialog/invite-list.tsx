@@ -6,7 +6,7 @@ import { api } from "~/trpc/react";
 
 export default function InviteList({ watchlistId }: { watchlistId: string }) {
 	const utils = api.useUtils();
-	const { data } = api.watchlist.getInvites.useQuery({
+	const { data, isLoading } = api.watchlist.getInvites.useQuery({
 		id: watchlistId,
 	});
 	const deleteInvite = api.watchlist.deleteInvite.useMutation({
@@ -15,7 +15,7 @@ export default function InviteList({ watchlistId }: { watchlistId: string }) {
 		},
 	});
 
-	if (data?.length === 0) {
+	if (isLoading || data?.length === 0) {
 		return null;
 	}
 
