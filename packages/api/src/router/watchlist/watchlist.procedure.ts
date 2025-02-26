@@ -47,6 +47,11 @@ export const watchlistRouter = {
 		.meta({ name: "add-watchlist-entry" })
 		.mutation(async ({ ctx, input }) => services.addEntry(ctx, input)),
 
+	deleteEntry: protectedProcedure
+		.input(inputs.deleteEntry)
+		.meta({ name: "delete-entry" })
+		.mutation(async ({ ctx, input }) => services.deleteEntry(ctx, input)),
+
 	updateEntryOrder: protectedProcedure
 		.input(inputs.updateEntryOrder)
 		.meta({ name: "update-entry-order" })

@@ -7,6 +7,7 @@ import type {
 	CreateCommentInput,
 	CreateWatchlistInput,
 	DeleteCommentInput,
+	DeleteEntryInput,
 	DeleteInviteInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
@@ -640,4 +641,20 @@ export const respondInvite = async (
 			read: true,
 		},
 	});
+};
+
+export const deleteEntry = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteEntryInput,
+) => {
+	await ctx.db.watchlistEntry.delete({
+		where: {
+			id: input.entryId,
+			watchlistId: input.watchlistId,
+		},
+	});
+
+	return {
+		success: true,
+	};
 };

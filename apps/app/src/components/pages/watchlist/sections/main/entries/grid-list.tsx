@@ -24,6 +24,7 @@ import { createPortal } from "react-dom";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { api } from "~/trpc/react";
 import AddEntry from "./add-entry";
+import MovieDropdown from "./movie-dropdown";
 
 export default function GridList({
 	entries,
@@ -138,7 +139,11 @@ export default function GridList({
 						{localEntries
 							.sort((a, b) => a.order - b.order)
 							.map((entry) => (
-								<SortableEntry key={entry.id} entry={entry} />
+								<SortableEntry
+									key={entry.id}
+									entry={entry}
+									role={isOwner ? "OWNER" : isEditor ? "EDITOR" : "VIEWER"}
+								/>
 							))}
 						{(isOwner || isEditor) &&
 							mounted &&
@@ -158,30 +163,66 @@ export default function GridList({
 
 function SortableEntry({
 	entry,
-}: { entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] }) {
-	const { attributes, listeners, setNodeRef, transform, transition } =
-		useSortable({
-			id: entry.id,
-		});
+	role,
+}: {
+	entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number];
+	role: "VIEWER" | "EDITOR" | "OWNER";
+}) {
+	const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({
+		id: entry.id,
+		disabled: isDropdownOpen,
+	});
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	};
+	const canEdit = role === "EDITOR" || role === "OWNER";
 	return (
 		<div ref={setNodeRef} style={style} {...attributes} {...listeners}>
 			<div>
 				<Tooltip>
-					<TooltipTrigger asChild>
+					<TooltipTrigger asChild disabled={isDragging}>
 						<div className="flex flex-col items-center">
-							<div className="relative w-full aspect-[2/3]">
-								<Image
-									className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark absolute inset-0 h-full w-full object-cover"
-									width={0}
-									height={0}
-									sizes="100vw"
-									alt={`Poster for ${entry.movie.title}`}
-									src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
-								/>
+							<div className="group relative w-full aspect-[2/3]">
+								{canEdit ? (
+									<div
+										className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
+											isDropdownOpen && canEdit
+												? "opacity-100"
+												: "opacity-0 group-hover:opacity-100"
+										}`}
+									>
+										<MovieDropdown
+											role={role}
+											entry={entry}
+											isOpen={isDropdownOpen}
+											onOpenChange={setIsDropdownOpen}
+										/>
+									</div>
+								) : null}
+								<div
+									className={`${
+										isDropdownOpen && canEdit ? "pointer-events-none" : ""
+									}`}
+								>
+									<Image
+										className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark absolute inset-0 h-full w-full object-cover"
+										width={0}
+										height={0}
+										sizes="100vw"
+										alt={`Poster for ${entry.movie.title}`}
+										src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
+									/>
+								</div>
 							</div>
 							<p className="font-medium font-mono text-neutral-500 text-sm">
 								{entry.order + 1}
