@@ -182,7 +182,7 @@ model Watched {
   watchlist Watchlist       @relation(fields: [watchlistId], references: [id])
   user      User            @relation(fields: [userId], references: [id])
   member    WatchlistMember @relation(fields: [memberId], references: [id])
-  entry     WatchlistEntry  @relation(fields: [entryId], references: [id])
+  entry     WatchlistEntry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
 
   @@unique([watchlistId, userId, memberId, entryId])
   @@index([userId])

@@ -111,7 +111,22 @@ export const getWatchlistEntries = async (
 		orderBy: [{ order: "asc" }, { id: "asc" }],
 		include: {
 			movie: true,
-			watched: true,
+			watched: {
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							image: true,
+						},
+					},
+				},
+			},
+			_count: {
+				select: {
+					watched: true,
+				},
+			},
 		},
 	});
 
@@ -651,6 +666,14 @@ export const deleteEntry = async (
 		where: {
 			id: input.entryId,
 			watchlistId: input.watchlistId,
+		},
+	});
+	await ctx.db.watchlist.update({
+		where: {
+			id: input.watchlistId,
+		},
+		data: {
+			updatedAt: new Date(),
 		},
 	});
 
