@@ -18,7 +18,7 @@ export default function OwnerActions({
 	watchlistId: string;
 }) {
 	return (
-		<div className="mt-auto sticky z-50 pt-6 top-0 bg-background border-b px-8 pb-6 -ml-8 -mr-10 justify-end items-end self-end">
+		<div className="mt-auto sticky z-50 pt-6 top-0 border-b px-8 pb-6 -ml-8 -mr-10 justify-end items-end self-end">
 			<div className="flex items-center gap-2">
 				<InviteDialog members={members} watchlistId={watchlistId} />
 				<DropdownMenu>

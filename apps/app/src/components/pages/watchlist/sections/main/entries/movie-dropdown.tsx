@@ -109,15 +109,20 @@ export default function MovieDropdown({
 			return {
 				VIEWER: [
 					{
-						label: "Mark as watched",
+						label: "Toggle watched",
 						icon: <EyeIcon size={16} />,
-						onSelect: () => {},
+						onSelect: (watchlistId, entryId) => {
+							createWatched.mutate({
+								watchlistId: watchlistId,
+								entryId: entryId,
+							});
+						},
 					},
 				],
 				EDITOR: editorOwnerItems,
 				OWNER: editorOwnerItems,
 			};
-		}, [editorOwnerItems]);
+		}, [editorOwnerItems, createWatched]);
 
 	return (
 		<DropdownMenu open={isOpen} onOpenChange={onOpenChange}>

@@ -17,4 +17,9 @@ export const watchedRouter = {
 		.mutation(async ({ ctx, input }) =>
 			services.createWatchedForAll(ctx, input),
 		),
+
+	setWatchDate: protectedProcedure
+		.input(inputs.setWatchDate)
+		.meta({ name: "set-watch-date" })
+		.mutation(async ({ ctx, input }) => services.setWatchDate(ctx, input)),
 } satisfies TRPCRouterRecord;

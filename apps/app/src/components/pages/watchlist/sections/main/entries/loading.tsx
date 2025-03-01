@@ -3,7 +3,7 @@ import { ListOrderedIcon } from "lucide-react";
 
 export default function LoadingEntries() {
 	return (
-		<div className="pl-8 pr-14 border-b py-6">
+		<div className="pl-8 pr-8 border-b py-6">
 			<div className="flex items-center w-full justify-between text-carbon-900">
 				<div className="flex items-center gap-2">
 					<ListOrderedIcon className="w-4 h-4" />

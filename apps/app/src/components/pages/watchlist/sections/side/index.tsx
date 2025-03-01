@@ -9,7 +9,7 @@ export default function SideSection({
 	watchlist,
 }: { watchlist: RouterOutputs["watchlist"]["get"] }) {
 	return (
-		<div className="fixed overflow-y-auto max-h-screen space-y-8 px-8 right-0 bg-background min-h-screen min-w-[240px] border-l">
+		<div className="fixed bg-transpare overflow-y-auto max-h-screen space-y-8 px-8 right-0 bg-background min-h-screen min-w-[240px] border-l">
 			<div id="owner-actions-portal" />
 			<WatchlistDetails details={watchlist} />
 			<WatchlistTags tags={watchlist} />

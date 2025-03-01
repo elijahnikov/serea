@@ -70,6 +70,9 @@ export default function GridList({
 						updatedAt: new Date(),
 					},
 					watched: [],
+					_count: {
+						watched: 0,
+					},
 				};
 
 			setLocalEntries((prev) => [...prev, optimisticEntry]);
@@ -185,7 +188,7 @@ function SortableEntry({
 		transform: CSS.Transform.toString(transform),
 		transition,
 	};
-	const canEdit = role === "EDITOR" || role === "OWNER";
+
 	return (
 		<div ref={setNodeRef} style={style} {...attributes} {...listeners}>
 			<div>
@@ -193,26 +196,23 @@ function SortableEntry({
 					<TooltipTrigger asChild disabled={isDragging}>
 						<div className="flex flex-col items-center">
 							<div className="group relative w-full aspect-[2/3]">
-								{canEdit ? (
-									<div
-										className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
-											isDropdownOpen && canEdit
-												? "opacity-100"
-												: "opacity-0 group-hover:opacity-100"
-										}`}
-									>
-										<MovieDropdown
-											role={role}
-											entry={entry}
-											isOpen={isDropdownOpen}
-											onOpenChange={setIsDropdownOpen}
-										/>
-									</div>
-								) : null}
 								<div
-									className={`${
-										isDropdownOpen && canEdit ? "pointer-events-none" : ""
+									className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
+										isDropdownOpen
+											? "opacity-100"
+											: "opacity-0 group-hover:opacity-100"
 									}`}
+								>
+									<MovieDropdown
+										role={role}
+										entry={entry}
+										isOpen={isDropdownOpen}
+										onOpenChange={setIsDropdownOpen}
+									/>
+								</div>
+
+								<div
+									className={`${isDropdownOpen ? "pointer-events-none" : ""}`}
 								>
 									<Image
 										className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark absolute inset-0 h-full w-full object-cover"

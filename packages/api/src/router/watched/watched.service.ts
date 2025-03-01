@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
-import type { CreateWatched, CreateWatchedForAll } from "./watched.input";
+import type {
+	CreateWatched,
+	CreateWatchedForAll,
+	SetWatchDate,
+} from "./watched.input";
 
 export const createWatched = async (
 	ctx: ProtectedTRPCContext,
@@ -96,3 +100,8 @@ export const createWatchedForAll = async (
 		skippedCount: alreadyWatchedMemberIds.size,
 	};
 };
+
+export const setWatchDate = async (
+	ctx: ProtectedTRPCContext,
+	input: SetWatchDate,
+) => {};

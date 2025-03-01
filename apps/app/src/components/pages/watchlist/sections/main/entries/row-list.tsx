@@ -12,12 +12,15 @@ import {
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { RouterOutputs } from "@serea/api";
+import { AvatarGroup, AvatarGroupItem } from "@serea/ui/avatar-group";
+import { CheckCheckIcon } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { TMDB_IMAGE_BASE_URL_HD } from "~/lib/constants";
 import { api } from "~/trpc/react";
 import AddEntry from "./add-entry";
+import MovieDropdown from "./movie-dropdown";
 
 export default function RowList({
 	entries,
@@ -61,6 +64,9 @@ export default function RowList({
 						releaseDate: newEntry.content.releaseDate,
 						createdAt: new Date(),
 						updatedAt: new Date(),
+					},
+					_count: {
+						watched: 0,
 					},
 					watched: [],
 				};
@@ -131,7 +137,11 @@ export default function RowList({
 					{localEntries
 						.sort((a, b) => a.order - b.order)
 						.map((entry) => (
-							<SortableEntry key={entry.id} entry={entry} />
+							<SortableEntry
+								role={isOwner ? "OWNER" : isEditor ? "EDITOR" : "VIEWER"}
+								key={entry.id}
+								entry={entry}
+							/>
 						))}
 				</div>
 				{isOwner &&
@@ -147,15 +157,23 @@ export default function RowList({
 
 function SortableEntry({
 	entry,
-}: { entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number] }) {
+	role,
+}: {
+	entry: RouterOutputs["watchlist"]["getEntries"]["entries"][number];
+	role: "VIEWER" | "EDITOR" | "OWNER";
+}) {
+	const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({
 			id: entry.id,
+			disabled: isDropdownOpen,
 		});
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	};
+
 	return (
 		<div
 			ref={setNodeRef}
@@ -163,8 +181,20 @@ function SortableEntry({
 			{...attributes}
 			{...listeners}
 			suppressHydrationWarning
-			className="w-full dark:bg-carbon-dark-100 bg-carbon-100 px-4 py-2 flex items-center gap-4 border rounded-md"
+			className="w-full group relative dark:bg-carbon-dark-100 bg-carbon-100 px-4 py-2 flex items-center gap-4 border rounded-md"
 		>
+			<div
+				className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
+					isDropdownOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+				}`}
+			>
+				<MovieDropdown
+					role={role}
+					entry={entry}
+					isOpen={isDropdownOpen}
+					onOpenChange={setIsDropdownOpen}
+				/>
+			</div>
 			<div>
 				<p className="font-mono text-sm font-medium dark:text-carbon-900/75 text-carbon-dark-500/50">
 					{entry.order + 1}
@@ -179,11 +209,34 @@ function SortableEntry({
 					src={`${TMDB_IMAGE_BASE_URL_HD}${entry.movie.poster}`}
 				/>
 				<div>
-					<p className="font-medium text-md">{entry.movie.title} </p>
+					<p className="font-medium text-lg">{entry.movie.title} </p>
 					<p className="font-normal text-sm dark:text-carbon-900/75 text-carbon-dark-500">
 						{entry.movie.releaseDate &&
 							new Date(entry.movie.releaseDate).getFullYear()}
 					</p>
+					<span>
+						{entry.watched.length > 0 ? (
+							<div className="flex mt-1 items-center gap-2">
+								<CheckCheckIcon className="text-green-500" size={16} />
+								<AvatarGroup
+									moreLabel={
+										entry.watched.length > 5
+											? `+${entry.watched.length - 5}`
+											: undefined
+									}
+									size="xs"
+								>
+									{entry.watched.slice(0, 5).map((watched) => (
+										<AvatarGroupItem
+											key={watched.id}
+											src={watched.user.image ?? undefined}
+											initials={watched.user.name ?? undefined}
+										/>
+									))}
+								</AvatarGroup>
+							</div>
+						) : null}
+					</span>
 				</div>
 			</div>
 		</div>

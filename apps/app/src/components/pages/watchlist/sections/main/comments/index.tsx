@@ -45,7 +45,7 @@ export default function CommentsSection({
 	);
 
 	return (
-		<div className="pl-8 pr-14 py-6">
+		<div className="px-8 py-6">
 			<div
 				className="flex items-center gap-2 text-carbon-900"
 				id="comments-section"

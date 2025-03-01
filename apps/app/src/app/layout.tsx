@@ -71,7 +71,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 		<html lang="en" suppressHydrationWarning>
 			<body
 				className={cn(
-					"min-h-screen bg-background font-serea text-foreground antialiased",
+					"min-h-screen bg-background font-serea text-foreground antialiased relative",
 					sereaFont.variable,
 				)}
 			>
