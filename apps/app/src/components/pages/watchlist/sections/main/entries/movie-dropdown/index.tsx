@@ -22,7 +22,6 @@ import {
 import * as React from "react";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
-import WatchDatePopover from "./watch-date-popover";
 
 type MovieDropdownProps = {
 	isOpen: boolean;
@@ -158,9 +157,6 @@ export default function MovieDropdown({
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					{role === "OWNER" || role === "EDITOR" ? (
-						<WatchDatePopover entry={entry} />
-					) : null}
 					{roleToDropdownItems[role as keyof typeof roleToDropdownItems].map(
 						(item) => (
 							<DropdownMenuItem

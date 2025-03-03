@@ -142,7 +142,7 @@ export default function QuickActions() {
 						after={
 							<Badge
 								color="blue"
-								className="min-w-max ml-12 text-xs px-2 py-2 h-5 [&>svg]:size-2.5"
+								className="min-w-max ml-10 text-xs px-2 py-2 h-5 [&>svg]:size-2.5"
 							>
 								⌘K
 							</Badge>

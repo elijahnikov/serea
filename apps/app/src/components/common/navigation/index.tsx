@@ -34,7 +34,7 @@ export default async function Sidebar() {
 			</Sheet>
 
 			<aside className="hidden lg:block w-max max-w-[240px] min-w-[240px] fixed border-r">
-				<nav className="p-2 w-full min-h-screen ml-auto flex flex-col justify-between h-full">
+				<nav className="px-3 py-2 w-full min-h-screen ml-auto flex flex-col justify-between h-full">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center gap-2">
 							<img src={"/logo.png"} alt="logo" className="w-12 h-12" />
