@@ -5,6 +5,7 @@ import { createNotification } from "../notification/notification.service";
 import type {
 	AddWatchlistEntryInput,
 	CreateCommentInput,
+	CreateEventInput,
 	CreateWatchlistInput,
 	DeleteCommentInput,
 	DeleteEntryInput,
@@ -111,6 +112,7 @@ export const getWatchlistEntries = async (
 		orderBy: [{ order: "asc" }, { id: "asc" }],
 		include: {
 			movie: true,
+			events: true,
 			watched: {
 				include: {
 					user: {
@@ -674,6 +676,33 @@ export const deleteEntry = async (
 		},
 		data: {
 			updatedAt: new Date(),
+		},
+	});
+
+	return {
+		success: true,
+	};
+};
+
+export const createEvent = async (
+	ctx: ProtectedTRPCContext,
+	input: CreateEventInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	if (input.date < new Date()) {
+		throw new TRPCError({
+			code: "BAD_REQUEST",
+			message: "Watch party cannot be in the past.",
+		});
+	}
+
+	await ctx.db.watchEvent.create({
+		data: {
+			entryId: input.entryId,
+			watchlistId: input.watchlistId,
+			date: input.date,
+			userId: currentUserId,
 		},
 	});
 

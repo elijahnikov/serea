@@ -12,12 +12,14 @@ import {
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { RouterOutputs } from "@serea/api";
+import { Button } from "@serea/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@serea/ui/tooltip";
+import { CalendarClockIcon } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -58,6 +60,7 @@ export default function GridList({
 					userId: "",
 					createdAt: new Date(),
 					updatedAt: new Date(),
+					events: [],
 					movie: {
 						id: `temp-movie-${Date.now()}`,
 						contentId: newEntry.contentId,
@@ -196,6 +199,35 @@ function SortableEntry({
 					<TooltipTrigger asChild disabled={isDragging}>
 						<div className="flex flex-col items-center">
 							<div className="group relative w-full aspect-[2/3]">
+								{entry.events.length > 0 && (
+									<div className="absolute top-2 left-2 z-40">
+										<Tooltip>
+											<TooltipTrigger asChild>
+												<Button isIconOnly variant={"outline"} size="xs">
+													<CalendarClockIcon className="text-green-500" />
+												</Button>
+											</TooltipTrigger>
+											<TooltipContent className="flex items-center gap-1">
+												<CalendarClockIcon
+													className="text-green-500"
+													size={14}
+												/>
+												<p className="font-medium dark:text-neutral-500 text-neutral-400">
+													Watch party event set for{" "}
+													<span className="text-white">
+														{entry.events[0]?.date.toLocaleDateString("en-GB", {
+															month: "short",
+															day: "numeric",
+															year: "numeric",
+															hour: "2-digit",
+															minute: "2-digit",
+														})}
+													</span>
+												</p>
+											</TooltipContent>
+										</Tooltip>
+									</div>
+								)}
 								<div
 									className={`absolute top-2 right-2 z-40 transition-opacity duration-200 ${
 										isDropdownOpen

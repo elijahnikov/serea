@@ -97,3 +97,11 @@ export const respondInvite = z.object({
 	response: z.enum(["ACCEPT", "REJECT"]),
 });
 export type RespondInviteInput = z.infer<typeof respondInvite>;
+
+// Create an event
+export const createEvent = z.object({
+	watchlistId: z.string(),
+	entryId: z.string(),
+	date: z.date(),
+});
+export type CreateEventInput = z.infer<typeof createEvent>;
