@@ -3,61 +3,61 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --border: 0 0% 85%;
-    --background: 0 0% 94%;
-    --card: 0 0% 97%;
-    --input: 0 0% 100%;
+	:root {
+		--border: 0 0% 85%;
+		--background: 0 0% 94%;
+		--card: 0 0% 97%;
+		--input: 0 0% 100%;
 
-    --primary: 218 91% 60%;
-    --primary-hover: 218 90% 64%;
-    --primary-active: 218 88% 67%;
-    --primary-ring: 213 93% 67%;
-    --primary-border: 218 91% 60%;
-    --primary-outline: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
+		--primary: 218 91% 60%;
+		--primary-hover: 218 90% 64%;
+		--primary-active: 218 88% 67%;
+		--primary-ring: 213 93% 67%;
+		--primary-border: 218 91% 60%;
+		--primary-outline: 221 83% 53%;
+		--primary-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-hover: 0 84% 64%;
-    --destructive-active: 1 82% 67%;
-    --destructive-ring: 0 89% 71%;
-    --destructive-border: 0 94% 82%;
-    --destructive-outline: 0 72% 50%;
-    --destructive-foreground: 0 0% 100%;
+		--destructive: 0 84% 60%;
+		--destructive-hover: 0 84% 64%;
+		--destructive-active: 1 82% 67%;
+		--destructive-ring: 0 89% 71%;
+		--destructive-border: 0 94% 82%;
+		--destructive-outline: 0 72% 50%;
+		--destructive-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 83%;
-    --secondary-hover: 0 0% 85%;
-    --secondary-active: 0 0% 87%;
-    --secondary-foreground: 0 0% 32%;
+		--secondary: 0 0% 83%;
+		--secondary-hover: 0 0% 85%;
+		--secondary-active: 0 0% 87%;
+		--secondary-foreground: 0 0% 32%;
 
-    --radius: 0.5rem;
-  }
+		--radius: 0.5rem;
+	}
 
-  .dark {
-    --border: 0 0% 18%;
-    --background: 0 0% 10%;
-    --card: 0 0% 14%;
-    --input: 0 0% 7%;
+	.dark {
+		--border: 0 0% 18%;
+		--background: 0 0% 10%;
+		--card: 0 0% 14%;
+		--input: 0 0% 7%;
 
-    --primary: 218 91% 60%;
-    --primary-hover: 218 73% 55%;
-    --primary-active: 217 59% 50%;
-    --primary-ring: 213 93% 67%;
-    --primary-border: 221 83% 53%;
-    --primary-outline: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
+		--primary: 218 91% 60%;
+		--primary-hover: 218 73% 55%;
+		--primary-active: 217 59% 50%;
+		--primary-ring: 213 93% 67%;
+		--primary-border: 221 83% 53%;
+		--primary-outline: 221 83% 53%;
+		--primary-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-hover: 0 68% 55%;
-    --destructive-active: 0 54% 50%;
-    --destructive-ring: 0 72% 50%;
-    --destructive-border: 0 89% 71%;
-    --destructive-outline: 0 72% 50%;
-    --destructive-foreground: 0 0% 100%;
+		--destructive: 0 84% 60%;
+		--destructive-hover: 0 68% 55%;
+		--destructive-active: 0 54% 50%;
+		--destructive-ring: 0 72% 50%;
+		--destructive-border: 0 89% 71%;
+		--destructive-outline: 0 72% 50%;
+		--destructive-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 25%;
-    --secondary-hover: 0 0% 28%;
-    --secondary-active: 0 0% 32%;
-    --secondary-foreground: 0 0% 90%;
-  }
+		--secondary: 0 0% 25%;
+		--secondary-hover: 0 0% 28%;
+		--secondary-active: 0 0% 32%;
+		--secondary-foreground: 0 0% 90%;
+	}
 }

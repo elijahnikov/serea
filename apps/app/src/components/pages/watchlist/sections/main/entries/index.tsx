@@ -62,7 +62,7 @@ export default function EntriesSection({
 					/>
 				</div>
 			</div>
-			{entries.length === 0 && (
+			{(!entries || entries.length === 0) && (
 				<div className="flex flex-col w-full items-center justify-center h-full">
 					<div className="flex flex-col items-center justify-center h-full">
 						<p className="dark:text-white text-carbon-900 text-sm font-medium">
@@ -86,22 +86,21 @@ export default function EntriesSection({
 					</div>
 				</div>
 			)}
-			{entries.length > 0 &&
-				(selectedView === "grid" ? (
-					<GridList
-						isOwner={isOwner}
-						isEditor={isEditor}
-						entries={entries}
-						watchlistId={watchlistId}
-					/>
-				) : (
-					<RowList
-						isOwner={isOwner}
-						isEditor={isEditor}
-						entries={entries}
-						watchlistId={watchlistId}
-					/>
-				))}
+			{selectedView === "grid" ? (
+				<GridList
+					isOwner={isOwner}
+					isEditor={isEditor}
+					entries={entries}
+					watchlistId={watchlistId}
+				/>
+			) : (
+				<RowList
+					isOwner={isOwner}
+					isEditor={isEditor}
+					entries={entries}
+					watchlistId={watchlistId}
+				/>
+			)}
 			<div className="w-full flex justify-center">
 				{hasNextPage && (
 					<Button

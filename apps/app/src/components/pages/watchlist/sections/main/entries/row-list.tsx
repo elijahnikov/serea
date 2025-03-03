@@ -220,13 +220,13 @@ function SortableEntry({
 								<CheckCheckIcon className="text-green-500" size={16} />
 								<AvatarGroup
 									moreLabel={
-										entry.watched.length > 5
-											? `+${entry.watched.length - 5}`
+										entry.watched.length > 20
+											? `+${entry.watched.length - 20}`
 											: undefined
 									}
 									size="xs"
 								>
-									{entry.watched.slice(0, 5).map((watched) => (
+									{entry.watched.slice(0, 20).map((watched) => (
 										<AvatarGroupItem
 											key={watched.id}
 											src={watched.user.image ?? undefined}

@@ -8,7 +8,7 @@ export default function Watchlist({ id }: { id: string }) {
 	const [watchlist] = api.watchlist.get.useSuspenseQuery({
 		id,
 	});
-	console.log(watchlist);
+
 	return (
 		<main className="h-screen">
 			<div className="flex max-h-screen overflow-y-auto">
