@@ -52,6 +52,7 @@ export default function RowList({
 					watchlistId,
 					contentId: newEntry.contentId,
 					userId: "",
+					event: [],
 					createdAt: new Date(),
 					updatedAt: new Date(),
 					movie: {

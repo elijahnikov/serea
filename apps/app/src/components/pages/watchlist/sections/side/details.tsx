@@ -45,10 +45,14 @@ export default function WatchlistDetails({
 					</Tooltip>
 				</div>
 				<div className="flex items-center gap-2 mt-2">
-					<p className="text-xs font-mono text-carbon-900">LAST UPDATED</p>
+					<p className="text-xs font-mono whitespace-nowrap text-carbon-900">
+						LAST UPDATED
+					</p>
 					<Tooltip>
 						<TooltipTrigger>
-							<p className="text-xs">{dayjs(details.updatedAt).fromNow()}</p>
+							<p className="text-xs whitespace-nowrap">
+								{dayjs(details.updatedAt).fromNow()}
+							</p>
 						</TooltipTrigger>
 						<TooltipContent>
 							<p>{dayjs(details.updatedAt).format("DD MMMM YYYY")}</p>

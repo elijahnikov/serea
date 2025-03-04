@@ -57,6 +57,7 @@ export default function GridList({
 					watchlistId,
 					contentId: newEntry.contentId,
 					userId: "",
+					event: [],
 					createdAt: new Date(),
 					updatedAt: new Date(),
 					movie: {
