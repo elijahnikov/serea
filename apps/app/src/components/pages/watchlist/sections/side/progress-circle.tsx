@@ -12,7 +12,7 @@ export default function ProgressCircle({
 				strokeWidth="4"
 				stroke="currentColor"
 				fill="transparent"
-				r="24"
+				r="18"
 				cx="28"
 				cy="28"
 			/>
@@ -23,7 +23,7 @@ export default function ProgressCircle({
 					strokeLinecap="round"
 					stroke="currentColor"
 					fill="transparent"
-					r="24"
+					r="18"
 					cx="28"
 					cy="28"
 					strokeDasharray={`${(progress / total) * 150.72} 150.72`}

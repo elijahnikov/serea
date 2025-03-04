@@ -34,41 +34,43 @@ export default function WatchlistMembers({
 		<>
 			<div>
 				<p className="text-xs font-mono text-carbon-900">MEMBERS</p>
-				<div className="flex mt-2 flex-col gap-2">
+				<div className="flex mt-2 -space-y-1 flex-col">
 					<TooltipProvider>
-						{members.map((member) => (
-							<div key={member.id} className="flex items-center gap-2">
-								<div className="flex items-center gap-2">
-									<Tooltip>
-										<TooltipTrigger>
-											<div className="relative">
-												<ProgressCircle
-													progress={member._count.watched}
-													total={totalEntries}
-												/>
-												<div className="absolute inset-0 flex items-center justify-center">
-													<Avatar
-														size="md"
-														src={member.user.image ?? undefined}
-														alt={`Profile picture for ${member.user.name}`}
-														initials={member.user.name?.charAt(0)}
+						{[...members, ...members, ...members, ...members, ...members].map(
+							(member) => (
+								<div key={member.id} className="flex items-center gap-2">
+									<div className="flex items-center">
+										<Tooltip>
+											<TooltipTrigger>
+												<div className="relative">
+													<ProgressCircle
+														progress={member._count.watched}
+														total={totalEntries}
 													/>
+													<div className="absolute inset-0 flex items-center justify-center">
+														<Avatar
+															size="sm"
+															src={member.user.image ?? undefined}
+															alt={`Profile picture for ${member.user.name}`}
+															initials={member.user.name?.charAt(0)}
+														/>
+													</div>
 												</div>
-											</div>
-										</TooltipTrigger>
-										<TooltipContent>
-											<p className="text-xs font-mono">
-												{member._count.watched} / {totalEntries}
-											</p>
-										</TooltipContent>
-									</Tooltip>
-									<p className="text-md font-medium">{member.user.name}</p>
+											</TooltipTrigger>
+											<TooltipContent>
+												<p className="text-xs font-mono">
+													{member._count.watched} / {totalEntries}
+												</p>
+											</TooltipContent>
+										</Tooltip>
+										<p className="text-sm font-medium">{member.user.name}</p>
+									</div>
+									{member.role === "OWNER" && (
+										<CrownIcon className="h-4 w-4 text-muted-foreground" />
+									)}
 								</div>
-								{member.role === "OWNER" && (
-									<CrownIcon className="h-4 w-4 text-muted-foreground" />
-								)}
-							</div>
-						))}
+							),
+						)}
 					</TooltipProvider>
 				</div>
 			</div>

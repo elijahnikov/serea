@@ -1,58 +1,58 @@
 {
-	"name": "@serea/ui",
-	"private": true,
-	"version": "0.1.0",
-	"type": "module",
-	"exports": {
-		"./*": "./src/components/*.tsx",
-		"./cn": "./src/utils/cn.ts"
-	},
-	"license": "MIT",
-	"scripts": {
-		"build": "tsc",
-		"clean": "git clean -xdf .cache .turbo dist node_modules",
-		"dev": "tsc",
-		"lint": "biome lint .",
-		"format": "biome format . ",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
-		"ui-add": "pnpm dlx shadcn@latest add && biome format . --write"
-	},
-	"dependencies": {
-		"@hookform/resolvers": "^3.10.0",
-		"@radix-ui/react-aspect-ratio": "^1.1.1",
-		"@radix-ui/react-avatar": "^1.1.2",
-		"@radix-ui/react-dialog": "^1.1.5",
-		"@radix-ui/react-dropdown-menu": "^2.1.5",
-		"@radix-ui/react-icons": "^1.3.2",
-		"@radix-ui/react-label": "^2.1.1",
-		"@radix-ui/react-popover": "^1.1.6",
-		"@radix-ui/react-select": "^2.1.6",
-		"@radix-ui/react-slot": "^1.1.1",
-		"@radix-ui/react-switch": "^1.1.3",
-		"@radix-ui/react-tooltip": "^1.1.7",
-		"class-variance-authority": "^0.7.0",
-		"cmdk": "1.0.0",
-		"date-fns": "^4.1.0",
-		"lucide-react": "^0.474.0",
-		"next-themes": "^0.4.4",
-		"react-day-picker": "8.10.1",
-		"react-hook-form": "^7.54.2",
-		"sonner": "^1.7.4",
-		"tailwind-merge": "^2.5.4",
-		"tailwindcss": "catalog:",
-		"vaul": "^1.1.2"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"@serea/tailwind-config": "workspace:*",
-		"@serea/tsconfig": "workspace:*",
-		"@types/react": "catalog:react18",
-		"react": "catalog:react18",
-		"typescript": "catalog:",
-		"zod": "catalog:"
-	},
-	"peerDependencies": {
-		"react": "catalog:react18",
-		"zod": "catalog:"
-	}
+  "name": "@serea/ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./*": "./src/components/*.tsx",
+    "./cn": "./src/utils/cn.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "lint": "biome lint .",
+    "format": "biome format . ",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
+    "ui-add": "pnpm dlx shadcn@latest add && biome format . --write"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "@radix-ui/react-aspect-ratio": "^1.1.1",
+    "@radix-ui/react-avatar": "^1.1.2",
+    "@radix-ui/react-dialog": "^1.1.5",
+    "@radix-ui/react-dropdown-menu": "^2.1.5",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.3",
+    "@radix-ui/react-tooltip": "^1.1.7",
+    "class-variance-authority": "^0.7.0",
+    "cmdk": "1.0.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.474.0",
+    "next-themes": "^0.4.4",
+    "react-day-picker": "^9.5.1",
+    "react-hook-form": "^7.54.2",
+    "sonner": "^1.7.4",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss": "catalog:",
+    "vaul": "^1.1.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@serea/tailwind-config": "workspace:*",
+    "@serea/tsconfig": "workspace:*",
+    "@types/react": "catalog:react18",
+    "react": "catalog:react18",
+    "typescript": "catalog:",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:react18",
+    "zod": "catalog:"
+  }
 }

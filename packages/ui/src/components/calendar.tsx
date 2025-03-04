@@ -3,16 +3,18 @@
 import type * as React from "react";
 import { DayPicker } from "react-day-picker";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "../utils/cn";
 import { buttonVariants } from "./button";
+
+export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 function Calendar({
 	className,
 	classNames,
 	showOutsideDays = true,
 	...props
-}: React.ComponentProps<typeof DayPicker>) {
+}: CalendarProps) {
 	return (
 		<DayPicker
 			showOutsideDays={showOutsideDays}
@@ -60,12 +62,12 @@ function Calendar({
 				...classNames,
 			}}
 			components={{
-				IconLeft: ({ ...props }) => (
-					<ChevronLeftIcon className={cn("size-4", props.className)} />
-				),
-				IconRight: ({ ...props }) => (
-					<ChevronRightIcon className={cn("size-4", props.className)} />
-				),
+				Chevron: ({ ...props }) =>
+					props.orientation === "left" ? (
+						<ChevronLeft className="h-4 w-4" />
+					) : (
+						<ChevronRight className="h-4 w-4" />
+					),
 			}}
 			{...props}
 		/>

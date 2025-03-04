@@ -12,6 +12,7 @@ import {
 import { SortableContext, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { RouterOutputs } from "@serea/api";
+import { cn } from "@serea/ui/cn";
 import {
 	Tooltip,
 	TooltipContent,
@@ -199,7 +200,7 @@ function SortableEntry({
 		<div ref={setNodeRef} style={style} {...attributes} {...listeners}>
 			<div>
 				<Tooltip>
-					<TooltipTrigger asChild disabled={isDragging}>
+					<TooltipTrigger asChild disabled={isDragging || isDropdownOpen}>
 						<div className="flex flex-col items-center">
 							<div className="group relative w-full aspect-[2/3]">
 								<div
@@ -235,7 +236,12 @@ function SortableEntry({
 							</p>
 						</div>
 					</TooltipTrigger>
-					<TooltipContent className="flex items-center space-x-1">
+					<TooltipContent
+						className={cn(
+							"flex items-center space-x-1",
+							isDropdownOpen && "hidden",
+						)}
+					>
 						<p className="font-medium">{entry.movie.title}</p>
 						{entry.movie.releaseDate && (
 							<p className="font-medium dark:text-neutral-600 text-neutral-400">

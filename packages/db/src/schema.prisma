@@ -304,9 +304,9 @@ model WatchEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist      @relation(fields: [watchlistId], references: [id])
-  user      User           @relation(fields: [userId], references: [id])
-  entry     WatchlistEntry @relation(fields: [entryId], references: [id])
+  watchlist Watchlist      @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entry     WatchlistEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([watchlistId])
