@@ -59,6 +59,11 @@ export default function GridList({
 					createdAt: new Date(),
 					updatedAt: new Date(),
 					movie: {
+						genres: [],
+						budget: 0,
+						revenue: 0,
+						imdbId: null,
+						runtime: 0,
 						id: `temp-movie-${Date.now()}`,
 						contentId: newEntry.contentId,
 						title: newEntry.content.title,
@@ -81,7 +86,8 @@ export default function GridList({
 			setLocalEntries(entries);
 		},
 		onSuccess: () => {
-			utils.watchlist.getEntries.invalidate({ watchlistId });
+			void utils.watchlist.getEntries.invalidate({ watchlistId });
+			void utils.watchlist.getMembers.invalidate({ id: watchlistId });
 		},
 	});
 

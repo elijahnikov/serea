@@ -14,7 +14,7 @@ import UserMenu from "./user-menu";
 export default async function Sidebar() {
 	void api.notification.getNotifications.prefetch();
 	const user = await auth();
-	user?.user.name;
+
 	return (
 		<>
 			<Sheet>

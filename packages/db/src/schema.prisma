@@ -92,6 +92,12 @@ model Movie {
   backdrop    String?
   releaseDate String
 
+  runtime Int?     @default(0)
+  budget  Int?     @default(0)
+  revenue Int?     @default(0)
+  imdbId  String?
+  genres  String[] @default([])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -4,19 +4,21 @@ import type { ZodSchema } from "zod";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
-const apis = ["trendingThisWeek", "movieSearch"] as const;
+const apis = ["trendingThisWeek", "movieSearch", "movieDetails"] as const;
 type Api = (typeof apis)[number];
 
 export const TMDB_API_URLS = {
 	trendingThisWeek: `${TMDB_BASE_URL}/trending/movie/week?language=en-US`,
 	movieSearch: (query: string) =>
 		`${TMDB_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`,
+	movieDetails: (id: string) => `${TMDB_BASE_URL}/movie/${id}?language=en-US`,
 } satisfies Record<Api, string | ((query: string) => string)>;
 
 type TmdbFetchOptions<T> = {
 	url: string;
 	schema: ZodSchema<T>;
 };
+
 export const tmdbFetch = async <T>({
 	url,
 	schema,

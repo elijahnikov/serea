@@ -41,10 +41,6 @@ export default function MovieList({ form }: MovieListProps) {
 	);
 
 	const addEntry = (newEntry: Omit<MovieTableData, "order">) => {
-		// createMovie({
-		// 	...newEntry,
-		// });
-
 		const currentEntries = form.getValues("entries");
 		if (
 			currentEntries.findIndex(

@@ -45,6 +45,39 @@ export default function MovieDropdown({
 }: MovieDropdownProps) {
 	const utils = api.useUtils();
 	const deleteEntry = api.watchlist.deleteEntry.useMutation({
+		onMutate: async ({ watchlistId, entryId }) => {
+			await utils.watchlist.getEntries.cancel({ watchlistId });
+
+			const previousEntries = utils.watchlist.getEntries.getData({
+				watchlistId,
+			});
+
+			utils.watchlist.getEntries.setData({ watchlistId }, (old) => {
+				if (!old) return old;
+
+				const filteredEntries = old.entries.filter((e) => e.id !== entryId);
+
+				const updatedEntries = filteredEntries.map((e, index) => ({
+					...e,
+					order: index,
+				}));
+
+				return {
+					...old,
+					entries: updatedEntries,
+				};
+			});
+
+			return { previousEntries };
+		},
+		onError: (_, variables, context) => {
+			if (context?.previousEntries) {
+				utils.watchlist.getEntries.setData(
+					{ watchlistId: variables.watchlistId },
+					context.previousEntries,
+				);
+			}
+		},
 		onSuccess: () => {
 			void utils.watchlist.getEntries.invalidate();
 			void utils.watchlist.getMembers.invalidate();

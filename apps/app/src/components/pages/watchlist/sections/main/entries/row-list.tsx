@@ -55,6 +55,11 @@ export default function RowList({
 					createdAt: new Date(),
 					updatedAt: new Date(),
 					movie: {
+						genres: [],
+						budget: 0,
+						revenue: 0,
+						imdbId: null,
+						runtime: 0,
 						id: `temp-movie-${Date.now()}`,
 						contentId: newEntry.contentId,
 						title: newEntry.content.title,

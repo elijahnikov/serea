@@ -663,22 +663,58 @@ export const deleteEntry = async (
 	ctx: ProtectedTRPCContext,
 	input: DeleteEntryInput,
 ) => {
-	await ctx.db.watchlistEntry.delete({
+	const entryToDelete = await ctx.db.watchlistEntry.findUnique({
 		where: {
 			id: input.entryId,
 			watchlistId: input.watchlistId,
 		},
-	});
-	await ctx.db.watchlist.update({
-		where: {
-			id: input.watchlistId,
-		},
-		data: {
-			updatedAt: new Date(),
+		select: {
+			order: true,
 		},
 	});
 
-	return {
-		success: true,
-	};
+	if (!entryToDelete) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Entry not found",
+		});
+	}
+
+	const deletedOrder = entryToDelete.order;
+
+	return await ctx.db.$transaction(async (tx) => {
+		await tx.watchlistEntry.delete({
+			where: {
+				id: input.entryId,
+				watchlistId: input.watchlistId,
+			},
+		});
+
+		await tx.watchlistEntry.updateMany({
+			where: {
+				watchlistId: input.watchlistId,
+				order: {
+					gt: deletedOrder,
+				},
+			},
+			data: {
+				order: {
+					decrement: 1,
+				},
+			},
+		});
+
+		await tx.watchlist.update({
+			where: {
+				id: input.watchlistId,
+			},
+			data: {
+				updatedAt: new Date(),
+			},
+		});
+
+		return {
+			success: true,
+		};
+	});
 };
