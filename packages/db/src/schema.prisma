@@ -170,8 +170,8 @@ model WatchlistMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
-  user      User      @relation(fields: [userId], references: [id])
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   watched   Watched[]
 
   @@index([userId])
@@ -188,9 +188,9 @@ model Watched {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist       @relation(fields: [watchlistId], references: [id])
-  user      User            @relation(fields: [userId], references: [id])
-  member    WatchlistMember @relation(fields: [memberId], references: [id])
+  watchlist Watchlist       @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  member    WatchlistMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
   entry     WatchlistEntry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
 
   @@unique([watchlistId, userId, memberId, entryId])

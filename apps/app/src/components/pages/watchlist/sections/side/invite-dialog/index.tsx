@@ -44,7 +44,7 @@ export default function InviteDialog({
 				</DialogHeader>
 				<InviteForm watchlistId={watchlistId} />
 				<InviteList watchlistId={watchlistId} />
-				<MembersList members={members} />
+				<MembersList watchlistId={watchlistId} members={members} />
 			</DialogContent>
 		</Dialog>
 	);

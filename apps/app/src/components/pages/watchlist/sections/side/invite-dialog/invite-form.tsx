@@ -81,7 +81,7 @@ export default function InviteForm({ watchlistId }: { watchlistId: string }) {
 																defaultValue={roleField.value}
 															>
 																<SelectTrigger className="ring-0 outline-none dark:shadow-none rounded-l-none w-[100px] -mx-3 h-8 dark:border-0 border-0 shadow-none focus:ring-0 focus:ring-offset-0 focus-within:ring-0">
-																	<SelectValue placeholder="Select framework" />
+																	<SelectValue placeholder="Select role" />
 																</SelectTrigger>
 																<SelectContent>
 																	<SelectItem value="VIEWER">Viewer</SelectItem>

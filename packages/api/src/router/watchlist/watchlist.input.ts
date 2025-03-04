@@ -97,3 +97,18 @@ export const respondInvite = z.object({
 	response: z.enum(["ACCEPT", "REJECT"]),
 });
 export type RespondInviteInput = z.infer<typeof respondInvite>;
+
+// Update a member's role
+export const updateMemberRole = z.object({
+	watchlistId: z.string(),
+	memberId: z.string(),
+	role: z.enum(["VIEWER", "EDITOR"]),
+});
+export type UpdateMemberRoleInput = z.infer<typeof updateMemberRole>;
+
+// Delete a member
+export const deleteMember = z.object({
+	watchlistId: z.string(),
+	memberId: z.string(),
+});
+export type DeleteMemberInput = z.infer<typeof deleteMember>;

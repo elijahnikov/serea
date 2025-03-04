@@ -9,6 +9,7 @@ import type {
 	DeleteCommentInput,
 	DeleteEntryInput,
 	DeleteInviteInput,
+	DeleteMemberInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
 	InviteMembersInput,
@@ -16,6 +17,7 @@ import type {
 	LikeWatchlistInput,
 	RespondInviteInput,
 	UpdateEntryOrderInput,
+	UpdateMemberRoleInput,
 } from "./watchlist.input";
 
 export const createWatchlist = async (
@@ -717,4 +719,73 @@ export const deleteEntry = async (
 			success: true,
 		};
 	});
+};
+
+export const updateMemberRole = async (
+	ctx: ProtectedTRPCContext,
+	input: UpdateMemberRoleInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const isOwner = await ctx.db.watchlistMember.findFirst({
+		where: {
+			userId: currentUserId,
+			watchlistId: input.watchlistId,
+			role: "OWNER",
+		},
+	});
+
+	if (!isOwner) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "You are not the owner of this watchlist",
+		});
+	}
+
+	await ctx.db.watchlistMember.update({
+		where: {
+			id: input.memberId,
+			watchlistId: input.watchlistId,
+		},
+		data: {
+			role: input.role as Role,
+		},
+	});
+
+	return {
+		success: true,
+	};
+};
+
+export const deleteMember = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteMemberInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const isOwner = await ctx.db.watchlistMember.findFirst({
+		where: {
+			userId: currentUserId,
+			watchlistId: input.watchlistId,
+			role: "OWNER",
+		},
+	});
+
+	if (!isOwner) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "You are not the owner of this watchlist",
+		});
+	}
+
+	await ctx.db.watchlistMember.delete({
+		where: {
+			id: input.memberId,
+			watchlistId: input.watchlistId,
+		},
+	});
+
+	return {
+		success: true,
+	};
 };

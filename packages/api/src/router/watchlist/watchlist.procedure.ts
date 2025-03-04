@@ -86,4 +86,14 @@ export const watchlistRouter = {
 		.input(inputs.deleteInvite)
 		.meta({ name: "delete-invite" })
 		.mutation(async ({ ctx, input }) => services.deleteInvite(ctx, input)),
+
+	updateMemberRole: protectedProcedure
+		.input(inputs.updateMemberRole)
+		.meta({ name: "update-member-role" })
+		.mutation(async ({ ctx, input }) => services.updateMemberRole(ctx, input)),
+
+	deleteMember: protectedProcedure
+		.input(inputs.deleteMember)
+		.meta({ name: "delete-member" })
+		.mutation(async ({ ctx, input }) => services.deleteMember(ctx, input)),
 } satisfies TRPCRouterRecord;
