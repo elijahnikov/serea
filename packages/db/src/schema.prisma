@@ -73,6 +73,7 @@ model User {
   watchlistInvitesInviter WatchlistInvite[]      @relation("Inviter")
   notifications           Notification[]
   notificationActed       Notification[]         @relation("NotificationActed")
+  event                   WatchEvent[]
 }
 
 model VerificationToken {
@@ -127,6 +128,7 @@ model Watchlist {
   likes    WatchlistLike[]
   comments WatchlistComment[]
   invites  WatchlistInvite[]
+  event    WatchEvent[]
 
   @@index([userId])
 }
@@ -141,9 +143,10 @@ model WatchlistEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
-  movie     Movie     @relation(fields: [contentId], references: [contentId])
+  watchlist Watchlist    @relation(fields: [watchlistId], references: [id])
+  movie     Movie        @relation(fields: [contentId], references: [contentId])
   watched   Watched[]
+  event     WatchEvent[]
 
   @@unique([order, id])
   @@index([userId])
@@ -289,4 +292,23 @@ model Notification {
 
   @@index([userId])
   @@index([actorId])
+}
+
+model WatchEvent {
+  id String @id @default(cuid())
+
+  userId      String
+  watchlistId String
+  entryId     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  watchlist Watchlist      @relation(fields: [watchlistId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
+  entry     WatchlistEntry @relation(fields: [entryId], references: [id])
+
+  @@index([userId])
+  @@index([watchlistId])
+  @@index([entryId])
 }
