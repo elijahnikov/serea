@@ -11,11 +11,9 @@ import {
 } from "@serea/ui/dropdown-menu";
 import { Spinner } from "@serea/ui/spinner";
 import {
-	CalendarClockIcon,
 	CheckCheckIcon,
 	EllipsisIcon,
 	EyeIcon,
-	PencilIcon,
 	TrashIcon,
 	UserCheckIcon,
 } from "lucide-react";
@@ -191,7 +189,7 @@ export default function MovieDropdown({
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuGroup>
-					<WatchEventPopover />
+					{role === "OWNER" && <WatchEventPopover entry={entry} />}
 					{roleToDropdownItems[role as keyof typeof roleToDropdownItems].map(
 						(item) => (
 							<DropdownMenuItem

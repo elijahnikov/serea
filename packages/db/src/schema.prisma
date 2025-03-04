@@ -300,6 +300,7 @@ model WatchEvent {
   userId      String
   watchlistId String
   entryId     String
+  date        DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
