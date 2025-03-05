@@ -12,3 +12,10 @@ export const deleteWatchEvent = z.object({
 	id: z.string(),
 });
 export type DeleteWatchEventInput = z.infer<typeof deleteWatchEvent>;
+
+export const getWatchEventForWatchlist = z.object({
+	watchlistId: z.string(),
+});
+export type GetWatchEventForWatchlistInput = z.infer<
+	typeof getWatchEventForWatchlist
+>;

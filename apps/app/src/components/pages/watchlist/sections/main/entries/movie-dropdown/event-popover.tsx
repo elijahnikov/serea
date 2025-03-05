@@ -45,37 +45,46 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 
 	return (
 		<DropdownMenuSub>
-			<DropdownMenuSubTrigger>
-				<CalendarPlus2Icon />
+			<DropdownMenuSubTrigger aria-label="Create new watch party">
+				<CalendarPlus2Icon aria-hidden="true" />
 				<span>Create new watch party</span>
 			</DropdownMenuSubTrigger>
-			<DropdownMenuSubContent className="p-2">
+			<DropdownMenuSubContent
+				className="p-2"
+				// biome-ignore lint/a11y/useSemanticElements: <explanation>
+				role="dialog"
+				aria-label="Watch party options"
+			>
 				{event && (
 					<div className="flex p-3 items-center justify-between rounded-lg border dark:bg-carbon-dark-100 gap-1 w-[300px]">
 						<div className="flex w-full gap-1 flex-col ">
 							<div className="flex w-full items-center gap-2">
-								<CalendarIcon className="w-4 h-4" />
+								<CalendarIcon aria-hidden="true" className="w-4 h-4" />
 								<p className="text-sm whitespace-nowrap font-medium">
-									{event.date.toLocaleDateString("en-US", {
-										day: "numeric",
-										month: "long",
-										year: "numeric",
-									})}{" "}
-									at{" "}
-									{event.date.toLocaleTimeString("en-US", {
-										hour: "2-digit",
-										minute: "2-digit",
-									})}
+									<time dateTime={event.date.toISOString()}>
+										{event.date.toLocaleDateString("en-US", {
+											day: "numeric",
+											month: "long",
+											year: "numeric",
+										})}{" "}
+										at{" "}
+										{event.date.toLocaleTimeString("en-GB", {
+											hour: "2-digit",
+											minute: "2-digit",
+										})}
+									</time>
 								</p>
 							</div>
 							<div className="flex items-center gap-2">
-								<ClockIcon className="w-4 h-4" />
+								<ClockIcon aria-hidden="true" className="w-4 h-4" />
 								<p className="text-sm text-carbon-500">
-									{entry.movie.runtime} minutes
+									<time dateTime={`PT${entry.movie.runtime}M`}>
+										{entry.movie.runtime} minutes
+									</time>
 								</p>
 							</div>
 						</div>
-						<div className="w-full ml-4 gap-2">
+						<div className="ml-4 gap-2">
 							<LoadingButton
 								loading={deleteWatchEvent.isPending}
 								variant="destructive"
@@ -83,8 +92,9 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 								onClick={() => {
 									deleteWatchEvent.mutate({ id: event.id });
 								}}
+								aria-label={`Delete watch party for ${entry.movie.title}`}
 							>
-								<TrashIcon className="w-4 h-4" />
+								<TrashIcon className="w-4 h-4" aria-hidden="true" />
 							</LoadingButton>
 						</div>
 					</div>

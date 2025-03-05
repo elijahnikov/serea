@@ -5,6 +5,9 @@ export default function ProgressCircle({
 	progress: number;
 	total: number;
 }) {
+	const radius = 18;
+	const circumference = 2 * Math.PI * radius;
+
 	return (
 		<svg className="w-14 h-14">
 			<circle
@@ -12,7 +15,7 @@ export default function ProgressCircle({
 				strokeWidth="4"
 				stroke="currentColor"
 				fill="transparent"
-				r="18"
+				r={radius}
 				cx="28"
 				cy="28"
 			/>
@@ -23,10 +26,10 @@ export default function ProgressCircle({
 					strokeLinecap="round"
 					stroke="currentColor"
 					fill="transparent"
-					r="18"
+					r={radius}
 					cx="28"
 					cy="28"
-					strokeDasharray={`${(progress / total) * 150.72} 150.72`}
+					strokeDasharray={`${(progress / total) * circumference} ${circumference}`}
 					strokeDashoffset="0"
 					transform="rotate(-90 28 28)"
 				/>

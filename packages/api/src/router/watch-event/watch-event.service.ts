@@ -3,6 +3,7 @@ import type { ProtectedTRPCContext } from "../../trpc";
 import type {
 	CreateWatchEventInput,
 	DeleteWatchEventInput,
+	GetWatchEventForWatchlistInput,
 } from "./watch-event.input";
 
 export const createWatchEvent = async (
@@ -68,4 +69,27 @@ export const deleteWatchEvent = async (
 			id: input.id,
 		},
 	});
+};
+
+export const getEventsForWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchEventForWatchlistInput,
+) => {
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+
+	const tomorrow = new Date(today);
+	tomorrow.setDate(tomorrow.getDate() + 1);
+
+	const events = await ctx.db.watchEvent.findMany({
+		where: {
+			watchlistId: input.watchlistId,
+			date: {
+				gte: today,
+				lt: tomorrow,
+			},
+		},
+	});
+
+	return events;
 };
