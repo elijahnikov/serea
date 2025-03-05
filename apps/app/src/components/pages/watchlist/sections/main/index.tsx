@@ -11,9 +11,11 @@ export default function MainSection({
 }: { watchlist: RouterOutputs["watchlist"]["get"] }) {
 	return (
 		<div className="flex w-full lg:mt-0 mt-8 max-w-[calc(100%-240px)] flex-col ">
-			<Suspense>
-				<EventSection watchlistId={watchlist.id} />
-			</Suspense>
+			{(watchlist.isMember || watchlist.isEditor || watchlist.isOwner) && (
+				<Suspense>
+					<EventSection watchlistId={watchlist.id} />
+				</Suspense>
+			)}
 			<MainHeader watchlist={watchlist} />
 			<Suspense fallback={<div>Loading entries...</div>}>
 				<EntriesSection

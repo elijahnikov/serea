@@ -17,10 +17,10 @@ export const badgeVariants = cva(
 					"dark:bg-carbon-dark-200 bg-carbon-200 border text-secondary-foreground",
 				secondary: "bg-secondary text-secondary-foreground",
 				green:
-					"dark:bg-green-800 border-b-[1px] ring-1 ring-inset ring-green-300 dark:border-green-700 dark:text-green-200 bg-green-400 border-green-500 text-green-900",
+					"dark:bg-green-800 dark:border-green-600 border dark:text-green-200 bg-green-400 border-green-500 text-green-900",
 				yellow:
 					"dark:bg-yellow-800 dark:border-yellow-700 dark:text-yellow-200 bg-yellow-400 border-yellow-500 text-yellow-900",
-				red: "dark:bg-red-800 dark:border-red-700 dark:text-red-200 bg-red-400 border-red-500 text-red-900",
+				red: "dark:bg-red-800 dark:border-red-600 border dark:text-red-200 bg-red-400 border-red-500 text-red-900",
 				purple:
 					"dark:bg-purple-800 dark:border-purple-700 dark:text-purple-200 bg-purple-400 border-purple-500 text-purple-900",
 				blue: "dark:bg-blue-700 dark:border-blue-500 border ring-1 ring-inset ring-blue-300 dark:ring-blue-800 dark:text-blue-200 bg-blue-400 border-blue-500 text-blue-900",

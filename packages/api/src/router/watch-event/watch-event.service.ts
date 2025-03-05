@@ -12,13 +12,22 @@ export const createWatchEvent = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
+	const now = new Date();
+
+	if (new Date(input.date) < now) {
+		throw new TRPCError({
+			code: "BAD_REQUEST",
+			message: "Cannot create an event in the past",
+		});
+	}
+
 	const startDate = new Date(input.date);
 	const endDate = new Date(startDate.getTime() + input.runtime * 60 * 1000);
 
 	const existingEvents = await ctx.db.watchEvent.findMany({
 		where: {
 			userId: currentUserId,
-			watchlistId: input.watchlistId, // Filter by the same watchlist
+			watchlistId: input.watchlistId,
 		},
 		include: {
 			entry: {
@@ -75,7 +84,9 @@ export const getEventsForWatchlist = async (
 	ctx: ProtectedTRPCContext,
 	input: GetWatchEventForWatchlistInput,
 ) => {
-	const today = new Date();
+	const now = new Date();
+
+	const today = new Date(now);
 	today.setHours(0, 0, 0, 0);
 
 	const tomorrow = new Date(today);
@@ -89,7 +100,30 @@ export const getEventsForWatchlist = async (
 				lt: tomorrow,
 			},
 		},
+		include: {
+			entry: {
+				include: {
+					movie: true,
+				},
+			},
+		},
+		orderBy: {
+			date: "asc",
+		},
 	});
 
-	return events;
+	const relevantEvents = events.filter((event) => {
+		if (event.date > now) return true;
+
+		const runtime = event.entry.movie.runtime;
+		if (runtime) {
+			const endTime = new Date(event.date);
+			endTime.setMinutes(endTime.getMinutes() + runtime);
+			return endTime > now;
+		}
+
+		return false;
+	});
+
+	return relevantEvents;
 };

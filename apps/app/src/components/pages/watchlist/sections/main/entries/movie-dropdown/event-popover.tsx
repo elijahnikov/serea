@@ -13,6 +13,7 @@ import {
 	ClockIcon,
 	TrashIcon,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
 import { api } from "~/trpc/react";
@@ -24,6 +25,7 @@ type WatchEventPopoverProps = {
 export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 	const [date, setDate] = React.useState<Date | undefined>(undefined);
 
+	const router = useRouter();
 	const utils = api.useUtils();
 	const event = React.useMemo(() => entry.event[0], [entry]);
 	const createWatchEvent = api.watchEvent.create.useMutation({
@@ -52,6 +54,8 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 			void utils.watchlist.getEntries.invalidate({
 				watchlistId: entry.watchlistId,
 			});
+			void utils.watchEvent.getEventsForWatchlist.invalidate();
+			router.refresh();
 			toast.success(`Watch party deleted for ${entry.movie.title}`);
 		},
 	});

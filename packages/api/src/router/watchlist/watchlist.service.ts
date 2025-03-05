@@ -70,9 +70,7 @@ export const getWatchlist = async (
 					id: true,
 				},
 			},
-			members: !currentUserId
-				? false
-				: { where: { userId: currentUserId, role: "EDITOR" } },
+			members: !currentUserId ? false : { where: { userId: currentUserId } },
 			likes: !currentUserId ? false : { where: { userId: currentUserId } },
 			_count: {
 				select: {
@@ -94,8 +92,16 @@ export const getWatchlist = async (
 	return {
 		...watchlist,
 		liked: Boolean(watchlist.likes.length > 0 && ctx.session.user.id),
-		isEditor: Boolean(watchlist.members.length > 0 && ctx.session.user.id),
+		isEditor: Boolean(
+			watchlist.members.length > 0 &&
+				ctx.session.user.id &&
+				watchlist.members.some(
+					(member) =>
+						member.userId === ctx.session.user.id && member.role === "EDITOR",
+				),
+		),
 		isOwner: Boolean(currentUserId === watchlist.userId),
+		isMember: Boolean(watchlist.members.length > 0 && ctx.session.user.id),
 	};
 };
 

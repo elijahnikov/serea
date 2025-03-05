@@ -53,6 +53,15 @@ export default {
 					"50%": { transform: "scale(1.2)" },
 					"100%": { transform: "scale(1)" },
 				},
+				"custom-ping": {
+					"0%": { transform: "scale(0)" },
+					"50%": { transform: "scale(1.2)" },
+					"100%": { transform: "scale(1)" },
+				},
+				"progress-stripes": {
+					"0%": { backgroundPosition: "0 0" },
+					"100%": { backgroundPosition: "20px 0" },
+				},
 				"caret-blink": {
 					"0%,70%,100%": { opacity: "1" },
 					"20%,50%": { opacity: "0" },
@@ -87,6 +96,8 @@ export default {
 				"marquee-vertical": "marquee-vertical var(--duration) linear infinite",
 				"caret-blink": "caret-blink 1.25s ease-out infinite",
 				shimmer: "shimmer 1.5s infinite",
+				"custom-ping": "custom-ping 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+				"progress-stripes": "progress-stripes 1s linear infinite",
 			},
 		},
 	},
