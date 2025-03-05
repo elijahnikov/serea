@@ -1,6 +1,7 @@
 import type { Role } from "@serea/db";
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
+import { addMovie } from "../movie/movie.service";
 import { createNotification } from "../notification/notification.service";
 import type {
 	AddWatchlistEntryInput,
@@ -198,6 +199,13 @@ export const addEntry = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
+	await addMovie(ctx, {
+		contentId: input.contentId,
+		backdrop: input.content.backdrop,
+		poster: input.content.poster,
+		releaseDate: input.content.releaseDate,
+		title: input.content.title,
+	});
 	const entry = await ctx.db.watchlistEntry.findFirst({
 		where: {
 			contentId: input.contentId,

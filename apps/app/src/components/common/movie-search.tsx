@@ -53,7 +53,6 @@ export default function MovieSearch({ callback }: MovieSearchProps) {
 								.map((movie) => (
 									<MovieResult
 										handleClick={(movie) => {
-											callback(movie);
 											addMovie({
 												backdrop: movie.backdrop,
 												contentId: movie.contentId,
@@ -62,6 +61,7 @@ export default function MovieSearch({ callback }: MovieSearchProps) {
 												title: movie.title,
 												overview: movie.overview,
 											});
+											callback(movie);
 										}}
 										key={movie.id}
 										movie={movie}

@@ -13,6 +13,12 @@ export const watchEventRouter = {
 			services.getEventsForWatchlist(ctx, input),
 		),
 
+	getAllEventsForWatchlist: protectedProcedure
+		.input(inputs.getWatchEventForWatchlist)
+		.meta({ name: "get-all-events-for-watchlist" })
+		.query(async ({ ctx, input }) =>
+			services.getAllEventsForWatchlist(ctx, input),
+		),
 	// MUTATIONS
 	create: protectedProcedure
 		.input(inputs.createWatchEvent)

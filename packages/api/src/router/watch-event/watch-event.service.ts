@@ -127,3 +127,28 @@ export const getEventsForWatchlist = async (
 
 	return relevantEvents;
 };
+
+export const getAllEventsForWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: GetWatchEventForWatchlistInput,
+) => {
+	const now = new Date();
+	return await ctx.db.watchEvent.findMany({
+		where: {
+			watchlistId: input.watchlistId,
+			date: {
+				gte: now,
+			},
+		},
+		include: {
+			entry: {
+				include: {
+					movie: true,
+				},
+			},
+		},
+		orderBy: {
+			date: "asc",
+		},
+	});
+};

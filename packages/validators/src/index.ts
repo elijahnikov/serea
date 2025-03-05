@@ -78,8 +78,8 @@ export const movieDetailsSchema = z.object({
 		.object({
 			id: z.number(),
 			name: z.string(),
-			poster_path: z.string(),
-			backdrop_path: z.string(),
+			poster_path: z.string().nullable(),
+			backdrop_path: z.string().nullable(),
 		})
 		.nullable(),
 	budget: z.number(),
@@ -96,7 +96,7 @@ export const movieDetailsSchema = z.object({
 	production_companies: z.array(
 		z.object({
 			id: z.number(),
-			logo_path: z.string(),
+			logo_path: z.string().nullable(),
 			name: z.string(),
 			origin_country: z.string(),
 		}),
