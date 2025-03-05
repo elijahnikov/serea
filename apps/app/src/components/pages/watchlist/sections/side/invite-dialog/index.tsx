@@ -9,7 +9,6 @@ import {
 	DialogTrigger,
 } from "@serea/ui/dialog";
 import { PlusIcon, UserPlusIcon } from "lucide-react";
-import { api } from "~/trpc/react";
 import InviteForm from "./invite-form";
 import InviteList from "./invite-list";
 import MembersList from "./members-list";

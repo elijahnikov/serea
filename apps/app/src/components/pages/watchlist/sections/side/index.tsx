@@ -2,7 +2,6 @@ import type { RouterOutputs } from "@serea/api";
 import { Suspense } from "react";
 import WatchlistDetails from "./details";
 import WatchlistMembers from "./members";
-import OwnerActions from "./owner-actions";
 import WatchlistTags from "./tags";
 
 export default function SideSection({

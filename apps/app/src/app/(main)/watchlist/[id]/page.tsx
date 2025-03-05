@@ -13,6 +13,7 @@ export default async function WatchlistPage({
 	void api.watchlist.getEntries.prefetch({ watchlistId: id });
 	void api.watchlist.getMembers.prefetch({ id });
 	void api.watchlist.getComments.prefetch({ id });
+	void api.watchEvent.getEventsForWatchlist.prefetch({ watchlistId: id });
 
 	return (
 		<HydrateClient>

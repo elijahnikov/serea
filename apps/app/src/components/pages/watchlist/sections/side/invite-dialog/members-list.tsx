@@ -86,30 +86,32 @@ function MemberRow({
 					</p>
 				</div>
 			</div>
-			<div className="flex items-center gap-2">
-				<Select
-					value={member.role}
-					onValueChange={(value) =>
-						updateRole(member.id, value as "EDITOR" | "VIEWER")
-					}
-				>
-					<SelectTrigger className="min-w-[100px]">
-						<SelectValue placeholder="Select role" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="VIEWER">Viewer</SelectItem>
-						<SelectItem value="EDITOR">Editor</SelectItem>
-					</SelectContent>
-				</Select>
-				<LoadingButton
-					loading={deleteMemberLoading}
-					onClick={() => deleteMember(member.id)}
-					variant="outline"
-					className="px-1"
-				>
-					<XIcon className="w-4 h-4" />
-				</LoadingButton>
-			</div>
+			{member.role !== "OWNER" && (
+				<div className="flex items-center gap-2">
+					<Select
+						value={member.role}
+						onValueChange={(value) =>
+							updateRole(member.id, value as "EDITOR" | "VIEWER")
+						}
+					>
+						<SelectTrigger className="min-w-[100px]">
+							<SelectValue placeholder="Select role" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="VIEWER">Viewer</SelectItem>
+							<SelectItem value="EDITOR">Editor</SelectItem>
+						</SelectContent>
+					</Select>
+					<LoadingButton
+						loading={deleteMemberLoading}
+						onClick={() => deleteMember(member.id)}
+						variant="outline"
+						className="px-1"
+					>
+						<XIcon className="w-4 h-4" />
+					</LoadingButton>
+				</div>
+			)}
 		</div>
 	);
 }

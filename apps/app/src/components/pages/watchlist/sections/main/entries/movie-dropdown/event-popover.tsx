@@ -31,7 +31,20 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 			void utils.watchlist.getEntries.invalidate({
 				watchlistId: entry.watchlistId,
 			});
-			toast.success(`Watch party created for ${entry.movie.title}`);
+			void utils.watchEvent.getEventsForWatchlist.invalidate();
+			toast.success(
+				`Watch party created for ${entry.movie.title} on ${date?.toLocaleDateString(
+					"en-US",
+					{
+						day: "numeric",
+						month: "long",
+						year: "numeric",
+					},
+				)} at ${date?.toLocaleTimeString("en-GB", {
+					hour: "2-digit",
+					minute: "2-digit",
+				})}`,
+			);
 		},
 	});
 	const deleteWatchEvent = api.watchEvent.delete.useMutation({

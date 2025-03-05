@@ -3,10 +3,7 @@
 import { Button } from "@serea/ui/button";
 import { ListOrderedIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
-import {
-	SELECTED_VIEW_COOKIE_NAME,
-	TMDB_IMAGE_BASE_URL_HD,
-} from "~/lib/constants";
+import { SELECTED_VIEW_COOKIE_NAME } from "~/lib/constants";
 import { api } from "~/trpc/react";
 import AddEntry from "./add-entry";
 import GridList from "./grid-list";

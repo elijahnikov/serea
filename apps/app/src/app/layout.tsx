@@ -69,6 +69,12 @@ const sereaFont = localFont({
 export default function RootLayout(props: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<head>
+				<script
+					crossOrigin="anonymous"
+					src="//unpkg.com/react-scan/dist/auto.global.js"
+				/>
+			</head>
 			<body
 				className={cn(
 					"min-h-screen bg-background font-serea text-foreground antialiased relative",
