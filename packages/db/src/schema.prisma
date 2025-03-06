@@ -69,11 +69,12 @@ model User {
   watchlistLikes          WatchlistLike[]
   watchlistComments       WatchlistComment[]
   watchlistCommentLikes   WatchlistCommentLike[]
-  watchlistInvitesInvitee WatchlistInvite[]      @relation("Invitee")
-  watchlistInvitesInviter WatchlistInvite[]      @relation("Inviter")
+  watchlistInvitesInvitee WatchlistInvite[]          @relation("Invitee")
+  watchlistInvitesInviter WatchlistInvite[]          @relation("Inviter")
   notifications           Notification[]
-  notificationActed       Notification[]         @relation("NotificationActed")
+  notificationActed       Notification[]             @relation("NotificationActed")
   event                   WatchEvent[]
+  channelMessages         WatchEventChannelMessage[]
 }
 
 model VerificationToken {
@@ -305,11 +306,42 @@ model WatchEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist      @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  entry     WatchlistEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  watchlist Watchlist          @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entry     WatchlistEntry     @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  channel   WatchEventChannel?
 
   @@index([userId])
   @@index([watchlistId])
   @@index([entryId])
+}
+
+model WatchEventChannel {
+  id           String @id @default(cuid())
+  watchEventId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages WatchEventChannelMessage[]
+
+  watchEvent WatchEvent @relation(fields: [watchEventId], references: [id], onDelete: Cascade)
+
+  @@index([watchEventId])
+}
+
+model WatchEventChannelMessage {
+  id String @id @default(cuid())
+
+  channelId String
+  userId    String
+  content   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel WatchEventChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
 }
