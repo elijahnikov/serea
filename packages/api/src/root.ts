@@ -1,4 +1,6 @@
 import { authRouter } from "./router/auth/auth.procedure";
+import { channelRouter } from "./router/channel/channel.procedure";
+import { messageRouter } from "./router/message/message.procedure";
 import { movieRouter } from "./router/movie/movie.procedure";
 import { notificationRouter } from "./router/notification/notification.procedure";
 import { postRouter } from "./router/post";
@@ -19,6 +21,8 @@ export const appRouter = createTRPCRouter({
 	notification: notificationRouter,
 	watched: watchedRouter,
 	watchEvent: watchEventRouter,
+	message: messageRouter,
+	channel: channelRouter,
 });
 
 // export type definition of API

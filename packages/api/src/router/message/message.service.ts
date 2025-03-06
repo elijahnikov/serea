@@ -1,6 +1,6 @@
 import type { ProtectedTRPCContext } from "../../trpc";
 import { currentlyTyping, ee } from "../channel/channel.procedure";
-import type { AddMessageInput } from "./message.input";
+import type { AddMessageInput, GetInfiniteInput } from "./message.input";
 
 export const addMessage = async (
 	ctx: ProtectedTRPCContext,
@@ -24,4 +24,34 @@ export const addMessage = async (
 	ee.emit("add", input.channelId, message);
 
 	return message;
+};
+
+export const getInfinite = async (
+	ctx: ProtectedTRPCContext,
+	input: GetInfiniteInput,
+) => {
+	const take = input.take ?? 10;
+	const cursor = input.cursor;
+
+	const messagesQuery = await ctx.db.watchEventChannelMessage.findMany({
+		where: {
+			channelId: input.channelId,
+			...(input.cursor ? { createdAt: { lte: input.cursor } } : {}),
+		},
+		orderBy: { createdAt: "desc" },
+		take: take + 1,
+	});
+
+	const messages = messagesQuery.reverse();
+	let nextCursor: typeof cursor | null = null;
+	if (messages.length > take) {
+		const prev = messages.shift();
+		// biome-ignore lint/style/noNonNullAssertion: <explanation>
+		nextCursor = prev!.createdAt;
+	}
+
+	return {
+		messages,
+		nextCursor,
+	};
 };

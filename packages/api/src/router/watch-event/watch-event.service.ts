@@ -57,16 +57,26 @@ export const createWatchEvent = async (
 		});
 	}
 
-	const event = await ctx.db.watchEvent.create({
-		data: {
-			userId: currentUserId,
-			watchlistId: input.watchlistId,
-			entryId: input.entryId,
-			date: input.date,
-		},
+	const transaction = await ctx.db.$transaction(async (tx) => {
+		const event = await tx.watchEvent.create({
+			data: {
+				userId: currentUserId,
+				watchlistId: input.watchlistId,
+				entryId: input.entryId,
+				date: input.date,
+			},
+		});
+
+		await tx.watchEventChannel.create({
+			data: {
+				watchEventId: event.id,
+			},
+		});
+
+		return event;
 	});
 
-	return event;
+	return transaction;
 };
 
 export const deleteWatchEvent = async (
@@ -101,6 +111,7 @@ export const getEventsForWatchlist = async (
 			},
 		},
 		include: {
+			channel: true,
 			entry: {
 				include: {
 					movie: true,

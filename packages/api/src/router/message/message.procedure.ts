@@ -6,6 +6,10 @@ import * as input from "./message.input";
 import * as service from "./message.service";
 
 export const messageRouter = {
+	// QUERIES
+	getInfinite: protectedProcedure
+		.input(input.getInfinite)
+		.query(async ({ ctx, input }) => service.getInfinite(ctx, input)),
 	// MUTATIONS
 	add: protectedProcedure
 		.input(input.add)

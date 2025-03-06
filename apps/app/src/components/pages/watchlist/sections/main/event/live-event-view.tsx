@@ -2,15 +2,22 @@ import type { RouterOutputs } from "@serea/api";
 import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import dayjs from "dayjs";
-import { CalendarIcon, XIcon } from "lucide-react";
+import {
+	CalendarIcon,
+	DoorClosedIcon,
+	DoorOpenIcon,
+	XIcon,
+} from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
+import { useChannelStore } from "~/stores/channel";
 import EventCount from "./count";
 
 export default function LiveEventView({
 	event,
 }: { event: RouterOutputs["watchEvent"]["getEventsForWatchlist"][number] }) {
+	const { joinChannel, currentChannelId, leaveChannel } = useChannelStore();
 	const eventDate = new Date(event.date);
 	const runtime = event.entry.movie.runtime;
 	const movieTitle = event.entry.movie.title;
@@ -70,40 +77,60 @@ export default function LiveEventView({
 	return (
 		<>
 			<div className="flex flex-col w-full">
-				<div className="flex w-full items-center gap-2">
-					{event.entry.movie.poster && (
-						<Image
-							src={`${TMDB_IMAGE_BASE_URL_SD}${event.entry.movie.poster}`}
-							alt={movieTitle}
-							width={50}
-							height={50}
-							className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark object-cover"
-						/>
-					)}
-					<div className="font-medium gap-1 flex flex-col">
-						<div className="flex items-center gap-2">
-							<span className="font-bold">{movieTitle}</span>
-							<Badge
-								shape="pill"
-								color="green"
-								size={"sm"}
-								className="px-2 py-0.5 text-xs"
-							>
-								<div className="flex items-center gap-1">
-									<div className="h-2 w-2 duration-1000 rounded-full bg-green-400 animate-custom-ping" />
-									<p>Live</p>
-								</div>
-							</Badge>
+				<div className="flex w-full items-center justify-between">
+					<div className="flex w-full items-center gap-2">
+						{event.entry.movie.poster && (
+							<Image
+								src={`${TMDB_IMAGE_BASE_URL_SD}${event.entry.movie.poster}`}
+								alt={movieTitle}
+								width={50}
+								height={50}
+								className="rounded-md border-[0.5px] shadow-sm dark:shadow-sm-dark object-cover"
+							/>
+						)}
+						<div className="font-medium gap-1 flex flex-col">
+							<div className="flex items-center gap-2">
+								<span className="font-bold">{movieTitle}</span>
+								<Badge
+									shape="pill"
+									color="green"
+									size={"sm"}
+									className="px-2 py-0.5 text-xs"
+								>
+									<div className="flex items-center gap-1">
+										<div className="h-2 w-2 duration-1000 rounded-full bg-green-400 animate-custom-ping" />
+										<p>Live</p>
+									</div>
+								</Badge>
+							</div>
+
+							<span className="text-carbon-900">
+								{dayjs(eventDate).format("ddd MMMM D, YYYY [at] HH:mm")}
+							</span>
 						</div>
-						<span className="text-carbon-900">
-							{dayjs(eventDate).format("ddd MMMM D, YYYY [at] HH:mm")}
-						</span>
 					</div>
+					{!currentChannelId ? (
+						<Button
+							before={<DoorOpenIcon />}
+							onClick={() =>
+								event.channel?.id && joinChannel(event.channel?.id)
+							}
+						>
+							Join
+						</Button>
+					) : (
+						<Button
+							variant={"destructive"}
+							before={<DoorClosedIcon />}
+							onClick={() => leaveChannel()}
+						>
+							Leave
+						</Button>
+					)}
 				</div>
 
 				<div className="mt-4 mb-2">
 					<div className="flex justify-between text-xs mt-1 font-medium text-carbon-600">
-						{/* <span className="font-medium font-mono">{currentTime}</span> */}
 						<EventCount time={currentTime} />
 						<span className="font-mono">{formattedRuntime}</span>
 					</div>

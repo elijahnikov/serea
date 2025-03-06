@@ -87,6 +87,10 @@ export default {
 						transform: "translateX(100%)",
 					},
 				},
+				"slide-in-from-right": {
+					"0%": { transform: "translateX(100%)" },
+					"100%": { transform: "translateX(0)" },
+				},
 			},
 			animation: {
 				"bounce-in": "bounce-in 0.5s ease-out",
@@ -98,6 +102,7 @@ export default {
 				shimmer: "shimmer 1.5s infinite",
 				"custom-ping": "custom-ping 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
 				"progress-stripes": "progress-stripes 1s linear infinite",
+				"slide-in-from-right": "slide-in-from-right 0.3s ease-out",
 			},
 		},
 	},
