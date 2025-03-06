@@ -10,12 +10,12 @@ import LiveEventView from "./live-event-view";
 import UpcomingEventView from "./upcoming-event-view";
 
 type Event = RouterOutputs["watchEvent"]["getEventsForWatchlist"][number];
+
 export default function EventSection({
 	watchlistId,
 }: {
 	watchlistId: string;
 }) {
-	// Query for events data
 	const [eventsData] = api.watchEvent.getEventsForWatchlist.useSuspenseQuery({
 		watchlistId,
 	});
@@ -38,7 +38,6 @@ export default function EventSection({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
-		// Early return if no events
 		if (!eventsData.length || eventsData[0] === undefined) {
 			return;
 		}
