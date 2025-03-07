@@ -1,7 +1,6 @@
 import type { RouterOutputs } from "@serea/api";
 import { cn } from "@serea/ui/cn";
 import { Suspense } from "react";
-import { useChannelStore } from "~/stores/channel";
 import CommentsSection from "./comments";
 import EntriesSection from "./entries";
 import EventSection from "./event";

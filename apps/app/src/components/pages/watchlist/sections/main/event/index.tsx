@@ -6,6 +6,7 @@ import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 import { api } from "~/trpc/react";
 
+import { useRouter } from "next/navigation";
 import LiveEventView from "./live-event-view";
 import UpcomingEventView from "./upcoming-event-view";
 
@@ -16,6 +17,8 @@ export default function EventSection({
 }: {
 	watchlistId: string;
 }) {
+	const router = useRouter();
+
 	const [eventsData] = api.watchEvent.getEventsForWatchlist.useSuspenseQuery({
 		watchlistId,
 	});
@@ -55,6 +58,7 @@ export default function EventSection({
 
 			if (newStatus !== eventStatus) {
 				setEventStatus(newStatus);
+				router.refresh();
 			}
 		};
 

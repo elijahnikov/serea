@@ -1,6 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
 import { api } from "~/trpc/react";
 import MainSection from "./sections/main";
 import SideSection from "./sections/side";

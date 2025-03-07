@@ -2,12 +2,7 @@ import type { RouterOutputs } from "@serea/api";
 import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import dayjs from "dayjs";
-import {
-	CalendarIcon,
-	DoorClosedIcon,
-	DoorOpenIcon,
-	XIcon,
-} from "lucide-react";
+import { DoorClosedIcon, DoorOpenIcon } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
