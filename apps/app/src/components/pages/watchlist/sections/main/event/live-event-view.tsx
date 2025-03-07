@@ -11,13 +11,15 @@ import {
 import Image from "next/image";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
-import { useChannelStore } from "~/stores/channel";
+import { useChannelParticipation } from "~/lib/hooks/channel";
 import EventCount from "./count";
 
 export default function LiveEventView({
 	event,
 }: { event: RouterOutputs["watchEvent"]["getEventsForWatchlist"][number] }) {
-	const { joinChannel, currentChannelId, leaveChannel } = useChannelStore();
+	const { hasJoined, joinChannel, leaveChannel, isJoining, participants } =
+		useChannelParticipation(event.channel?.id ?? "");
+
 	const eventDate = new Date(event.date);
 	const runtime = event.entry.movie.runtime;
 	const movieTitle = event.entry.movie.title;
@@ -109,24 +111,22 @@ export default function LiveEventView({
 							</span>
 						</div>
 					</div>
-					{!currentChannelId ? (
-						<Button
-							before={<DoorOpenIcon />}
-							onClick={() =>
-								event.channel?.id && joinChannel(event.channel?.id)
-							}
-						>
-							Join
-						</Button>
-					) : (
-						<Button
-							variant={"destructive"}
-							before={<DoorClosedIcon />}
-							onClick={() => leaveChannel()}
-						>
+					{hasJoined ? (
+						<Button before={<DoorClosedIcon />} onClick={() => leaveChannel()}>
 							Leave
 						</Button>
+					) : (
+						<Button before={<DoorOpenIcon />} onClick={() => joinChannel()}>
+							Join
+						</Button>
 					)}
+					{JSON.stringify({
+						hasJoined,
+						joinChannel,
+						leaveChannel,
+						isJoining,
+						participants: participants.map((p) => p.name),
+					})}
 				</div>
 
 				<div className="mt-4 mb-2">

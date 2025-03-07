@@ -5,6 +5,11 @@ import { protectedProcedure } from "../../trpc";
 import * as input from "./channel.input";
 import * as service from "./channel.service";
 
+type User = {
+	id: string;
+	name: string;
+	image: string | null | undefined;
+};
 export type WhoIsTyping = Record<string, { lastTyped: Date }>;
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -26,15 +31,23 @@ export type MessageType = {
 	userId: string;
 	content: string;
 	channelId: string;
+	user: {
+		name: string;
+		id: string;
+		image: string | null;
+	};
+	isUser: boolean;
 };
 export interface Events {
 	add: [channelId: string, message: MessageType];
 	isTypingUpdate: [channelId: string, who: WhoIsTyping];
+	participantsUpdate: [channelId: string, participants: User[]];
 }
 
 export const ee = new IterativeEventEmitter<Events>();
 
 export const currentlyTyping: Record<string, WhoIsTyping> = Object.create(null);
+export const whoIsParticipating: Record<string, User[]> = Object.create(null);
 
 setInterval(() => {
 	const updatedChannels = new Set<string>();
@@ -54,6 +67,10 @@ setInterval(() => {
 }, 1000).unref();
 
 export const channelRouter = {
+	// QUERIES
+	getChannel: protectedProcedure
+		.input(input.getChannel)
+		.query(async ({ ctx, input }) => service.getChannel(ctx, input)),
 	// MUTATIONS
 	create: protectedProcedure
 		.input(input.create)
@@ -77,6 +94,78 @@ export const channelRouter = {
 				};
 			}
 			ee.emit("isTypingUpdate", channelId, currentlyTyping[channelId]);
+		}),
+
+	hasJoined: protectedProcedure
+		.input(input.hasJoined)
+		.mutation(async ({ ctx, input }) => {
+			const { channelId, joined } = input;
+
+			const channelExists = await ctx.db.watchEventChannel.findFirst({
+				where: {
+					id: channelId,
+				},
+				include: {
+					watchEvent: {
+						select: {
+							watchlistId: true,
+						},
+					},
+				},
+			});
+
+			if (!channelExists) {
+				return;
+			}
+
+			const isMember = await ctx.db.watchlistMember.findFirst({
+				where: {
+					watchlistId: channelExists.watchEvent.watchlistId,
+					userId: ctx.session.user.id,
+				},
+			});
+
+			if (!isMember) {
+				return;
+			}
+
+			if (!whoIsParticipating[channelId]) {
+				whoIsParticipating[channelId] = [];
+			}
+
+			if (joined) {
+				const userExists = whoIsParticipating[channelId].some(
+					(user) => user.id === ctx.session.user.id,
+				);
+
+				if (!userExists) {
+					whoIsParticipating[channelId] = [
+						...whoIsParticipating[channelId],
+						{
+							id: ctx.session.user.id,
+							name: String(ctx.session.user.name),
+							image: ctx.session.user.image,
+						},
+					];
+
+					setTimeout(() => {
+						ee.emit(
+							"participantsUpdate",
+							channelId,
+							// biome-ignore lint/style/noNonNullAssertion: <explanation>
+							whoIsParticipating[channelId]!,
+						);
+					}, 100);
+				}
+			} else {
+				whoIsParticipating[channelId] = whoIsParticipating[channelId].filter(
+					(user) => user.id !== ctx.session.user.id,
+				);
+
+				ee.emit("participantsUpdate", channelId, whoIsParticipating[channelId]);
+			}
+
+			return whoIsParticipating[channelId];
 		}),
 
 	// SUBSCRIPTIONS
@@ -104,6 +193,37 @@ export const channelRouter = {
 			)) {
 				if (eventChannelId === input.channelId) {
 					yield* maybeYield(who);
+				}
+			}
+		}),
+
+	whoIsParticipating: protectedProcedure
+		.input(input.whoIsTyping)
+		.subscription(async function* ({ input, signal }) {
+			let lastParticipants = "";
+
+			function* maybeYield(participants: User[]) {
+				const idx = participants
+					.map((p) => p.id)
+					.sort()
+					.toString();
+				if (idx === lastParticipants) {
+					return;
+				}
+				yield participants;
+				lastParticipants = idx;
+			}
+
+			yield* maybeYield(whoIsParticipating[input.channelId] ?? []);
+
+			for await (const [eventChannelId, participants] of ee.toIterable(
+				"participantsUpdate",
+				{
+					signal,
+				},
+			)) {
+				if (eventChannelId === input.channelId) {
+					yield* maybeYield(participants);
 				}
 			}
 		}),

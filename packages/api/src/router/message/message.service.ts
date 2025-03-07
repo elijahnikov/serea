@@ -15,13 +15,23 @@ export const addMessage = async (
 		},
 	});
 
+	const formattedMessage = {
+		...message,
+		isUser: message.userId === ctx.session.user.id,
+		user: {
+			name: userName,
+			id: ctx.session.user.id,
+			image: ctx.session.user.image as string | null,
+		},
+	};
+
 	const channelTyping = currentlyTyping[input.channelId];
 	if (channelTyping) {
 		delete channelTyping[userName];
 		ee.emit("isTypingUpdate", input.channelId, channelTyping);
 	}
 
-	ee.emit("add", input.channelId, message);
+	ee.emit("add", input.channelId, formattedMessage);
 
 	return message;
 };
@@ -30,6 +40,8 @@ export const getInfinite = async (
 	ctx: ProtectedTRPCContext,
 	input: GetInfiniteInput,
 ) => {
+	const currentUserId = ctx.session.user.id;
+
 	const take = input.take ?? 10;
 	const cursor = input.cursor;
 
@@ -40,6 +52,15 @@ export const getInfinite = async (
 		},
 		orderBy: { createdAt: "desc" },
 		take: take + 1,
+		include: {
+			user: {
+				select: {
+					name: true,
+					id: true,
+					image: true,
+				},
+			},
+		},
 	});
 
 	const messages = messagesQuery.reverse();
@@ -51,7 +72,10 @@ export const getInfinite = async (
 	}
 
 	return {
-		messages,
+		messages: messages.map((message) => ({
+			...message,
+			isUser: message.userId === currentUserId,
+		})),
 		nextCursor,
 	};
 };

@@ -1,5 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
+import {
+	currentlyTyping,
+	ee,
+	whoIsParticipating,
+} from "../channel/channel.procedure";
 import type {
 	CreateWatchEventInput,
 	DeleteWatchEventInput,
@@ -83,6 +88,18 @@ export const deleteWatchEvent = async (
 	ctx: ProtectedTRPCContext,
 	input: DeleteWatchEventInput,
 ) => {
+	const channel = await ctx.db.watchEventChannel.findFirst({
+		where: {
+			watchEventId: input.id,
+		},
+	});
+
+	if (channel) {
+		whoIsParticipating[channel.id] = [];
+		currentlyTyping[channel.id] = {};
+		ee.emit("participantsUpdate", channel.id, []);
+	}
+
 	await ctx.db.watchEvent.delete({
 		where: {
 			id: input.id,

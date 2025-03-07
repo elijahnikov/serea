@@ -1,5 +1,6 @@
 import { skipToken } from "@tanstack/react-query";
 import * as React from "react";
+import { useChannelStore } from "~/lib/stores/channel";
 import { api } from "~/trpc/react";
 
 export function useThrottledIsTypingMutation(channelId: string) {
@@ -18,87 +19,148 @@ export function useThrottledIsTypingMutation(channelId: string) {
 				channelId,
 				typing: state,
 			});
-
-			return (nextState: boolean) => {
-				const shouldTriggerImmediately = nextState !== state;
-
-				state = nextState;
-
-				if (shouldTriggerImmediately) {
-					trigger();
-				} else if (!timeout) {
-					timeout = setTimeout(trigger, 1000);
-				}
-			};
 		}
+		return (nextState: boolean) => {
+			const shouldTriggerImmediately = nextState !== state;
+
+			state = nextState;
+
+			if (shouldTriggerImmediately) {
+				trigger();
+			} else if (!timeout) {
+				timeout = setTimeout(trigger, 1000);
+			}
+		};
 	}, [channelId]);
 }
 
 export function useLivePosts(channelId: string) {
-	// const utils = api.useUtils();
-	// const [, query] = api.message.getInfinite.useSuspenseInfiniteQuery(
-	// 	{
-	// 		channelId,
-	// 	},
-	// 	{
-	// 		getNextPageParam: (lastPage) => lastPage.nextCursor,
-	// 		refetchOnReconnect: false,
-	// 		refetchOnWindowFocus: false,
-	// 		refetchOnMount: false,
-	// 	},
-	// );
+	const utils = api.useUtils();
+	const [, query] = api.message.getInfinite.useSuspenseInfiniteQuery(
+		{
+			channelId,
+		},
+		{
+			getNextPageParam: (lastPage) => lastPage.nextCursor,
+			refetchOnReconnect: false,
+			refetchOnWindowFocus: false,
+			refetchOnMount: false,
+		},
+	);
 
-	// const [messages, setMessages] = React.useState(() => {
-	// 	const msgs = query.data?.pages.flatMap((page) => page.messages);
-	// 	return msgs ?? null;
-	// });
-	// const [lastEventId, setLastEventId] = React.useState<false | null | string>(
-	// 	false,
-	// );
+	const [messages, setMessages] = React.useState(() => {
+		const msgs = query.data?.pages.flatMap((page) => page.messages);
+		return msgs ?? null;
+	});
+	const [lastEventId, setLastEventId] = React.useState<false | null | string>(
+		false,
+	);
 
-	// type Message = NonNullable<typeof messages>[number];
+	type Message = NonNullable<typeof messages>[number];
 
-	// const addMessages = React.useCallback((incoming?: Message[]) => {
-	// 	setMessages((current) => {
-	// 		const map: Record<Message["id"], Message> = {};
-	// 		for (const msg of current ?? []) {
-	// 			map[msg.id] = msg;
-	// 		}
-	// 		for (const msg of incoming ?? []) {
-	// 			map[msg.id] = msg;
-	// 		}
-	// 		return Object.values(map).sort(
-	// 			(a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-	// 		);
-	// 	});
-	// }, []);
+	const addMessages = React.useCallback((incoming?: Message[]) => {
+		setMessages((current) => {
+			const map: Record<Message["id"], Message> = {};
+			for (const msg of current ?? []) {
+				map[msg.id] = msg;
+			}
+			for (const msg of incoming ?? []) {
+				map[msg.id] = msg;
+			}
+			return Object.values(map).sort(
+				(a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+			);
+		});
+	}, []);
 
-	// React.useEffect(() => {
-	// 	const msgs = query.data?.pages.flatMap((page) => page.messages);
-	// 	addMessages(msgs);
-	// }, [query.data?.pages, addMessages]);
+	React.useEffect(() => {
+		const msgs = query.data?.pages.flatMap((page) => page.messages);
+		addMessages(msgs);
+	}, [query.data?.pages, addMessages]);
 
-	// if (messages && lastEventId === false) {
-	// 	setLastEventId(messages.at(-1)?.id ?? null);
-	// }
+	if (messages && lastEventId === false) {
+		setLastEventId(messages.at(-1)?.id ?? null);
+	}
 
-	// const subscription = api.message.onAdd.useSubscription(
-	// 	lastEventId === false ? skipToken : { channelId, lastEventId },
-	// 	{
-	// 		onData(event) {
-	// 			addMessages([event.data]);
-	// 		},
-	// 		onError(error) {
-	// 			console.error("Subscription error:", error);
+	const subscription = api.message.onAdd.useSubscription(
+		lastEventId === false ? skipToken : { channelId, lastEventId },
+		{
+			onData(event) {
+				addMessages([event.data]);
+			},
+			onError(error) {
+				console.error("Subscription error:", error);
 
-	// 			const lastMessageEventId = messages?.at(-1)?.id;
-	// 			if (lastMessageEventId) {
-	// 				setLastEventId(lastMessageEventId);
-	// 			}
-	// 		},
-	// 	},
-	// );
+				const lastMessageEventId = messages?.at(-1)?.id;
+				if (lastMessageEventId) {
+					setLastEventId(lastMessageEventId);
+				}
+			},
+		},
+	);
 
-	// return { query, messages, subscription };
-	return 1;
+	return { query, messages, subscription };
+}
+
+export function useChannelParticipation(channelId: string | undefined) {
+	const {
+		joinedChannels,
+		channelParticipants,
+		joinChannel: storeJoinChannel,
+		leaveChannel: storeLeaveChannel,
+		setParticipants: storeSetParticipants,
+	} = useChannelStore();
+
+	const joinMutation = api.channel.hasJoined.useMutation();
+	const user = api.auth.getSession.useQuery().data?.user;
+
+	const hasJoined = channelId ? !!joinedChannels[channelId] : false;
+	const participants = channelId ? channelParticipants[channelId] || [] : [];
+
+	// Join the channel
+	const joinChannel = React.useCallback(() => {
+		if (!channelId || !user) return;
+
+		joinMutation.mutate({ channelId, joined: true });
+		storeJoinChannel(channelId);
+	}, [channelId, user, joinMutation, storeJoinChannel]);
+
+	// Leave the channel
+	const leaveChannel = React.useCallback(() => {
+		if (!channelId) return;
+
+		joinMutation.mutate({ channelId, joined: false });
+		storeLeaveChannel(channelId);
+	}, [channelId, joinMutation, storeLeaveChannel]);
+
+	// Auto-join if previously joined
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	React.useEffect(() => {
+		if (channelId && hasJoined && user) {
+			joinMutation.mutate({ channelId, joined: true });
+		}
+	}, [channelId, hasJoined, user]);
+
+	// Subscribe to participant updates
+	api.channel.whoIsParticipating.useSubscription(
+		channelId ? { channelId } : skipToken,
+		{
+			onData(data) {
+				if (channelId) {
+					storeSetParticipants(channelId, data);
+				}
+			},
+			onError(error) {
+				console.error("Participant subscription error:", error);
+			},
+		},
+	);
+
+	return {
+		participants,
+		hasJoined,
+		joinChannel,
+		leaveChannel,
+		isJoining: joinMutation.isPending,
+	};
 }

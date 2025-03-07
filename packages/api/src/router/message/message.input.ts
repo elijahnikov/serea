@@ -13,7 +13,7 @@ export const onAdd = z.object({
 export type OnAddMessageInput = z.infer<typeof onAdd>;
 
 export const getInfinite = z.object({
-	channelId: z.string().uuid(),
+	channelId: z.string(),
 	cursor: z.date().nullish(),
 	take: z.number().min(1).max(50).nullish(),
 });

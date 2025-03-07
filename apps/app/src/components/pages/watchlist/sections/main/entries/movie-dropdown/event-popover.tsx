@@ -28,6 +28,8 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 	const router = useRouter();
 	const utils = api.useUtils();
 	const event = React.useMemo(() => entry.event[0], [entry]);
+
+	const hasJoined = api.channel.hasJoined.useMutation();
 	const createWatchEvent = api.watchEvent.create.useMutation({
 		onSuccess: () => {
 			void utils.watchlist.getEntries.invalidate({
@@ -49,8 +51,21 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 			);
 		},
 	});
+
 	const deleteWatchEvent = api.watchEvent.delete.useMutation({
 		onSuccess: () => {
+			// Clean up channel data when event is deleted
+			if (event?.channel?.id) {
+				try {
+					hasJoined.mutate({
+						channelId: event.channel.id,
+						joined: false,
+					});
+				} catch (error) {
+					console.error("Error leaving channel:", error);
+				}
+			}
+
 			void utils.watchlist.getEntries.invalidate({
 				watchlistId: entry.watchlistId,
 			});

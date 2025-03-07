@@ -21,6 +21,7 @@ export const messageRouter = {
 		input,
 		signal,
 	}) {
+		const currentUserId = ctx.session.user.id;
 		const iterable = ee.toIterable("add", { signal });
 
 		let lastMessageCreatedAt = await (async () => {
@@ -44,8 +45,29 @@ export const messageRouter = {
 						? { createdAt: { gt: lastMessageCreatedAt } }
 						: {}),
 				},
+				include: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							image: true,
+						},
+					},
+				},
 				orderBy: { createdAt: "asc" },
 			});
+
+		const newMessagesSinceLastMessageFormatted =
+			newMessagesSinceLastMessage.map((message) => ({
+				...message,
+				user: {
+					...message.user,
+					name: String(message.user.name),
+					id: String(message.user.id),
+					image: String(message.user.image),
+				},
+				isUser: message.user.id === currentUserId,
+			}));
 
 		function* maybeYield(message: MessageType) {
 			if (message.channelId !== input.channelId) {
@@ -61,7 +83,7 @@ export const messageRouter = {
 			lastMessageCreatedAt = message.createdAt;
 		}
 
-		for (const message of newMessagesSinceLastMessage) {
+		for (const message of newMessagesSinceLastMessageFormatted) {
 			yield* maybeYield(message);
 		}
 

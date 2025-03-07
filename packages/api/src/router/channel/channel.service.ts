@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import type { ProtectedTRPCContext } from "../../trpc";
-import type { CreateChannelInput, IsTypingInput } from "./channel.input";
+import type {
+	CreateChannelInput,
+	GetChannelInput,
+	IsTypingInput,
+} from "./channel.input";
 
 export const createChannel = async (
 	ctx: ProtectedTRPCContext,
@@ -39,4 +43,24 @@ export const createChannel = async (
 	});
 
 	return channel.id;
+};
+
+export const getChannel = async (
+	ctx: ProtectedTRPCContext,
+	input: GetChannelInput,
+) => {
+	const channel = await ctx.db.watchEventChannel.findUnique({
+		where: {
+			id: input.channelId,
+		},
+	});
+
+	if (!channel) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Channel not found",
+		});
+	}
+
+	return channel;
 };

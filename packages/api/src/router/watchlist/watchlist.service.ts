@@ -120,7 +120,11 @@ export const getWatchlistEntries = async (
 		orderBy: [{ order: "asc" }, { id: "asc" }],
 		include: {
 			movie: true,
-			event: true,
+			event: {
+				include: {
+					channel: true,
+				},
+			},
 			watched: {
 				include: {
 					user: {
