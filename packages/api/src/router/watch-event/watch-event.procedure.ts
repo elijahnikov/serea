@@ -6,6 +6,11 @@ import * as services from "./watch-event.service";
 
 export const watchEventRouter = {
 	// QUERIES
+	getEvent: protectedProcedure
+		.input(inputs.getEvent)
+		.meta({ name: "get-event" })
+		.query(async ({ ctx, input }) => services.getEvent(ctx, input)),
+
 	getEventsForWatchlist: protectedProcedure
 		.input(inputs.getWatchEventForWatchlist)
 		.meta({ name: "get-events-for-watchlist" })

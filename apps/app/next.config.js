@@ -17,9 +17,6 @@ const config = {
     "@serea/validators",
   ],
 
-  experimental: {
-    nodeMiddleware: true,
-  },
   images: {
     remotePatterns: [
       {

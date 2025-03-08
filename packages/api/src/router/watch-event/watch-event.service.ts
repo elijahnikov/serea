@@ -8,6 +8,7 @@ import {
 import type {
 	CreateWatchEventInput,
 	DeleteWatchEventInput,
+	GetEventInput,
 	GetWatchEventForWatchlistInput,
 } from "./watch-event.input";
 
@@ -179,4 +180,46 @@ export const getAllEventsForWatchlist = async (
 			date: "asc",
 		},
 	});
+};
+
+export const getEvent = async (
+	ctx: ProtectedTRPCContext,
+	input: GetEventInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const isMember = await ctx.db.watchlistMember.findFirst({
+		where: {
+			watchlistId: input.watchlistId,
+			userId: currentUserId,
+		},
+	});
+
+	if (!isMember) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+		});
+	}
+
+	const event = await ctx.db.watchEvent.findUnique({
+		where: { id: input.eventId, watchlistId: input.watchlistId },
+		include: {
+			watchlist: true,
+			channel: true,
+			entry: {
+				include: {
+					movie: true,
+				},
+			},
+		},
+	});
+
+	if (!event) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Event not found",
+		});
+	}
+
+	return event;
 };

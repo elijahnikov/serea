@@ -1,3 +1,4 @@
+import { RouterOutputs } from "@serea/api";
 import { skipToken } from "@tanstack/react-query";
 import * as React from "react";
 import { useChannelStore } from "~/lib/stores/channel";
@@ -103,43 +104,13 @@ export function useLivePosts(channelId: string) {
 }
 
 export function useChannelParticipation(channelId: string | undefined) {
-	const {
-		joinedChannels,
-		channelParticipants,
-		joinChannel: storeJoinChannel,
-		leaveChannel: storeLeaveChannel,
-		setParticipants: storeSetParticipants,
-	} = useChannelStore();
-
-	const joinMutation = api.channel.hasJoined.useMutation();
-	const user = api.auth.getSession.useQuery().data?.user;
-
-	const hasJoined = channelId ? !!joinedChannels[channelId] : false;
-	const participants = channelId ? channelParticipants[channelId] || [] : [];
-
-	// Join the channel
-	const joinChannel = React.useCallback(() => {
-		if (!channelId || !user) return;
-
-		joinMutation.mutate({ channelId, joined: true });
-		storeJoinChannel(channelId);
-	}, [channelId, user, joinMutation, storeJoinChannel]);
-
-	// Leave the channel
-	const leaveChannel = React.useCallback(() => {
-		if (!channelId) return;
-
-		joinMutation.mutate({ channelId, joined: false });
-		storeLeaveChannel(channelId);
-	}, [channelId, joinMutation, storeLeaveChannel]);
-
-	// Auto-join if previously joined
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	React.useEffect(() => {
-		if (channelId && hasJoined && user) {
-			joinMutation.mutate({ channelId, joined: true });
-		}
-	}, [channelId, hasJoined, user]);
+	const [participants, setParticipants] = React.useState<
+		{
+			id: string;
+			name: string;
+			image: string | null | undefined;
+		}[]
+	>([]);
 
 	// Subscribe to participant updates
 	api.channel.whoIsParticipating.useSubscription(
@@ -147,7 +118,7 @@ export function useChannelParticipation(channelId: string | undefined) {
 		{
 			onData(data) {
 				if (channelId) {
-					storeSetParticipants(channelId, data);
+					setParticipants(data);
 				}
 			},
 			onError(error) {
@@ -158,9 +129,5 @@ export function useChannelParticipation(channelId: string | undefined) {
 
 	return {
 		participants,
-		hasJoined,
-		joinChannel,
-		leaveChannel,
-		isJoining: joinMutation.isPending,
 	};
 }

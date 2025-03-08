@@ -19,3 +19,9 @@ export const getWatchEventForWatchlist = z.object({
 export type GetWatchEventForWatchlistInput = z.infer<
 	typeof getWatchEventForWatchlist
 >;
+
+export const getEvent = z.object({
+	eventId: z.string(),
+	watchlistId: z.string(),
+});
+export type GetEventInput = z.infer<typeof getEvent>;

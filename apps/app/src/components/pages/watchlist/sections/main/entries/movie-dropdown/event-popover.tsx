@@ -50,6 +50,13 @@ export default function WatchEventPopover({ entry }: WatchEventPopoverProps) {
 				})}`,
 			);
 		},
+		onError: (error) => {
+			if (error.data?.code === "BAD_REQUEST") {
+				toast.error(error.message);
+			} else {
+				toast.error("An error occurred while creating the watch party");
+			}
+		},
 	});
 
 	const deleteWatchEvent = api.watchEvent.delete.useMutation({
