@@ -1,7 +1,6 @@
 import { RouterOutputs } from "@serea/api";
 import { skipToken } from "@tanstack/react-query";
 import * as React from "react";
-import { useChannelStore } from "~/lib/stores/channel";
 import { api } from "~/trpc/react";
 
 export function useThrottledIsTypingMutation(channelId: string) {

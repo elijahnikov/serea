@@ -16,9 +16,7 @@ export default function MainSection({
 			)}
 		>
 			{(watchlist.isMember || watchlist.isEditor || watchlist.isOwner) && (
-				<Suspense>
-					<EventSection watchlistId={watchlist.id} />
-				</Suspense>
+				<EventSection watchlistId={watchlist.id} />
 			)}
 			<MainHeader watchlist={watchlist} />
 			<Suspense fallback={<div>Loading entries...</div>}>

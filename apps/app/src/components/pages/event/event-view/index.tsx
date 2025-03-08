@@ -4,31 +4,24 @@ import type { RouterOutputs } from "@serea/api";
 import { cn } from "@serea/ui/cn";
 import { CalendarIcon } from "lucide-react";
 import * as React from "react";
-import { api } from "~/trpc/react";
 
 import { useRouter } from "next/navigation";
-import LiveEventView from "./live-event-view";
-import UpcomingEventView from "./upcoming-event-view";
+import LiveEventView from "../../watchlist/sections/main/event/live-event-view";
+import UpcomingEventView from "../../watchlist/sections/main/event/upcoming-event-view";
 
-type Event = RouterOutputs["watchEvent"]["getEventsForWatchlist"][number];
-
-export default function EventSection({
-	watchlistId,
+export default function EventView({
+	eventData,
 }: {
-	watchlistId: string;
+	eventData: RouterOutputs["watchEvent"]["getEvent"];
 }) {
 	const router = useRouter();
 
-	const [eventsData] = api.watchEvent.getEventsForWatchlist.useSuspenseQuery({
-		watchlistId,
-	});
-
 	const getInitialStatus = () => {
-		if (!eventsData.length || eventsData[0] === undefined) {
+		if (!eventData) {
 			return "upcoming";
 		}
 
-		const eventDate = new Date(eventsData[0].date);
+		const eventDate = new Date(eventData.date);
 		const now = new Date();
 		return eventDate > now ? "upcoming" : "live";
 	};
@@ -37,16 +30,17 @@ export default function EventSection({
 		getInitialStatus(),
 	);
 
-	const eventRef = React.useRef<Event | null>(null);
+	const eventRef = React.useRef<RouterOutputs["watchEvent"]["getEvent"] | null>(
+		null,
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	React.useEffect(() => {
-		if (!eventsData.length || eventsData[0] === undefined) {
+		if (!eventData) {
 			return;
 		}
 
-		const event = eventsData[0];
-		eventRef.current = event;
+		eventRef.current = eventData;
 
 		const checkEventStatus = () => {
 			if (!eventRef.current) return;
@@ -84,13 +78,11 @@ export default function EventSection({
 			clearInterval(statusInterval);
 			if (transitionTimeout) clearTimeout(transitionTimeout);
 		};
-	}, [eventsData, eventStatus, watchlistId]);
+	}, [eventData, eventStatus]);
 
-	if (!eventsData.length || eventsData[0] === undefined) {
+	if (!eventData) {
 		return null;
 	}
-
-	const event = eventsData[0];
 
 	return (
 		<div className={cn("pl-8 pr-8 border-b flex flex-col py-4 relative")}>
@@ -101,9 +93,9 @@ export default function EventSection({
 				</div>
 			</div>
 			{eventStatus === "upcoming" ? (
-				<UpcomingEventView event={event} />
+				<UpcomingEventView event={eventData} />
 			) : (
-				<LiveEventView event={event} />
+				<LiveEventView event={eventData} />
 			)}
 		</div>
 	);

@@ -1,7 +1,9 @@
 "use client";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import EventView from "./event-view";
+import EventHeader from "./header";
 
 export default function Event({
 	eventId,
@@ -20,5 +22,10 @@ export default function Event({
 		router.push(`/watchlist/${watchlistId}`);
 	}
 
-	return <div>{JSON.stringify(event)}</div>;
+	return (
+		<>
+			<EventHeader event={event} />
+			<EventView eventData={event} />
+		</>
+	);
 }

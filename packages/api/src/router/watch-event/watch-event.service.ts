@@ -129,6 +129,12 @@ export const getEventsForWatchlist = async (
 			},
 		},
 		include: {
+			watchlist: {
+				select: {
+					id: true,
+					title: true,
+				},
+			},
 			channel: true,
 			entry: {
 				include: {
@@ -204,7 +210,12 @@ export const getEvent = async (
 	const event = await ctx.db.watchEvent.findUnique({
 		where: { id: input.eventId, watchlistId: input.watchlistId },
 		include: {
-			watchlist: true,
+			watchlist: {
+				select: {
+					id: true,
+					title: true,
+				},
+			},
 			channel: true,
 			entry: {
 				include: {
