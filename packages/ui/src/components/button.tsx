@@ -7,14 +7,14 @@ import * as React from "react";
 import { cn } from "../utils";
 
 const buttonVariants = cva(
-	"select-none cursor-default font-medium animate transition-colors  disabled:pointer-events-none disabled:opacity-50 duration-100 inline-flex items-center justify-center whitespace-nowrap",
+	"select-none cursor-pointer font-medium animate transition-all  disabled:pointer-events-none disabled:opacity-50 duration-200 inline-flex items-center justify-center whitespace-nowrap",
 	{
 		variants: {
 			variant: {
 				primary:
-					"bg-primary active:bg-primary-active hover:bg-primary-hover ring-1 ring-inset ring-primary-ring border-primary-border border-b outline-primary-outline text-white",
+					"from-primary to-blue-400 bg-gradient-to-t active:scale-[99%] hover:scale-[101%] ring-1 ring-inset ring-primary-ring border-primary-border border-b outline-primary-outline text-white",
 				destructive:
-					"bg-destructive active:bg-destructive-active hover:bg-destructive-hover ring-1 ring-inset ring-destructive-border  border-b border-destructive-ring outline-destructive-outline text-white",
+					"from-destructive to-red-400 bg-gradient-to-t active:bg-scale-[99%] hover:scale-[101%] ring-1 ring-inset ring-destructive-border  border-b border-destructive-ring outline-destructive-outline text-white",
 				black:
 					"bg-carbon-dark-100 dark:shadow-sm-dark shadow-xs text-white dark:text-secondary-foreground border-b ring-1 ring-inset ring-carbon-dark-500 border-carbon-dark-300 dark:ring-carbon-dark-400 dark:border-carbon-dark-500 active:bg-carbon-dark-300 hover:bg-carbon-dark-200",
 				secondary:

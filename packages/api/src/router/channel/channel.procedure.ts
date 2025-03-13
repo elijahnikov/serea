@@ -36,7 +36,6 @@ export type MessageType = {
 		id: string;
 		image: string | null;
 	};
-	isUser: boolean;
 };
 export interface Events {
 	add: [channelId: string, message: MessageType];

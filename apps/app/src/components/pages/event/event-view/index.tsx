@@ -6,6 +6,7 @@ import { CalendarIcon } from "lucide-react";
 import * as React from "react";
 
 import { useRouter } from "next/navigation";
+import FinishedEventView from "../../watchlist/sections/main/event/finished-event-view";
 import LiveEventView from "../../watchlist/sections/main/event/live-event-view";
 import UpcomingEventView from "../../watchlist/sections/main/event/upcoming-event-view";
 
@@ -23,12 +24,22 @@ export default function EventView({
 
 		const eventDate = new Date(eventData.date);
 		const now = new Date();
+
+		// Check if event is finished using the correct runtime path
+		const runtime = eventData.entry?.movie?.runtime;
+		if (runtime) {
+			const endTime = new Date(eventDate.getTime() + runtime * 60 * 1000);
+			if (now > endTime) {
+				return "finished";
+			}
+		}
+
 		return eventDate > now ? "upcoming" : "live";
 	};
 
-	const [eventStatus, setEventStatus] = React.useState<"upcoming" | "live">(
-		getInitialStatus(),
-	);
+	const [eventStatus, setEventStatus] = React.useState<
+		"upcoming" | "live" | "finished"
+	>(getInitialStatus());
 
 	const eventRef = React.useRef<RouterOutputs["watchEvent"]["getEvent"] | null>(
 		null,
@@ -48,7 +59,21 @@ export default function EventView({
 			const eventDate = new Date(eventRef.current.date);
 			const now = new Date();
 
-			const newStatus = eventDate > now ? "upcoming" : "live";
+			let newStatus: "upcoming" | "live" | "finished" = "upcoming";
+
+			// Check if event is finished using the correct runtime path
+			const runtime = eventRef.current.entry?.movie?.runtime;
+			if (runtime) {
+				const endTime = new Date(eventDate.getTime() + runtime * 60 * 1000);
+				if (now > endTime) {
+					newStatus = "finished";
+				} else if (now > eventDate) {
+					newStatus = "live";
+				}
+			} else {
+				// Fallback to original logic if no runtime
+				newStatus = eventDate > now ? "upcoming" : "live";
+			}
 
 			if (newStatus !== eventStatus) {
 				setEventStatus(newStatus);
@@ -94,9 +119,11 @@ export default function EventView({
 			</div>
 			{eventStatus === "upcoming" ? (
 				<UpcomingEventView event={eventData} />
-			) : (
-				<LiveEventView event={eventData} />
-			)}
+			) : eventStatus === "live" ? (
+				<LiveEventView event={eventData} showActionButton={false} />
+			) : eventStatus === "finished" ? (
+				<FinishedEventView event={eventData} />
+			) : null}
 		</div>
 	);
 }

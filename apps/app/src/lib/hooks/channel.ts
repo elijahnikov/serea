@@ -1,4 +1,5 @@
-import { RouterOutputs } from "@serea/api";
+"use client";
+
 import { skipToken } from "@tanstack/react-query";
 import * as React from "react";
 import { api } from "~/trpc/react";
@@ -34,11 +35,11 @@ export function useThrottledIsTypingMutation(channelId: string) {
 	}, [channelId]);
 }
 
-export function useLivePosts(channelId: string) {
-	const utils = api.useUtils();
+export function useLiveMessages(channelId: string) {
 	const [, query] = api.message.getInfinite.useSuspenseInfiniteQuery(
 		{
 			channelId,
+			take: 20,
 		},
 		{
 			getNextPageParam: (lastPage) => lastPage.nextCursor,

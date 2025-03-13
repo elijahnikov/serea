@@ -12,7 +12,11 @@ import EventCount from "./count";
 
 export default function LiveEventView({
 	event,
-}: { event: RouterOutputs["watchEvent"]["getEventsForWatchlist"][number] }) {
+	showActionButton = true,
+}: {
+	event: RouterOutputs["watchEvent"]["getEventsForWatchlist"][number];
+	showActionButton?: boolean;
+}) {
 	const eventDate = new Date(event.date);
 	const runtime = event.entry.movie.runtime;
 	const movieTitle = event.entry.movie.title;
@@ -105,9 +109,11 @@ export default function LiveEventView({
 						</div>
 					</div>
 
-					<Link href={`/watchlist/${event.watchlistId}/event/${event.id}`}>
-						<Button before={<DoorOpenIcon />}>Join</Button>
-					</Link>
+					{showActionButton && (
+						<Link href={`/watchlist/${event.watchlistId}/event/${event.id}`}>
+							<Button before={<DoorOpenIcon />}>Join</Button>
+						</Link>
+					)}
 				</div>
 
 				<div className="mt-4 mb-2">
@@ -120,7 +126,7 @@ export default function LiveEventView({
 			<>
 				<div className="absolute bottom-0 left-0 w-full h-2" />
 				<div
-					className="absolute bottom-0 left-0 h-2 bg-primary transition-all duration-1000 overflow-hidden"
+					className="absolute bottom-0 left-0 h-2 bg-green-400 transition-all duration-1000 overflow-hidden"
 					style={{ width: `${uiState.progress}%` }}
 				>
 					<div

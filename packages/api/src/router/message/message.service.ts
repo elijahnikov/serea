@@ -17,7 +17,6 @@ export const addMessage = async (
 
 	const formattedMessage = {
 		...message,
-		isUser: message.userId === ctx.session.user.id,
 		user: {
 			name: userName,
 			id: ctx.session.user.id,
@@ -72,10 +71,8 @@ export const getInfinite = async (
 	}
 
 	return {
-		messages: messages.map((message) => ({
-			...message,
-			isUser: message.userId === currentUserId,
-		})),
+		messages,
+		currentUserId,
 		nextCursor,
 	};
 };
