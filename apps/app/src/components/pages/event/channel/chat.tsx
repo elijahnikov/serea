@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar } from "@serea/ui/avatar";
 import { Button } from "@serea/ui/button";
 import { cn } from "@serea/ui/cn";
 import dayjs from "dayjs";
@@ -9,6 +10,7 @@ import {
 	useThrottledIsTypingMutation,
 } from "~/lib/hooks/channel";
 import { api } from "~/trpc/react";
+import CurrentlyTyping from "./currently-typing";
 import MessageForm from "./message-form";
 
 export const pluralize = (count: number, singular: string, plural: string) =>
@@ -44,13 +46,13 @@ export default function Chat({
 	return (
 		<div className="h-full flex flex-col">
 			<div
-				className="flex flex-1 flex-col-reverse max-h-[50vh] overflow-y-scroll p-4 sm:p-6 lg:p-8"
+				className="flex flex-1 flex-col-reverse max-h-[50vh] overflow-y-scroll px-8 pt-8 pb-1"
 				ref={scrollRef}
 			>
 				<div>
 					<div className="grid gap-4">
 						{liveMessages.query.hasNextPage ? (
-							<div>
+							<div className="flex items-center justify-center">
 								<Button
 									disabled={
 										!liveMessages.query.hasNextPage ||
@@ -91,14 +93,13 @@ export default function Chat({
 									className={cn(
 										"flex items-start gap-3",
 										isOwner ? "justify-end" : "justify-start",
-										// Reduce gap between grouped messages
 										!isFirstInGroup ? "-mt-3" : "",
 									)}
 								>
 									<div className="flex flex-col gap-1">
 										<div
 											className={cn(
-												"border px-3 py-2 text-sm rounded-lg",
+												"border px-3 py-2 text-sm rounded-lg w-max",
 												isOwner
 													? "bg-gray-300 dark:bg-carbon-dark-400"
 													: "bg-gray-200 dark:bg-carbon-dark-100",
@@ -107,8 +108,18 @@ export default function Chat({
 											<p>{item.content}</p>
 										</div>
 										{showUserInfo && (
-											<div className="text-xs text-gray-500 dark:text-gray-400">
-												<p>{item.user.name}</p>
+											<div
+												className={cn(
+													isOwner ? "justify-end" : "justify-start",
+													"text-xs text-carbon-900 mt-1 flex items-center gap-1",
+												)}
+											>
+												<Avatar
+													size="xs"
+													src={item.user.image ?? undefined}
+													initials={item.user.name?.slice(0, 2)}
+												/>
+												<p className="font-medium">{item.user.name}</p>
 											</div>
 										)}
 									</div>
@@ -116,17 +127,9 @@ export default function Chat({
 							);
 						})}
 					</div>
-					{/* <p className="text-sm text-gray-400">
-						{currentlyTyping.data?.length ? (
-							`${listWithAnd(currentlyTyping.data)} ${pluralize(
-								currentlyTyping.data.length,
-								"is",
-								"are",
-							)} typing...`
-						) : (
-							<>&nbsp;</>
-						)}
-					</p> */}
+					{currentlyTyping.data && (
+						<CurrentlyTyping typing={currentlyTyping.data} />
+					)}
 				</div>
 			</div>
 			<MessageForm

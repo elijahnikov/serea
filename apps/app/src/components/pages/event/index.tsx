@@ -32,8 +32,6 @@ export default function Event({
 			<EventChannel
 				// biome-ignore lint/style/noNonNullAssertion: <explanation>
 				channelId={event.channel!.id}
-				eventId={eventId}
-				watchlistId={watchlistId}
 				currentUserId={currentUserId}
 			/>
 		</div>

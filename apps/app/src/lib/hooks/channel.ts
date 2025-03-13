@@ -103,6 +103,26 @@ export function useLiveMessages(channelId: string) {
 	return { query, messages, subscription };
 }
 
+export function useJoinedChannel(channelId: string | undefined) {
+	const joinChannel = api.channel.hasJoined.useMutation();
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	return React.useMemo(() => {
+		// Return a no-op function if channelId is undefined
+		if (!channelId) {
+			return () => {};
+		}
+
+		// Return a function that can be called to update joined status
+		return (isJoined: boolean) => {
+			joinChannel.mutate({
+				channelId,
+				joined: isJoined,
+			});
+		};
+	}, [channelId]);
+}
+
 export function useChannelParticipation(channelId: string | undefined) {
 	const [participants, setParticipants] = React.useState<
 		{
@@ -111,23 +131,44 @@ export function useChannelParticipation(channelId: string | undefined) {
 			image: string | null | undefined;
 		}[]
 	>([]);
+	const [isLoading, setIsLoading] = React.useState(true);
+	const [shouldRender, setShouldRender] = React.useState(false);
 
-	// Subscribe to participant updates
+	React.useEffect(() => {
+		const timer = setTimeout(() => {
+			setShouldRender(true);
+		}, 200);
+
+		return () => clearTimeout(timer);
+	}, []);
+
 	api.channel.whoIsParticipating.useSubscription(
 		channelId ? { channelId } : skipToken,
 		{
 			onData(data) {
 				if (channelId) {
+					console.log("Subscription update for participants:", data);
 					setParticipants(data);
+					setIsLoading(false);
 				}
 			},
 			onError(error) {
 				console.error("Participant subscription error:", error);
+				setIsLoading(false);
 			},
 		},
 	);
 
+	React.useEffect(() => {
+		if (!channelId) {
+			setIsLoading(false);
+		}
+	}, [channelId]);
+
 	return {
 		participants,
+		isLoading,
+		shouldRender,
+		hasParticipants: participants.length > 0,
 	};
 }
