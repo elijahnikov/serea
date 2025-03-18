@@ -12,12 +12,18 @@ export default function Participants({ channelId }: { channelId: string }) {
 		useChannelParticipation(channelId);
 
 	if (!shouldRender || isLoading) return null;
+
 	return (
 		<div className="ml-auto text-xs items-center flex gap-2">
 			<p className="font-mono text-xs text-carbon-900">ONLINE</p>
-			<AvatarGroup size={"xs"}>
+			<AvatarGroup
+				moreLabel={
+					participants.length > 20 ? `+${participants.length - 20}` : null
+				}
+				size={"xs"}
+			>
 				<TooltipProvider>
-					{participants.map((p) => (
+					{participants.slice(0, 20).map((p) => (
 						<Participant key={p.id} participant={p} />
 					))}
 				</TooltipProvider>

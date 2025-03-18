@@ -50,7 +50,7 @@ export default function Chat({
 				ref={scrollRef}
 			>
 				<div>
-					<div className="grid gap-4">
+					<div className="grid gap-4 mb-4">
 						{liveMessages.query.hasNextPage ? (
 							<div className="flex items-center justify-center">
 								<Button
@@ -91,21 +91,41 @@ export default function Chat({
 								<div
 									key={item.id}
 									className={cn(
-										"flex items-start gap-3",
+										"flex group items-start gap-3",
 										isOwner ? "justify-end" : "justify-start",
 										!isFirstInGroup ? "-mt-3" : "",
 									)}
 								>
 									<div className="flex flex-col gap-1">
-										<div
-											className={cn(
-												"border px-3 py-2 text-sm rounded-lg w-max",
-												isOwner
-													? "bg-gray-300 dark:bg-carbon-dark-400"
-													: "bg-gray-200 dark:bg-carbon-dark-100",
+										<div className="flex items-center gap-2">
+											{isOwner && (
+												<div className="group-hover:opacity-100 opacity-0 text-xs text-carbon-900">
+													{dayjs(item.createdAt).isBefore(
+														dayjs().startOf("day"),
+													)
+														? dayjs(item.createdAt).format("DD/MM/YYYY, HH:mm")
+														: dayjs(item.createdAt).format("HH:mm")}
+												</div>
 											)}
-										>
-											<p>{item.content}</p>
+											<div
+												className={cn(
+													"border px-3 py-2 text-sm rounded-lg w-max",
+													isOwner
+														? "bg-gray-300 dark:bg-carbon-dark-400"
+														: "bg-gray-200 dark:bg-carbon-dark-100",
+												)}
+											>
+												<p>{item.content}</p>
+											</div>
+											{!isOwner && (
+												<div className="group-hover:opacity-100 opacity-0 text-xs text-carbon-900">
+													{dayjs(item.createdAt).isBefore(
+														dayjs().startOf("day"),
+													)
+														? dayjs(item.createdAt).format("DD/MM/YYYY, HH:mm")
+														: dayjs(item.createdAt).format("HH:mm")}
+												</div>
+											)}
 										</div>
 										{showUserInfo && (
 											<div
@@ -127,9 +147,7 @@ export default function Chat({
 							);
 						})}
 					</div>
-					{currentlyTyping.data && (
-						<CurrentlyTyping typing={currentlyTyping.data} />
-					)}
+					<CurrentlyTyping typing={currentlyTyping.data ?? []} />
 				</div>
 			</div>
 			<MessageForm
