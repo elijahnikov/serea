@@ -2,13 +2,13 @@ import type { RouterOutputs } from "@serea/api";
 import { Badge } from "@serea/ui/badge";
 import { Button } from "@serea/ui/button";
 import dayjs from "dayjs";
-import { DoorClosedIcon, DoorOpenIcon } from "lucide-react";
+import { DoorOpenIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
-import { useChannelParticipation } from "~/lib/hooks/channel";
 import EventCount from "./count";
+import WatchProviders from "./watch-providerst";
 
 export default function LiveEventView({
 	event,
@@ -108,7 +108,9 @@ export default function LiveEventView({
 							</span>
 						</div>
 					</div>
-
+					{!showActionButton && (
+						<WatchProviders movieId={event.entry.movie.contentId} />
+					)}
 					{showActionButton && (
 						<Link href={`/watchlist/${event.watchlistId}/event/${event.id}`}>
 							<Button before={<DoorOpenIcon />}>Join</Button>

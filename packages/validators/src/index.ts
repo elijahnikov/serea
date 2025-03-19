@@ -122,3 +122,24 @@ export const movieDetailsSchema = z.object({
 	vote_count: z.number(),
 });
 export type MovieDetailsSchema = z.infer<typeof movieDetailsSchema>;
+
+const providerObject = z.object({
+	logo_path: z.string().nullable(),
+	provider_id: z.number(),
+	provider_name: z.string(),
+	display_priority: z.number(),
+});
+
+export const watchProvidersSchema = z.object({
+	id: z.number(),
+	results: z.record(
+		z.string(),
+		z.object({
+			link: z.string(),
+			flatrate: z.array(providerObject).optional(),
+			rent: z.array(providerObject).optional(),
+			buy: z.array(providerObject).optional(),
+		}),
+	),
+});
+export type WatchProvidersSchema = z.infer<typeof watchProvidersSchema>;

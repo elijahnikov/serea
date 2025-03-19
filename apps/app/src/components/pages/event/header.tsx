@@ -1,6 +1,7 @@
 import type { RouterOutputs } from "@serea/api";
 import { cn } from "@serea/ui/cn";
-import { ListIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, ListIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function EventHeader({
 	event,
@@ -17,7 +18,15 @@ export default function EventHeader({
 			</div>
 
 			<div className="flex items-center gap-2">
-				<h1 className="text-md font-semibold">{event.watchlist.title}</h1>
+				<Link
+					href={`/watchlist/${event.watchlist.id}`}
+					className="group flex items-center"
+				>
+					<ArrowLeftIcon className="group-hover:opacity-100 opacity-0 group-hover:translate-x-0 translate-x-1 transition-all duration-300 w-4 h-4" />
+					<h1 className="text-md group-hover:translate-x-1 -translate-x-1 transition-all duration-300 font-semibold">
+						{event.watchlist.title}
+					</h1>
+				</Link>
 			</div>
 		</div>
 	);

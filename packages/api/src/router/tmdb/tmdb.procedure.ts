@@ -2,6 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { publicProcedure } from "../../trpc";
 
 import { z } from "zod";
+import * as inputs from "./tmdb.inputs";
 import * as services from "./tmdb.service";
 
 export const tmdbRouter = {
@@ -11,6 +12,11 @@ export const tmdbRouter = {
 
 	movieSearch: publicProcedure
 		.meta({ name: "movie-search" })
-		.input(z.object({ query: z.string() }))
-		.query(({ input }) => services.movieSearch(input.query)),
+		.input(inputs.movieSearch)
+		.query(({ input }) => services.movieSearch(input)),
+
+	getWatchProviders: publicProcedure
+		.meta({ name: "get-watch-providers" })
+		.input(inputs.watchProviders)
+		.query(({ input }) => services.getWatchProviders(input)),
 } satisfies TRPCRouterRecord;

@@ -4,7 +4,12 @@ import type { ZodSchema } from "zod";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
-const apis = ["trendingThisWeek", "movieSearch", "movieDetails"] as const;
+const apis = [
+	"trendingThisWeek",
+	"movieSearch",
+	"movieDetails",
+	"watchProviders",
+] as const;
 type Api = (typeof apis)[number];
 
 export const TMDB_API_URLS = {
@@ -12,6 +17,8 @@ export const TMDB_API_URLS = {
 	movieSearch: (query: string) =>
 		`${TMDB_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&include_adult=false&language=en-US&page=1`,
 	movieDetails: (id: string) => `${TMDB_BASE_URL}/movie/${id}?language=en-US`,
+	watchProviders: (id: string) =>
+		`${TMDB_BASE_URL}/movie/${id}/watch/providers`,
 } satisfies Record<Api, string | ((query: string) => string)>;
 
 type TmdbFetchOptions<T> = {
@@ -44,6 +51,7 @@ export const tmdbFetch = async <T>({
 	const parsed = schema.safeParse(data);
 
 	if (!parsed.success) {
+		console.log(parsed.error);
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: "Invalid response from TMDB",

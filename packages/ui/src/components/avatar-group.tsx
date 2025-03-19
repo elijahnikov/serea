@@ -30,7 +30,7 @@ const AvatarGroupItem = React.forwardRef<
 		<Avatar
 			ref={ref}
 			className={cn(
-				"ring-2 dark:shadow-sm-dark ring-carbon-500 dark:ring-carbon-dark-500 backdrop-blur-3xl",
+				"ring-1 dark:shadow-sm-dark ring-carbon-500 dark:ring-carbon-dark-500 backdrop-blur-3xl",
 				className,
 			)}
 			initials={initials}

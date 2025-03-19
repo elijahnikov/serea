@@ -55,9 +55,12 @@ export default function LiveEventView({
 					</div>
 
 					{showActionButton && (
-						<Link href={`/review/${event.entry.movie.id}`}>
-							<Button before={<PencilLineIcon />}>Write a review</Button>
-						</Link>
+						<div className="flex items-center gap-2">
+							<Link href={`/review/${event.entry.movie.id}`}>
+								<Button before={<PencilLineIcon />}>Write a review</Button>
+							</Link>
+							<Button before={<CheckCircleIcon />}>Mark as watched</Button>
+						</div>
 					)}
 				</div>
 			</div>
