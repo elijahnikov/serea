@@ -19,9 +19,9 @@ export default function SideSection({
 			<div id="owner-actions-portal" />
 			<WatchlistDetails details={watchlist} />
 			<WatchlistTags tags={watchlist} />
-			{/* <Suspense fallback={<div>Loading events...</div>}>
+			<Suspense fallback={<div>Loading events...</div>}>
 				<WatchlistEvents watchlist={watchlist} />
-			</Suspense> */}
+			</Suspense>
 			<Suspense fallback={<div>Loading members...</div>}>
 				<WatchlistMembers
 					watchlist={watchlist}

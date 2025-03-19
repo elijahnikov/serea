@@ -15,7 +15,7 @@ export default function WatchlistEvents({
 	if (events.length === 0) return null;
 	return (
 		<div>
-			<p className="text-xs font-mono text-carbon-900">EVENTS</p>
+			<p className="text-xs font-mono text-carbon-900">UPCOMING EVENTS</p>
 			<div className="flex mt-2 flex-col gap-2">
 				{events.map((event) => (
 					<div key={event.id}>

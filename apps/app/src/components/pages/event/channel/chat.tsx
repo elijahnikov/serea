@@ -46,7 +46,7 @@ export default function Chat({
 	return (
 		<div className="h-full flex flex-col">
 			<div
-				className="flex flex-1 flex-col-reverse max-h-[44vh] overflow-y-scroll px-8 pt-8 pb-1"
+				className="flex flex-1 flex-col-reverse max-h-[40vh] min-h-[40vh] overflow-y-scroll px-8 pt-8 pb-1"
 				ref={scrollRef}
 			>
 				<div>

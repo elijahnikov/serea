@@ -8,7 +8,7 @@ import Link from "next/link";
 import * as React from "react";
 import { TMDB_IMAGE_BASE_URL_SD } from "~/lib/constants";
 import EventCount from "./count";
-import WatchProviders from "./watch-providerst";
+import WatchProviders from "./watch-providers";
 
 export default function LiveEventView({
 	event,

@@ -26,7 +26,7 @@ export default function Event({
 	}
 
 	return (
-		<div className="flex flex-col h-full max-h-screen overflow-hidden">
+		<div className="flex flex-col h-full min-h-screen max-h-screen overflow-hidden">
 			<EventHeader event={event} />
 			<EventView eventData={event} />
 			<EventChannel
