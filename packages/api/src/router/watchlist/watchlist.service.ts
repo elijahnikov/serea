@@ -815,6 +815,7 @@ export const editWatchlist = async (
 ) => {
 	const currentUserId = ctx.session.user.id;
 
+	const { watchlistId, ...rest } = input;
 	const watchlist = await ctx.db.watchlist.findUnique({
 		where: {
 			id: input.watchlistId,
@@ -834,7 +835,7 @@ export const editWatchlist = async (
 			id: input.watchlistId,
 		},
 		data: {
-			...input,
+			...rest,
 		},
 	});
 };

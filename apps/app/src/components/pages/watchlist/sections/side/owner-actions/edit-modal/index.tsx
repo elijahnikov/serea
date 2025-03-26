@@ -25,7 +25,10 @@ import { Label } from "@serea/ui/label";
 import { LoadingButton } from "@serea/ui/loading-button";
 import { Switch } from "@serea/ui/switch";
 import { Textarea } from "@serea/ui/textarea";
-import { ArrowLeftIcon, PencilIcon, X } from "lucide-react";
+import { sleep } from "@trpc/server/unstable-core-do-not-import";
+import { PencilIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import * as React from "react";
 import { Controller } from "react-hook-form";
 import { z } from "zod";
 import { api } from "~/trpc/react";
@@ -41,7 +44,16 @@ const editWatchlistSchema = z.object({
 export default function EditModal({
 	watchlist,
 }: { watchlist: RouterOutputs["watchlist"]["get"] }) {
-	const editWatchlist = api.watchlist.editWatchlist.useMutation();
+	const [isOpen, setIsOpen] = React.useState(false);
+
+	const router = useRouter();
+	const utils = api.useUtils();
+	const editWatchlist = api.watchlist.editWatchlist.useMutation({
+		onSuccess: async () => {
+			void utils.watchlist.get.invalidate();
+			setIsOpen(false);
+		},
+	});
 	const form = useForm({
 		schema: editWatchlistSchema,
 		defaultValues: {
@@ -94,14 +106,14 @@ export default function EditModal({
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
 				<DropdownMenuItem onSelect={(e) => e.preventDefault()}>
 					<PencilIcon />
 					<span>Edit watchlist</span>
 				</DropdownMenuItem>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent className="min-w-[600px]">
 				<DialogHeader>
 					<DialogTitle>Edit watchlist</DialogTitle>
 				</DialogHeader>
@@ -112,7 +124,7 @@ export default function EditModal({
 								className="flex gap-4 w-full"
 								onSubmit={form.handleSubmit(onSubmit)}
 							>
-								<div className="flex flex-col gap-4">
+								<div className="flex flex-col gap-6">
 									<FormField
 										control={form.control}
 										name="title"
