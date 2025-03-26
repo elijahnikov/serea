@@ -112,3 +112,14 @@ export const deleteMember = z.object({
 	memberId: z.string(),
 });
 export type DeleteMemberInput = z.infer<typeof deleteMember>;
+
+// Edit a watchlist
+export const editWatchlist = z.object({
+	watchlistId: z.string(),
+	title: z.string().optional(),
+	description: z.string().optional(),
+	tags: z.string().array().optional(),
+	isPrivate: z.boolean().optional(),
+	hideStats: z.boolean().optional(),
+});
+export type EditWatchlistInput = z.infer<typeof editWatchlist>;

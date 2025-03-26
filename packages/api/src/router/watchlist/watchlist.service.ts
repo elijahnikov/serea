@@ -11,6 +11,7 @@ import type {
 	DeleteEntryInput,
 	DeleteInviteInput,
 	DeleteMemberInput,
+	EditWatchlistInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
 	InviteMembersInput,
@@ -806,4 +807,34 @@ export const deleteMember = async (
 	return {
 		success: true,
 	};
+};
+
+export const editWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: EditWatchlistInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	const watchlist = await ctx.db.watchlist.findUnique({
+		where: {
+			id: input.watchlistId,
+			userId: currentUserId,
+		},
+	});
+
+	if (!watchlist) {
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: "Watchlist not found",
+		});
+	}
+
+	await ctx.db.watchlist.update({
+		where: {
+			id: input.watchlistId,
+		},
+		data: {
+			...input,
+		},
+	});
 };
