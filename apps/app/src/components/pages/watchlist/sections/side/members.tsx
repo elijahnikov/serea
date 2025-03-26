@@ -18,7 +18,7 @@ export default function WatchlistMembers({
 	watchlist,
 	totalEntries,
 }: {
-	watchlist: Pick<RouterOutputs["watchlist"]["get"], "isOwner" | "id">;
+	watchlist: RouterOutputs["watchlist"]["get"];
 	totalEntries: number;
 }) {
 	const [members] = api.watchlist.getMembers.useSuspenseQuery({
@@ -74,7 +74,7 @@ export default function WatchlistMembers({
 			</div>
 			{watchlist.isOwner && mounted ? (
 				createPortal(
-					<OwnerActions members={members} watchlistId={watchlist.id} />,
+					<OwnerActions members={members} watchlist={watchlist} />,
 					document.getElementById("owner-actions-portal") ?? document.body,
 				)
 			) : (
