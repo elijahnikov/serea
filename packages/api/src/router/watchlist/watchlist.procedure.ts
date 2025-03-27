@@ -101,4 +101,9 @@ export const watchlistRouter = {
 		.input(inputs.editWatchlist)
 		.meta({ name: "edit-watchlist" })
 		.mutation(async ({ ctx, input }) => services.editWatchlist(ctx, input)),
+
+	deleteWatchlist: protectedProcedure
+		.input(inputs.deleteWatchlist)
+		.meta({ name: "delete-watchlist" })
+		.mutation(async ({ ctx, input }) => services.deleteWatchlist(ctx, input)),
 } satisfies TRPCRouterRecord;

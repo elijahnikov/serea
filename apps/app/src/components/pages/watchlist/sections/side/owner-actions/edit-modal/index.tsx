@@ -46,7 +46,6 @@ export default function EditModal({
 }: { watchlist: RouterOutputs["watchlist"]["get"] }) {
 	const [isOpen, setIsOpen] = React.useState(false);
 
-	const router = useRouter();
 	const utils = api.useUtils();
 	const editWatchlist = api.watchlist.editWatchlist.useMutation({
 		onSuccess: async () => {

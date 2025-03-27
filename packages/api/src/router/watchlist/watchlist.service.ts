@@ -11,6 +11,7 @@ import type {
 	DeleteEntryInput,
 	DeleteInviteInput,
 	DeleteMemberInput,
+	DeleteWatchlistInput,
 	EditWatchlistInput,
 	GetWatchlistEntriesInput,
 	GetWatchlistInput,
@@ -836,6 +837,20 @@ export const editWatchlist = async (
 		},
 		data: {
 			...rest,
+		},
+	});
+};
+
+export const deleteWatchlist = async (
+	ctx: ProtectedTRPCContext,
+	input: DeleteWatchlistInput,
+) => {
+	const currentUserId = ctx.session.user.id;
+
+	await ctx.db.watchlist.delete({
+		where: {
+			id: input.watchlistId,
+			userId: currentUserId,
 		},
 	});
 };

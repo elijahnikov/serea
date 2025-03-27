@@ -123,3 +123,9 @@ export const editWatchlist = z.object({
 	hideStats: z.boolean().optional(),
 });
 export type EditWatchlistInput = z.infer<typeof editWatchlist>;
+
+// Delete a watchlist
+export const deleteWatchlist = z.object({
+	watchlistId: z.string(),
+});
+export type DeleteWatchlistInput = z.infer<typeof deleteWatchlist>;

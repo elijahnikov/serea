@@ -144,7 +144,7 @@ model WatchlistEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist    @relation(fields: [watchlistId], references: [id])
+  watchlist Watchlist    @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
   movie     Movie        @relation(fields: [contentId], references: [contentId])
   watched   Watched[]
   event     WatchEvent[]
@@ -223,7 +223,7 @@ model WatchlistComment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
   user      User      @relation(fields: [userId], references: [id])
 
   parent  WatchlistComment?      @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
@@ -261,7 +261,7 @@ model WatchlistInvite {
 
   invitee   User      @relation("Invitee", fields: [inviteeId], references: [id])
   inviter   User      @relation("Inviter", fields: [inviterId], references: [id])
-  watchlist Watchlist @relation(fields: [watchlistId], references: [id])
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
 
   @@index([inviteeId])
   @@index([inviterId])

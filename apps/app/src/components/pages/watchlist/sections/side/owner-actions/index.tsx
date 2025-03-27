@@ -8,6 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "@serea/ui/dropdown-menu";
 import { PencilIcon, SettingsIcon, TrashIcon } from "lucide-react";
+import { DeleteDialog } from "./delete-dialog";
 import EditModal from "./edit-modal";
 import InviteDialog from "./invite-dialog";
 
@@ -31,10 +32,7 @@ export default function OwnerActions({
 					<DropdownMenuContent>
 						<DropdownMenuGroup>
 							<EditModal watchlist={watchlist} />
-							<DropdownMenuItem destructive>
-								<TrashIcon />
-								<span>Delete watchlist</span>
-							</DropdownMenuItem>
+							<DeleteDialog watchlistId={watchlist.id} />
 						</DropdownMenuGroup>
 					</DropdownMenuContent>
 				</DropdownMenu>
